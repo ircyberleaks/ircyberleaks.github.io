@@ -3,42 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>داده‌های هک شده بانک سپه</title>
-    
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@rahbarusd">
-    <meta name="twitter:title" content="داده‌های هک شده بانک سپه">
-    <meta name="twitter:description" content="اطلاعات وام‌های کلان بانک سپه که از طریق هک به دست آمده‌اند و صرفاً برای اهداف آموزشی نمایش داده می‌شوند.">
-    <meta name="twitter:image" content="images/bank-data-preview.jpg">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <title>داده‌های وام بانک سپه</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <style>
-        @font-face {
-            font-family: 'Vazir';
-            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir.woff2') format('woff2');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-        
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #3498db;
+            --accent-color: #e74c3c;
             --text-color: #333;
             --text-light: #777;
-            --light-bg: #f5f5f5;
             --border-color: #ddd;
+            --light-bg: #f5f5f5;
+            --card-bg: #fff;
             --transition-speed: 0.3s;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
         }
         
         [data-theme="dark"] {
             --primary-color: #3498db;
             --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
             --text-color: #f5f5f5;
             --text-light: #aaa;
+            --border-color: #444;
             --light-bg: #2c3e50;
-            --border-color: #34495e;
+            --card-bg: #34495e;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
         
         * {
@@ -49,10 +41,11 @@
         
         body {
             font-family: 'Vazir', Tahoma, Arial, sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-color);
             line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
             transition: all var(--transition-speed);
+            padding-bottom: 30px;
         }
         
         .container {
@@ -70,8 +63,19 @@
         
         h1 {
             color: var(--primary-color);
-            font-size: 24px;
-            margin: 0;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header-alert {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: var(--box-shadow);
         }
         
         .theme-toggle {
@@ -80,21 +84,20 @@
             color: var(--text-color);
             cursor: pointer;
             font-size: 24px;
-            transition: color var(--transition-speed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: all var(--transition-speed);
+            background-color: var(--card-bg);
+            box-shadow: var(--box-shadow);
         }
         
         .theme-toggle:hover {
-            color: var(--secondary-color);
-        }
-        
-        .header-alert {
-            background-color: rgba(231, 76, 60, 0.1);
-            color: #e74c3c;
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: bold;
+            background-color: var(--secondary-color);
+            color: white;
         }
         
         .search-container {
@@ -103,29 +106,26 @@
         
         #searchInput {
             width: 100%;
-            padding: 10px 15px;
+            padding: 12px 15px;
             border: 1px solid var(--border-color);
-            border-radius: 5px;
+            border-radius: var(--border-radius);
             font-family: 'Vazir', Tahoma, Arial, sans-serif;
-            font-size: 14px;
-            background-color: white;
+            font-size: 16px;
             color: var(--text-color);
-            transition: border-color var(--transition-speed);
-        }
-        
-        [data-theme="dark"] #searchInput {
-            background-color: #34495e;
-            color: var(--text-color);
+            background-color: var(--card-bg);
+            box-shadow: var(--box-shadow);
+            transition: all var(--transition-speed);
         }
         
         #searchInput:focus {
             outline: none;
             border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
         }
         
         .filter-options {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
@@ -135,17 +135,13 @@
             min-width: 200px;
             padding: 10px 15px;
             border: 1px solid var(--border-color);
-            border-radius: 5px;
+            border-radius: var(--border-radius);
             font-family: 'Vazir', Tahoma, Arial, sans-serif;
             font-size: 14px;
-            background-color: white;
             color: var(--text-color);
-            transition: border-color var(--transition-speed);
-        }
-        
-        [data-theme="dark"] .filter-select {
-            background-color: #34495e;
-            color: var(--text-color);
+            background-color: var(--card-bg);
+            cursor: pointer;
+            transition: all var(--transition-speed);
         }
         
         .filter-select:focus {
@@ -153,66 +149,76 @@
             border-color: var(--secondary-color);
         }
         
-        .tab-container {
-            margin-bottom: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
-        
-        [data-theme="dark"] .tab-container {
-            background-color: #34495e;
-        }
-        
         .tab {
-            overflow: hidden;
             display: flex;
-            flex-wrap: wrap;
-            background-color: var(--light-bg);
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 20px;
             border-bottom: 1px solid var(--border-color);
+            scrollbar-width: thin;
+            scrollbar-color: var(--secondary-color) var(--light-bg);
         }
         
-        [data-theme="dark"] .tab {
-            background-color: #2c3e50;
+        .tab::-webkit-scrollbar {
+            height: 5px;
         }
         
-        .tab button {
-            background-color: inherit;
-            float: right;
+        .tab::-webkit-scrollbar-track {
+            background: var(--light-bg);
+        }
+        
+        .tab::-webkit-scrollbar-thumb {
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+        }
+        
+        .tablinks {
+            background-color: transparent;
             border: none;
             outline: none;
             cursor: pointer;
-            padding: 12px 16px;
-            transition: all var(--transition-speed);
+            padding: 12px 20px;
             font-family: 'Vazir', Tahoma, Arial, sans-serif;
-            font-size: 14px;
+            font-size: 15px;
             color: var(--text-color);
-            border-bottom: 2px solid transparent;
-            flex: 1;
-            min-width: 150px;
-            text-align: center;
+            transition: all var(--transition-speed);
+            position: relative;
+            font-weight: 500;
         }
         
-        .tab button:hover {
-            background-color: rgba(52, 152, 219, 0.1);
+        .tablinks:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--secondary-color);
+            transition: width var(--transition-speed);
         }
         
-        .tab button.active {
-            background-color: white;
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--secondary-color);
+        .tablinks.active {
+            color: var(--secondary-color);
             font-weight: bold;
         }
         
-        [data-theme="dark"] .tab button.active {
-            background-color: #34495e;
+        .tablinks.active:after {
+            width: 100%;
+        }
+        
+        .tablinks:hover:not(.active):after {
+            width: 100%;
+            background-color: var(--text-light);
         }
         
         .tabcontent {
             display: none;
-            padding: 20px;
             animation: fadeEffect 0.5s;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
         }
         
         @keyframes fadeEffect {
@@ -222,107 +228,122 @@
         
         .section-title {
             color: var(--primary-color);
-            font-size: 18px;
             margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
+            font-size: 20px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 8px;
+            display: inline-block;
         }
         
         .table-container {
             overflow-x: auto;
             margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
         }
         
-        table {
+        .dataTable {
             width: 100%;
             border-collapse: collapse;
+            text-align: center;
             font-size: 14px;
         }
         
-        th, td {
+        .dataTable th {
+            background-color: var(--primary-color);
+            color: white;
             padding: 12px 15px;
-            text-align: right;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        th {
-            background-color: var(--light-bg);
-            color: var(--primary-color);
-            font-weight: bold;
-            cursor: pointer;
             position: relative;
-            user-select: none;
+            cursor: pointer;
+            transition: all var(--transition-speed);
         }
         
-        [data-theme="dark"] th {
-            background-color: #2c3e50;
+        .dataTable th:hover {
+            background-color: var(--secondary-color);
         }
         
-        th:hover {
+        .dataTable th.sort-asc:after,
+        .dataTable th.sort-desc:after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+        }
+        
+        .dataTable th.sort-asc:after {
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid white;
+        }
+        
+        .dataTable th.sort-desc:after {
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid white;
+        }
+        
+        .dataTable td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            transition: all var(--transition-speed);
+        }
+        
+        .dataTable tbody tr {
+            background-color: var(--card-bg);
+            transition: all var(--transition-speed);
+        }
+        
+        .dataTable tbody tr:hover {
             background-color: rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
-        th.sort-asc::after {
-            content: "▲";
-            margin-right: 5px;
-            font-size: 12px;
-            color: var(--secondary-color);
-        }
-        
-        th.sort-desc::after {
-            content: "▼";
-            margin-right: 5px;
-            font-size: 12px;
-            color: var(--secondary-color);
-        }
-        
-        tr:hover {
-            background-color: rgba(52, 152, 219, 0.05);
+        .dataTable tbody tr:last-child td {
+            border-bottom: none;
         }
         
         .amount {
-            direction: ltr;
-            text-align: left;
-            font-family: monospace;
-            font-size: 13px;
-            color: #27ae60;
+            font-weight: bold;
+            color: var(--accent-color);
         }
         
         .national-id, .mobile {
-            direction: ltr;
-            text-align: left;
             font-family: monospace;
-            font-size: 13px;
+            direction: ltr;
+            text-align: center;
         }
         
         .pagination {
             display: flex;
             justify-content: center;
+            gap: 5px;
             margin-top: 20px;
             flex-wrap: wrap;
-            gap: 5px;
         }
         
         .pagination button {
-            background-color: var(--light-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
             padding: 8px 12px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
             cursor: pointer;
-            border-radius: 4px;
-            transition: all var(--transition-speed);
             font-family: 'Vazir', Tahoma, Arial, sans-serif;
-        }
-        
-        .pagination button:hover:not(:disabled) {
-            background-color: var(--secondary-color);
-            color: white;
+            transition: all var(--transition-speed);
+            color: var(--text-color);
         }
         
         .pagination button.active {
             background-color: var(--secondary-color);
             color: white;
             border-color: var(--secondary-color);
+        }
+        
+        .pagination button:hover:not(.active):not(:disabled) {
+            background-color: var(--light-bg);
         }
         
         .pagination button:disabled {
@@ -332,7 +353,7 @@
         
         .pagination-info {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
             margin-bottom: 10px;
             color: var(--text-light);
@@ -340,22 +361,23 @@
         }
         
         .progress-container {
-            flex: 1;
-            height: 4px;
-            background-color: var(--border-color);
-            border-radius: 2px;
-            margin: 0 15px;
+            width: 100%;
+            max-width: 300px;
+            height: 5px;
+            background-color: var(--light-bg);
+            border-radius: 10px;
+            margin-top: 5px;
             overflow: hidden;
         }
         
         .progress-bar {
             height: 100%;
             background-color: var(--secondary-color);
-            border-radius: 2px;
+            border-radius: 10px;
             transition: width 0.3s ease;
         }
         
-        /* استایل برای نمایش کارتی در موبایل */
+        /* استایل برای کارت‌های موبایل */
         .card-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -364,20 +386,17 @@
         }
         
         .data-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
             padding: 15px;
-            transition: transform var(--transition-speed);
-        }
-        
-        [data-theme="dark"] .data-card {
-            background-color: #34495e;
+            box-shadow: var(--box-shadow);
+            transition: all var(--transition-speed);
+            border-right: 4px solid var(--secondary-color);
         }
         
         .data-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
         
         .card-item {
@@ -396,28 +415,66 @@
             font-weight: bold;
             color: var(--primary-color);
             margin-bottom: 5px;
-        }
-        
-        .card-value {
             font-size: 14px;
         }
         
+        .card-value {
+            font-size: 15px;
+        }
+        
         .card-amount {
-            direction: ltr;
-            text-align: left;
-            font-family: monospace;
-            font-size: 13px;
-            color: #27ae60;
+            color: var(--accent-color);
+            font-weight: bold;
         }
         
         .card-id, .card-mobile {
+            font-family: monospace;
             direction: ltr;
             text-align: left;
-            font-family: monospace;
             font-size: 13px;
         }
         
         /* استایل برای موبایل */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .filter-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            .tablinks {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .dataTable {
+                font-size: 13px;
+            }
+            
+            .dataTable th, .dataTable td {
+                padding: 10px;
+            }
+            
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         @media (max-width: 576px) {
             .mobile-data-label {
                 display: block;
@@ -626,14 +683,36 @@
         
         <div class="tab-container">
             <div class="tab">
-                <button class="tablinks active" onclick="openTab(event, 'tab1')">وام‌های بالای 1000 میلیارد</button>
+                <!-- اضافه کردن تب جدید برای نمایش همه وام‌ها -->
+                <button class="tablinks active" onclick="openTab(event, 'tab0')">همه وام‌ها</button>
+                <button class="tablinks" onclick="openTab(event, 'tab1')">وام‌های بالای 1000 میلیارد</button>
                 <button class="tablinks" onclick="openTab(event, 'tab2')">وام‌های 500 تا 1000 میلیارد</button>
                 <button class="tablinks" onclick="openTab(event, 'tab3')">وام‌های 100 تا 500 میلیارد</button>
                 <button class="tablinks" onclick="openTab(event, 'tab4')">وام‌های زیر 100 میلیارد</button>
             </div>
             
+            <!-- تب جدید: همه وام‌ها -->
+            <div id="tab0" class="tabcontent" style="display: block;">
+                <h2 class="section-title">همه وام‌های بانک سپه</h2>
+                <div class="table-container">
+                    <table id="table0" class="dataTable">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0, 'table0')">نام مشتری</th>
+                                <th onclick="sortTable(1, 'table0')">کد ملی</th>
+                                <th onclick="sortTable(2, 'table0')">مجموع وام دریافتی</th>
+                                <th onclick="sortTable(3, 'table0')">شماره موبایل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- داده‌ها از فایل‌های خارجی بارگذاری می‌شوند -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
             <!-- تب اول: وام‌های بالای 1000 میلیارد -->
-            <div id="tab1" class="tabcontent" style="display: block;">
+            <div id="tab1" class="tabcontent">
                 <h2 class="section-title">وام‌های بالای 1000 میلیارد تومان</h2>
                 <div class="table-container">
                     <table id="table1" class="dataTable">
@@ -724,684 +803,620 @@
     </div>
     
     <script>
-        // متغیرهای جهانی برای ذخیره داده‌ها
-        let allData = {
-            'above1000': [],
-            '500to1000': [],
-            '100to500': [],
-            'below100': []
-        };
-        
-// تابع بارگذاری داده‌ها از فایل‌های خارجی
-async function loadData() {
-    document.querySelector('.loading').style.display = 'block';
-    
-    try {
-        // بارگذاری داده‌ها از یک فایل واحد
-        const response = await fetch('data/vam.html');
-        
-        if (!response.ok) {
-            throw new Error('خطا در بارگذاری داده‌ها');
-        }
-        
-        const html = await response.text();
-        
-        // تجزیه HTML و استخراج همه داده‌ها
-        const allDataArray = parseHtmlData(html);
-        
-        // دسته‌بندی داده‌ها بر اساس مبلغ وام
-        categorizeData(allDataArray);
-        
-        // نمایش داده‌ها در جداول
-        renderDataToTables();
-        
-        // اجرای صفحه‌بندی برای جدول فعال
-        const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
-        if (activeTab) {
-            const tableId = activeTab.querySelector('table').id;
-            setupPagination(tableId);
-        }
-        
-        // بررسی حالت نمایش موبایل
-        checkMobileView();
-        
-    } catch (error) {
-        console.error('خطا در بارگذاری داده‌ها:', error);
-        alert('خطا در بارگذاری داده‌ها. لطفاً صفحه را دوباره بارگذاری کنید.');
-    } finally {
-        document.querySelector('.loading').style.display = 'none';
-    }
-}
-
-// تابع تجزیه HTML و استخراج داده‌ها
-function parseHtmlData(html) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const rows = doc.querySelectorAll('tbody tr');
-    
-    const data = [];
-    rows.forEach(row => {
-        const cells = row.querySelectorAll('td');
-        if (cells.length >= 4) {
-            data.push({
-                name: cells[0].textContent.trim(),
-                nationalId: cells[1].textContent.trim(),
-                loanAmount: parseFloat(cells[2].textContent.trim().replace(/[^\d.]/g, '')),
-                mobile: cells[3].textContent.trim()
-            });
-        }
-    });
-    
-    return data;
-}
-
-// تابع دسته‌بندی داده‌ها بر اساس مبلغ وام
-function categorizeData(dataArray) {
-    // خالی کردن داده‌های قبلی
-    allData = {
+    // متغیرهای جهانی برای ذخیره داده‌ها
+    let allData = {
+        'all': [], // اضافه کردن آرایه برای همه داده‌ها
         'above1000': [],
         '500to1000': [],
         '100to500': [],
         'below100': []
     };
     
-    // دسته‌بندی داده‌ها بر اساس مبلغ وام
-    dataArray.forEach(item => {
-        const amount = item.loanAmount;
-        
-        if (amount >= 1000) {
-            allData.above1000.push(item);
-        } else if (amount >= 500) {
-            allData['500to1000'].push(item);
-        } else if (amount >= 100) {
-            allData['100to500'].push(item);
-        } else {
-            allData.below100.push(item);
-        }
-    });
-    
-    // مرتب‌سازی هر دسته بر اساس مبلغ وام (نزولی)
-    for (const key in allData) {
-        allData[key].sort((a, b) => b.loanAmount - a.loanAmount);
-    }
-}
-        
-        // تابع نمایش داده‌ها در جداول
-        function renderDataToTables() {
-            // جدول اول: وام‌های بالای 1000 میلیارد
-            renderTableData('table1', allData.above1000);
+    // تابع بارگذاری داده‌ها از فایل
+    async function loadData() {
+        try {
+            // نمایش لودینگ
+            document.querySelector('.loading').style.display = 'block';
             
-            // جدول دوم: وام‌های 500 تا 1000 میلیارد
-            renderTableData('table2', allData['500to1000']);
+            // بارگذاری داده‌ها از یک فایل واحد
+            const response = await fetch('data/vam.html');
+            const html = await response.text();
             
-            // جدول سوم: وام‌های 100 تا 500 میلیارد
-            renderTableData('table3', allData['100to500']);
+            // پردازش داده‌ها
+            parseHtmlData(html);
             
-            // جدول چهارم: وام‌های زیر 100 میلیارد
-            renderTableData('table4', allData.below100);
+            // مخفی کردن لودینگ
+            document.querySelector('.loading').style.display = 'none';
             
-            // فرمت‌بندی اعداد
-            document.querySelectorAll('.amount').forEach(el => {
-                const num = parseFloat(el.textContent.replace(/[^\d.]/g, ''));
-                el.textContent = formatNumber(num);
-            });
-        }
-        
-        // تابع نمایش داده‌ها در یک جدول مشخص
-        function renderTableData(tableId, data) {
-            const table = document.getElementById(tableId);
-            const tbody = table.querySelector('tbody');
-            tbody.innerHTML = '';
-            
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                
-                const nameCell = document.createElement('td');
-                nameCell.textContent = item.name;
-                
-                const idCell = document.createElement('td');
-                idCell.className = 'national-id';
-                idCell.textContent = item.nationalId;
-                
-                const amountCell = document.createElement('td');
-                amountCell.className = 'amount';
-                amountCell.textContent = item.loanAmount;
-                
-                const mobileCell = document.createElement('td');
-                mobileCell.className = 'mobile';
-                mobileCell.textContent = item.mobile;
-                
-                row.appendChild(nameCell);
-                row.appendChild(idCell);
-                row.appendChild(amountCell);
-                row.appendChild(mobileCell);
-                
-                tbody.appendChild(row);
-            });
-        }
-        
-        // تابع فرمت‌بندی اعداد
-        function formatNumber(num) {
-            return new Intl.NumberFormat('fa-IR').format(num) + ' میلیارد تومان';
-        }
-        
-        // تابع باز کردن تب‌ها
-        function openTab(evt, tabName) {
-            // مخفی کردن همه تب‌ها
-            const tabcontent = document.getElementsByClassName("tabcontent");
-            for (let i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            
-            // حذف کلاس active از همه دکمه‌های تب
-            const tablinks = document.getElementsByClassName("tablinks");
-            for (let i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            
-            // نمایش تب فعلی و اضافه کردن کلاس active به دکمه
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-            
-            // اجرای صفحه‌بندی برای جدول فعال
-            const tableId = document.getElementById(tabName).querySelector('table').id;
-            setupPagination(tableId);
-        }
-        
-        // تابع مرتب‌سازی جدول
-        function sortTable(n, tableId) {
-            const table = document.getElementById(tableId);
-            const header = table.querySelector('thead tr').children[n];
-            const tbody = table.querySelector('tbody');
-            const rows = Array.from(tbody.querySelectorAll('tr'));
-            
-            // تغییر وضعیت مرتب‌سازی
-            const isAsc = header.classList.contains('sort-asc');
-            
-            // حذف کلاس‌های مرتب‌سازی از همه هدرها
-            table.querySelectorAll('th').forEach(th => {
-                th.classList.remove('sort-asc', 'sort-desc');
-            });
-            
-            // اضافه کردن کلاس مرتب‌سازی به هدر فعلی
-            header.classList.add(isAsc ? 'sort-desc' : 'sort-asc');
-            
-            // مرتب‌سازی ردیف‌ها
-            rows.sort((a, b) => {
-                const aValue = a.children[n].textContent.trim();
-                const bValue = b.children[n].textContent.trim();
-                
-                // اگر ستون مبلغ وام است
-                if (n === 2) {
-                    const aNum = parseFloat(aValue.replace(/[^\d.]/g, ''));
-                    const bNum = parseFloat(bValue.replace(/[^\d.]/g, ''));
-                    return isAsc ? bNum - aNum : aNum - bNum;
-                }
-                
-                // برای سایر ستون‌ها
-                return isAsc ? 
-                    bValue.localeCompare(aValue, 'fa') : 
-                    aValue.localeCompare(bValue, 'fa');
-            });
-            
-            // بازسازی جدول
-            tbody.innerHTML = '';
-            rows.forEach(row => tbody.appendChild(row));
-            
-            // بروزرسانی صفحه‌بندی
-            setupPagination(tableId);
-        }
-        
-        // متغیرهای جهانی برای صفحه‌بندی
-        const rowsPerPage = 10;
-        let currentPage = 1;
-        let filteredData = {};
-        
-        // تابع راه‌اندازی صفحه‌بندی
-        function setupPagination(tableId) {
-            const table = document.getElementById(tableId);
-            const tbody = table.querySelector('tbody');
-            const rows = tbody.querySelectorAll('tr');
-            
-            // ذخیره داده‌های فیلتر شده
-            filteredData[tableId] = Array.from(rows);
-            
-            // محاسبه تعداد صفحات
-            const totalPages = Math.ceil(filteredData[tableId].length / rowsPerPage);
-            
-            // نمایش اطلاعات صفحه‌بندی
-            document.getElementById('pageInfo').textContent = `صفحه ${currentPage} از ${totalPages || 1}`;
-            
-            // بروزرسانی نوار پیشرفت
-            const progressBar = document.querySelector('.progress-bar');
-            progressBar.style.width = `${totalPages > 0 ? (currentPage / totalPages) * 100 : 100}%`;
-            
-            // ایجاد دکمه‌های صفحه‌بندی
-            const pagination = document.getElementById('pagination');
-            pagination.innerHTML = '';
-            
-            // دکمه قبلی
-            const prevButton = document.createElement('button');
-            prevButton.textContent = 'قبلی';
-            prevButton.disabled = currentPage === 1;
-            prevButton.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    showPage(tableId);
-                }
-            });
-            pagination.appendChild(prevButton);
-            
-            // دکمه‌های شماره صفحه
-            const maxButtons = 5;
-            const startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
-            const endPage = Math.min(totalPages, startPage + maxButtons - 1);
-            
-            for (let i = startPage; i <= endPage; i++) {
-                const pageButton = document.createElement('button');
-                pageButton.textContent = i;
-                pageButton.classList.toggle('active', i === currentPage);
-                pageButton.addEventListener('click', () => {
-                    currentPage = i;
-                    showPage(tableId);
-                });
-                pagination.appendChild(pageButton);
-            }
-            
-            // دکمه بعدی
-            const nextButton = document.createElement('button');
-            nextButton.textContent = 'بعدی';
-            nextButton.disabled = currentPage === totalPages || totalPages === 0;
-            nextButton.addEventListener('click', () => {
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    showPage(tableId);
-                }
-            });
-            pagination.appendChild(nextButton);
-            
-            // نمایش صفحه فعلی
-            showPage(tableId);
-        }
-        
-        // تابع نمایش صفحه
-        function showPage(tableId) {
-            const table = document.getElementById(tableId);
-            const tbody = table.querySelector('tbody');
-            const rows = filteredData[tableId];
-            
-            // محاسبه تعداد صفحات
-            const totalPages = Math.ceil(rows.length / rowsPerPage);
-            
-            // بروزرسانی اطلاعات صفحه‌بندی
-            document.getElementById('pageInfo').textContent = `صفحه ${currentPage} از ${totalPages || 1}`;
-            
-            // بروزرسانی نوار پیشرفت
-            const progressBar = document.querySelector('.progress-bar');
-            progressBar.style.width = `${totalPages > 0 ? (currentPage / totalPages) * 100 : 100}%`;
-            
-            // بروزرسانی دکمه‌های صفحه‌بندی
-            const pagination = document.getElementById('pagination');
-            const buttons = pagination.querySelectorAll('button');
-            
-            buttons[0].disabled = currentPage === 1; // دکمه قبلی
-            buttons[buttons.length - 1].disabled = currentPage === totalPages || totalPages === 0; // دکمه بعدی
-            
-            // مخفی کردن همه ردیف‌ها
-            rows.forEach(row => {
-                row.style.display = 'none';
-            });
-            
-            // نمایش ردیف‌های صفحه فعلی
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = Math.min(start + rowsPerPage, rows.length);
-            
-            for (let i = start; i < end; i++) {
-                if (rows[i]) {
-                    rows[i].style.display = '';
-                }
-            }
-        }
-        
-        // تابع جستجو در داده‌ها
-        function searchData() {
-            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-            
-            // جستجو در هر جدول
-            ['table1', 'table2', 'table3', 'table4'].forEach(tableId => {
-                const table = document.getElementById(tableId);
-                const tbody = table.querySelector('tbody');
-                const rows = tbody.querySelectorAll('tr');
-                
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(searchTerm) ? '' : 'none';
-                });
-                
-                // بروزرسانی داده‌های فیلتر شده
-                filteredData[tableId] = Array.from(rows).filter(row => 
-                    row.style.display !== 'none'
-                );
-                
-                // بروزرسانی صفحه‌بندی اگر تب فعال است
-                const tabContent = table.closest('.tabcontent');
-                if (tabContent.style.display === 'block') {
-                    currentPage = 1;
-                    setupPagination(tableId);
-                }
-            });
-        }
-        
-        // تابع فیلتر بر اساس محدوده وام
-        function filterByLoanRange() {
-            const rangeValue = document.getElementById('loanRangeFilter').value;
-            
-            // نمایش/مخفی کردن تب‌ها بر اساس فیلتر
-            const tabContents = document.querySelectorAll('.tabcontent');
-            const tabButtons = document.querySelectorAll('.tablinks');
-            
-            if (rangeValue === 'all') {
-                // نمایش همه تب‌ها
-                tabButtons.forEach(btn => btn.style.display = '');
-                
-                // نمایش تب فعال
-                let activeTabFound = false;
-                tabContents.forEach((tab, index) => {
-                    if (tabButtons[index].classList.contains('active')) {
-                        tab.style.display = 'block';
-                        activeTabFound = true;
-                    } else {
-                        tab.style.display = 'none';
-                    }
-                });
-                
-                // اگر هیچ تبی فعال نیست، تب اول را فعال کن
-                if (!activeTabFound) {
-                    tabContents[0].style.display = 'block';
-                    tabButtons[0].classList.add('active');
-                    setupPagination('table1');
-                }
-            } else {
-                // مخفی کردن همه تب‌ها
-                tabContents.forEach(tab => tab.style.display = 'none');
-                tabButtons.forEach(btn => {
-                    btn.classList.remove('active');
-                    btn.style.display = 'none';
-                });
-                
-                // نمایش تب مربوطه
-                let tableId = '';
-                let tabId = '';
-                
-                switch (rangeValue) {
-                    case 'above1000':
-                        tableId = 'table1';
-                        tabId = 'tab1';
-                        tabButtons[0].style.display = '';
-                        tabButtons[0].classList.add('active');
-                        break;
-                    case '500to1000':
-                        tableId = 'table2';
-                        tabId = 'tab2';
-                        tabButtons[1].style.display = '';
-                        tabButtons[1].classList.add('active');
-                        break;
-                    case '100to500':
-                        tableId = 'table3';
-                        tabId = 'tab3';
-                        tabButtons[2].style.display = '';
-                        tabButtons[2].classList.add('active');
-                        break;
-                    case 'below100':
-                        tableId = 'table4';
-                        tabId = 'tab4';
-                        tabButtons[3].style.display = '';
-                        tabButtons[3].classList.add('active');
-                        break;
-                }
-                
+            // نمایش تب فعال
+            const activeTab = document.querySelector('.tablinks.active');
+            if (activeTab) {
+                const tabId = activeTab.getAttribute('onclick').match(/openTab\(event, '(.+?)'\)/)[1];
                 document.getElementById(tabId).style.display = 'block';
-                currentPage = 1;
-                setupPagination(tableId);
-            }
-        }
-        
-        // تابع مرتب‌سازی بر اساس فیلتر
-        function sortByFilter() {
-            const sortValue = document.getElementById('sortFilter').value;
-            const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
-            
-            if (!activeTab) return;
-            
-            const tableId = activeTab.querySelector('table').id;
-            const table = document.getElementById(tableId);
-            const tbody = table.querySelector('tbody');
-            const rows = Array.from(tbody.querySelectorAll('tr'));
-            
-            // مرتب‌سازی ردیف‌ها
-            rows.sort((a, b) => {
-                switch (sortValue) {
-                    case 'loan-desc':
-                        const aAmount1 = parseFloat(a.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
-                        const bAmount1 = parseFloat(b.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
-                        return bAmount1 - aAmount1;
-                    
-                    case 'loan-asc':
-                        const aAmount2 = parseFloat(a.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
-                        const bAmount2 = parseFloat(b.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
-                        return aAmount2 - bAmount2;
-                    
-                    case 'name-asc':
-                        const aName1 = a.querySelector('td').textContent.trim();
-                        const bName1 = b.querySelector('td').textContent.trim();
-                        return aName1.localeCompare(bName1, 'fa');
-                    
-                    case 'name-desc':
-                        const aName2 = a.querySelector('td').textContent.trim();
-                        const bName2 = b.querySelector('td').textContent.trim();
-                        return bName2.localeCompare(aName2, 'fa');
-                    
-                    default:
-                        return 0;
-                }
-            });
-            
-            // بازسازی جدول
-            tbody.innerHTML = '';
-            rows.forEach(row => tbody.appendChild(row));
-            
-            // بروزرسانی صفحه‌بندی
-            filteredData[tableId] = rows;
-            currentPage = 1;
-            setupPagination(tableId);
-        }
-        
-        // تابع بررسی حالت نمایش موبایل
-        function checkMobileView() {
-            if (window.innerWidth <= 576) {
-                setupMobileViewToggle();
-            }
-        }
-        
-        // تابع راه‌اندازی تغییر حالت نمایش برای موبایل
-        function setupMobileViewToggle() {
-            const tableViewBtn = document.getElementById('tableView');
-            const cardViewBtn = document.getElementById('cardView');
-            const tabContainer = document.querySelector('.tab-container');
-            
-            // حالت نمایش جدولی
-            tableViewBtn.addEventListener('click', function() {
-                tableViewBtn.classList.add('active');
-                cardViewBtn.classList.remove('active');
-                tabContainer.classList.remove('mobile-view');
-                
-                // حذف نمایش کارتی
-                document.querySelectorAll('.card-container').forEach(container => {
-                    container.remove();
-                });
-                
-                // نمایش جداول
-                document.querySelectorAll('.table-container').forEach(container => {
-                    container.style.display = '';
-                });
-            });
-            
-            // حالت نمایش کارتی
-            cardViewBtn.addEventListener('click', function() {
-                cardViewBtn.classList.add('active');
-                tableViewBtn.classList.remove('active');
-                tabContainer.classList.add('mobile-view');
-                
-                // تبدیل جداول به کارت‌ها
-                convertTablesToCards();
-            });
-        }
-        
-        // تابع تبدیل جداول به کارت‌ها
-        function convertTablesToCards() {
-            const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
-            if (!activeTab) return;
-            
-            const tableContainer = activeTab.querySelector('.table-container');
-            const table = tableContainer.querySelector('table');
-            const rows = table.querySelectorAll('tbody tr');
-            
-            // مخفی کردن جدول
-            tableContainer.style.display = 'none';
-            
-            // حذف کارت‌های قبلی
-            const existingCardContainer = activeTab.querySelector('.card-container');
-            if (existingCardContainer) {
-                existingCardContainer.remove();
-            }
-            
-            // ایجاد کانتینر کارت‌ها
-            const cardContainer = document.createElement('div');
-            cardContainer.className = 'card-container';
-            
-            // تبدیل هر ردیف به یک کارت
-            rows.forEach(row => {
-                if (row.style.display === 'none') return;
-                
-                const cells = row.querySelectorAll('td');
-                
-                const card = document.createElement('div');
-                card.className = 'data-card';
-                
-                // نام مشتری
-                const nameItem = document.createElement('div');
-                nameItem.className = 'card-item';
-                
-                const nameLabel = document.createElement('div');
-                nameLabel.className = 'card-label';
-                nameLabel.textContent = 'نام مشتری';
-                
-                const nameValue = document.createElement('div');
-                nameValue.className = 'card-value';
-                nameValue.textContent = cells[0].textContent;
-                
-                nameItem.appendChild(nameLabel);
-                nameItem.appendChild(nameValue);
-                card.appendChild(nameItem);
-                
-                // کد ملی
-                const idItem = document.createElement('div');
-                idItem.className = 'card-item';
-                
-                const idLabel = document.createElement('div');
-                idLabel.className = 'card-label';
-                idLabel.textContent = 'کد ملی';
-                
-                const idValue = document.createElement('div');
-                idValue.className = 'card-value card-id';
-                idValue.textContent = cells[1].textContent;
-                
-                idItem.appendChild(idLabel);
-                idItem.appendChild(idValue);
-                card.appendChild(idItem);
-                
-                // مجموع وام
-                const amountItem = document.createElement('div');
-                amountItem.className = 'card-item';
-                
-                const amountLabel = document.createElement('div');
-                amountLabel.className = 'card-label';
-                amountLabel.textContent = 'مجموع وام دریافتی';
-                
-                const amountValue = document.createElement('div');
-                amountValue.className = 'card-value card-amount';
-                amountValue.textContent = cells[2].textContent;
-                
-                amountItem.appendChild(amountLabel);
-                amountItem.appendChild(amountValue);
-                card.appendChild(amountItem);
-                
-                // شماره موبایل
-                const mobileItem = document.createElement('div');
-                mobileItem.className = 'card-item';
-                
-                const mobileLabel = document.createElement('div');
-                mobileLabel.className = 'card-label';
-                mobileLabel.textContent = 'شماره موبایل';
-                
-                const mobileValue = document.createElement('div');
-                mobileValue.className = 'card-value card-mobile';
-                mobileValue.textContent = cells[3].textContent;
-                
-                mobileItem.appendChild(mobileLabel);
-                mobileItem.appendChild(mobileValue);
-                card.appendChild(mobileItem);
-                
-                cardContainer.appendChild(card);
-            });
-            
-            // اضافه کردن کارت‌ها به تب فعال
-            activeTab.appendChild(cardContainer);
-        }
-        
-        // اضافه کردن رویدادها
-        document.addEventListener('DOMContentLoaded', function() {
-            // بارگذاری داده‌ها
-            loadData();
-            
-            // رویداد جستجو
-            document.getElementById('searchInput').addEventListener('input', searchData);
-            
-            // رویداد فیلتر محدوده وام
-            document.getElementById('loanRangeFilter').addEventListener('change', filterByLoanRange);
-            
-            // رویداد مرتب‌سازی
-            document.getElementById('sortFilter').addEventListener('change', sortByFilter);
-            
-            // رویداد تغییر تم
-            document.getElementById('themeToggle').addEventListener('click', function() {
-                const body = document.body;
-                const icon = this.querySelector('.material-icons');
-                
-                if (body.getAttribute('data-theme') === 'dark') {
-                    body.removeAttribute('data-theme');
-                    icon.textContent = 'dark_mode';
-                    localStorage.setItem('theme', 'light');
-                } else {
-                    body.setAttribute('data-theme', 'dark');
-                    icon.textContent = 'light_mode';
-                    localStorage.setItem('theme', 'dark');
-                }
-            });
-            
-            // بررسی تم ذخیره شده
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.setAttribute('data-theme', 'dark');
-                document.querySelector('.theme-toggle .material-icons').textContent = 'light_mode';
             }
             
             // بررسی حالت نمایش موبایل
-            checkMobileView();
-            
-            // رویداد تغییر اندازه صفحه
-            window.addEventListener('resize', checkMobileView);
+            if (window.innerWidth <= 576 && document.getElementById('cardView').classList.contains('active')) {
+                convertTablesToCards();
+            }
+        } catch (error) {
+            console.error('خطا در بارگذاری داده‌ها:', error);
+            document.querySelector('.loading').style.display = 'none';
+            alert('خطا در بارگذاری داده‌ها. لطفاً صفحه را مجدداً بارگذاری کنید.');
+        }
+    }
+    
+    // تابع پردازش داده‌های HTML
+    function parseHtmlData(html) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const rows = doc.querySelectorAll('table tbody tr');
+        
+        // پاک کردن داده‌های قبلی
+        allData = {
+            'all': [],
+            'above1000': [],
+            '500to1000': [],
+            '100to500': [],
+            'below100': []
+        };
+        
+        // پردازش هر ردیف و تقسیم‌بندی داده‌ها
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 4) {
+                const name = cells[0].textContent.trim();
+                const nationalId = cells[1].textContent.trim();
+                const loanAmount = parseFloat(cells[2].textContent.replace(/[^\d.]/g, ''));
+                const mobile = cells[3].textContent.trim();
+                
+                // ایجاد ردیف جدید
+                const newRow = document.createElement('tr');
+                
+                // نام مشتری
+                const nameCell = document.createElement('td');
+                nameCell.textContent = name;
+                newRow.appendChild(nameCell);
+                
+                // کد ملی
+                const idCell = document.createElement('td');
+                idCell.className = 'national-id';
+                idCell.textContent = nationalId;
+                newRow.appendChild(idCell);
+                
+                // مبلغ وام
+                const amountCell = document.createElement('td');
+                amountCell.className = 'amount';
+                amountCell.textContent = formatCurrency(loanAmount);
+                newRow.appendChild(amountCell);
+                
+                // شماره موبایل
+                const mobileCell = document.createElement('td');
+                mobileCell.className = 'mobile';
+                mobileCell.textContent = mobile;
+                newRow.appendChild(mobileCell);
+                
+                // اضافه کردن به همه داده‌ها
+                allData['all'].push(newRow.cloneNode(true));
+                
+                // دسته‌بندی بر اساس مبلغ وام
+                if (loanAmount > 1000) {
+                    allData['above1000'].push(newRow.cloneNode(true));
+                } else if (loanAmount >= 500) {
+                    allData['500to1000'].push(newRow.cloneNode(true));
+                } else if (loanAmount >= 100) {
+                    allData['100to500'].push(newRow.cloneNode(true));
+                } else {
+                    allData['below100'].push(newRow.cloneNode(true));
+                }
+            }
         });
-    </script>
+        
+        // نمایش داده‌ها در جداول
+        displayDataInTables();
+    }
+    
+    // تابع نمایش داده‌ها در جداول
+    function displayDataInTables() {
+        // نمایش همه داده‌ها
+        displayTableData('table0', allData['all']);
+        
+        // نمایش داده‌های دسته‌بندی شده
+        displayTableData('table1', allData['above1000']);
+        displayTableData('table2', allData['500to1000']);
+        displayTableData('table3', allData['100to500']);
+        displayTableData('table4', allData['below100']);
+        
+        // ذخیره داده‌های فیلتر شده برای صفحه‌بندی
+        filteredData = {
+            'table0': [...allData['all']],
+            'table1': [...allData['above1000']],
+            'table2': [...allData['500to1000']],
+            'table3': [...allData['100to500']],
+            'table4': [...allData['below100']]
+        };
+        
+        // راه‌اندازی صفحه‌بندی برای همه جداول
+        setupPagination('table0');
+        setupPagination('table1');
+        setupPagination('table2');
+        setupPagination('table3');
+        setupPagination('table4');
+    }
+    
+    // تابع نمایش داده‌ها در یک جدول
+    function displayTableData(tableId, data) {
+        const tbody = document.querySelector(`#${tableId} tbody`);
+        tbody.innerHTML = '';
+        
+        data.forEach(row => {
+            tbody.appendChild(row.cloneNode(true));
+        });
+    }
+    
+    // تابع فرمت‌کردن اعداد به صورت پول
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('fa-IR', {
+            style: 'decimal',
+            maximumFractionDigits: 0
+        }).format(amount) + ' میلیارد تومان';
+    }
+    
+    // متغیرهای صفحه‌بندی
+    let rowsPerPage = 10;
+    let currentPage = 1;
+    let filteredData = {};
+    
+    // تابع راه‌اندازی صفحه‌بندی
+    function setupPagination(tableId) {
+        const data = filteredData[tableId];
+        if (!data) return;
+        
+        const totalPages = Math.ceil(data.length / rowsPerPage);
+        const paginationDiv = document.getElementById('pagination');
+        const pageInfoDiv = document.getElementById('pageInfo');
+        const progressBar = document.querySelector('.progress-bar');
+        
+        // نمایش اطلاعات صفحه
+        pageInfoDiv.textContent = `صفحه ${currentPage} از ${totalPages}`;
+        
+        // تنظیم نوار پیشرفت
+        const progress = (currentPage / totalPages) * 100;
+        progressBar.style.width = `${progress}%`;
+        
+        // ایجاد دکمه‌های صفحه‌بندی
+        paginationDiv.innerHTML = '';
+        
+        // دکمه قبلی
+        const prevButton = document.createElement('button');
+        prevButton.textContent = 'قبلی';
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(tableId, currentPage);
+                setupPagination(tableId);
+            }
+        });
+        paginationDiv.appendChild(prevButton);
+        
+        // دکمه‌های شماره صفحه
+        const maxButtons = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+        let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+        
+        if (endPage - startPage + 1 < maxButtons) {
+            startPage = Math.max(1, endPage - maxButtons + 1);
+        }
+        
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            pageButton.classList.toggle('active', i === currentPage);
+            pageButton.addEventListener('click', () => {
+                currentPage = i;
+                showPage(tableId, currentPage);
+                setupPagination(tableId);
+            });
+            paginationDiv.appendChild(pageButton);
+        }
+        
+        // دکمه بعدی
+        const nextButton = document.createElement('button');
+        nextButton.textContent = 'بعدی';
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                showPage(tableId, currentPage);
+                setupPagination(tableId);
+            }
+        });
+        paginationDiv.appendChild(nextButton);
+        
+        // نمایش صفحه فعلی
+        showPage(tableId, currentPage);
+    }
+    
+    // تابع نمایش صفحه
+    function showPage(tableId, page) {
+        const data = filteredData[tableId];
+        if (!data) return;
+        
+        const tbody = document.querySelector(`#${tableId} tbody`);
+        tbody.innerHTML = '';
+        
+        const startIndex = (page - 1) * rowsPerPage;
+        const endIndex = Math.min(startIndex + rowsPerPage, data.length);
+        
+        for (let i = startIndex; i < endIndex; i++) {
+            tbody.appendChild(data[i].cloneNode(true));
+        }
+        
+        // بررسی حالت نمایش موبایل
+        if (window.innerWidth <= 576 && document.getElementById('cardView').classList.contains('active')) {
+            convertTablesToCards();
+        }
+    }
+    
+    // تابع باز کردن تب
+    function openTab(event, tabId) {
+        // مخفی کردن همه تب‌ها
+        const tabcontent = document.getElementsByClassName('tabcontent');
+        for (let i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = 'none';
+        }
+        
+        // حذف کلاس active از همه دکمه‌های تب
+        const tablinks = document.getElementsByClassName('tablinks');
+        for (let i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(' active', '');
+        }
+        
+        // نمایش تب فعال و اضافه کردن کلاس active به دکمه
+        document.getElementById(tabId).style.display = 'block';
+        event.currentTarget.className += ' active';
+        
+        // تنظیم صفحه‌بندی برای تب فعال
+        const tableId = 'table' + tabId.replace('tab', '');
+        currentPage = 1;
+        setupPagination(tableId);
+        
+        // بررسی حالت نمایش موبایل
+        if (window.innerWidth <= 576 && document.getElementById('cardView').classList.contains('active')) {
+            convertTablesToCards();
+        }
+    }
+    
+    // تابع مرتب‌سازی جدول
+    function sortTable(columnIndex, tableId) {
+        const table = document.getElementById(tableId);
+        const headers = table.querySelectorAll('th');
+        
+        // حذف کلاس‌های مرتب‌سازی قبلی
+        headers.forEach(header => {
+            header.classList.remove('sort-asc', 'sort-desc');
+        });
+        
+        // تعیین جهت مرتب‌سازی
+        const currentHeader = headers[columnIndex];
+        const isAscending = !currentHeader.classList.contains('sort-asc');
+        
+        // اضافه کردن کلاس مرتب‌سازی
+        currentHeader.classList.add(isAscending ? 'sort-asc' : 'sort-desc');
+        
+        // مرتب‌سازی داده‌ها
+        const rows = Array.from(filteredData[tableId]);
+        rows.sort((a, b) => {
+            let aValue = a.cells[columnIndex].textContent.trim();
+            let bValue = b.cells[columnIndex].textContent.trim();
+            
+            // اگر ستون مبلغ وام است، به عدد تبدیل شود
+            if (columnIndex === 2) {
+                aValue = parseFloat(aValue.replace(/[^\d.]/g, ''));
+                bValue = parseFloat(bValue.replace(/[^\d.]/g, ''));
+                return isAscending ? aValue - bValue : bValue - aValue;
+            }
+            
+            // مرتب‌سازی متنی
+            return isAscending ? 
+                aValue.localeCompare(bValue, 'fa') : 
+                bValue.localeCompare(aValue, 'fa');
+        });
+        
+        // بروزرسانی داده‌های فیلتر شده
+        filteredData[tableId] = rows;
+        
+        // نمایش صفحه اول
+        currentPage = 1;
+        showPage(tableId, currentPage);
+        setupPagination(tableId);
+    }
+    
+    // تابع جستجو در داده‌ها
+    function searchData() {
+        const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+        
+        // جستجو در هر جدول
+        Object.keys(allData).forEach(key => {
+            const tableId = key === 'all' ? 'table0' : 
+                            key === 'above1000' ? 'table1' : 
+                            key === '500to1000' ? 'table2' : 
+                            key === '100to500' ? 'table3' : 'table4';
+            
+            // فیلتر کردن داده‌ها
+            filteredData[tableId] = allData[key].filter(row => {
+                const name = row.cells[0].textContent.toLowerCase();
+                const nationalId = row.cells[1].textContent;
+                const amount = row.cells[2].textContent;
+                const mobile = row.cells[3].textContent;
+                
+                return name.includes(searchTerm) || 
+                       nationalId.includes(searchTerm) || 
+                       amount.includes(searchTerm) || 
+                       mobile.includes(searchTerm);
+            });
+            
+            // بروزرسانی صفحه‌بندی
+            currentPage = 1;
+            setupPagination(tableId);
+        });
+        
+        // بررسی حالت نمایش موبایل
+        if (window.innerWidth <= 576 && document.getElementById('cardView').classList.contains('active')) {
+            convertTablesToCards();
+        }
+    }
+    
+    // تابع فیلتر بر اساس محدوده وام
+    function filterByLoanRange() {
+        const selectedRange = document.getElementById('loanRangeFilter').value;
+        
+        // تغییر تب فعال بر اساس محدوده انتخاب شده
+        const tabLinks = document.querySelectorAll('.tablinks');
+        const tabIndex = selectedRange === 'all' ? 0 : 
+                        selectedRange === 'above1000' ? 1 : 
+                        selectedRange === '500to1000' ? 2 : 
+                        selectedRange === '100to500' ? 3 : 4;
+        
+        // شبیه‌سازی کلیک روی تب
+        tabLinks[tabIndex].click();
+    }
+    
+    // تابع مرتب‌سازی بر اساس فیلتر
+    function sortByFilter() {
+        const selectedSort = document.getElementById('sortFilter').value;
+        const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
+        if (!activeTab) return;
+        
+        const tableId = activeTab.querySelector('table').id;
+        const tbody = activeTab.querySelector('tbody');
+        const rows = Array.from(filteredData[tableId]);
+        
+        // مرتب‌سازی بر اساس فیلتر انتخاب شده
+        rows.sort((a, b) => {
+            switch (selectedSort) {
+                case 'loan-desc':
+                    const aAmount1 = parseFloat(a.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
+                    const bAmount1 = parseFloat(b.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
+                    return bAmount1 - aAmount1;
+                
+                case 'loan-asc':
+                    const aAmount2 = parseFloat(a.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
+                    const bAmount2 = parseFloat(b.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
+                    return aAmount2 - bAmount2;
+                
+                case 'name-asc':
+                    const aName1 = a.querySelector('td').textContent.trim();
+                    const bName1 = b.querySelector('td').textContent.trim();
+                    return aName1.localeCompare(bName1, 'fa');
+                
+                case 'name-desc':
+                    const aName2 = a.querySelector('td').textContent.trim();
+                    const bName2 = b.querySelector('td').textContent.trim();
+                    return bName2.localeCompare(aName2, 'fa');
+                
+                default:
+                    return 0;
+            }
+        });
+        
+        // بازسازی جدول
+        tbody.innerHTML = '';
+        rows.forEach(row => tbody.appendChild(row));
+        
+        // بروزرسانی صفحه‌بندی
+        filteredData[tableId] = rows;
+        currentPage = 1;
+        setupPagination(tableId);
+    }
+    
+    // تابع بررسی حالت نمایش موبایل
+    function checkMobileView() {
+        if (window.innerWidth <= 576) {
+            setupMobileViewToggle();
+        }
+    }
+    
+    // تابع راه‌اندازی تغییر حالت نمایش برای موبایل
+    function setupMobileViewToggle() {
+        const tableViewBtn = document.getElementById('tableView');
+        const cardViewBtn = document.getElementById('cardView');
+        const tabContainer = document.querySelector('.tab-container');
+        
+        // حالت نمایش جدولی
+        tableViewBtn.addEventListener('click', function() {
+            tableViewBtn.classList.add('active');
+            cardViewBtn.classList.remove('active');
+            tabContainer.classList.remove('mobile-view');
+            
+            // حذف نمایش کارتی
+            document.querySelectorAll('.card-container').forEach(container => {
+                container.remove();
+            });
+            
+            // نمایش جداول
+            document.querySelectorAll('.table-container').forEach(container => {
+                container.style.display = '';
+            });
+        });
+        
+        // حالت نمایش کارتی
+        cardViewBtn.addEventListener('click', function() {
+            cardViewBtn.classList.add('active');
+            tableViewBtn.classList.remove('active');
+            tabContainer.classList.add('mobile-view');
+            
+            // تبدیل جداول به کارت‌ها
+            convertTablesToCards();
+        });
+    }
+    
+    // تابع تبدیل جداول به کارت‌ها
+    function convertTablesToCards() {
+        const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
+        if (!activeTab) return;
+        
+        const tableContainer = activeTab.querySelector('.table-container');
+        const table = tableContainer.querySelector('table');
+        const rows = table.querySelectorAll('tbody tr');
+        
+        // مخفی کردن جدول
+        tableContainer.style.display = 'none';
+        
+        // حذف کارت‌های قبلی
+        const existingCardContainer = activeTab.querySelector('.card-container');
+        if (existingCardContainer) {
+            existingCardContainer.remove();
+        }
+        
+        // ایجاد کانتینر کارت‌ها
+        const cardContainer = document.createElement('div');
+        cardContainer.className = 'card-container';
+        
+        // تبدیل هر ردیف به یک کارت
+        rows.forEach(row => {
+            if (row.style.display === 'none') return;
+            
+            const cells = row.querySelectorAll('td');
+            
+            const card = document.createElement('div');
+            card.className = 'data-card';
+            
+            // نام مشتری
+            const nameItem = document.createElement('div');
+            nameItem.className = 'card-item';
+            
+            const nameLabel = document.createElement('div');
+            nameLabel.className = 'card-label';
+            nameLabel.textContent = 'نام مشتری';
+            
+            const nameValue = document.createElement('div');
+            nameValue.className = 'card-value';
+            nameValue.textContent = cells[0].textContent;
+            
+            nameItem.appendChild(nameLabel);
+            nameItem.appendChild(nameValue);
+            card.appendChild(nameItem);
+            
+            // کد ملی
+            const idItem = document.createElement('div');
+            idItem.className = 'card-item';
+            
+            const idLabel = document.createElement('div');
+            idLabel.className = 'card-label';
+            idLabel.textContent = 'کد ملی';
+            
+            const idValue = document.createElement('div');
+            idValue.className = 'card-value card-id';
+            idValue.textContent = cells[1].textContent;
+            
+            idItem.appendChild(idLabel);
+            idItem.appendChild(idValue);
+            card.appendChild(idItem);
+            
+            // مجموع وام
+            const amountItem = document.createElement('div');
+            amountItem.className = 'card-item';
+            
+            const amountLabel = document.createElement('div');
+            amountLabel.className = 'card-label';
+            amountLabel.textContent = 'مجموع وام دریافتی';
+            
+            const amountValue = document.createElement('div');
+            amountValue.className = 'card-value card-amount';
+            amountValue.textContent = cells[2].textContent;
+            
+            amountItem.appendChild(amountLabel);
+            amountItem.appendChild(amountValue);
+            card.appendChild(amountItem);
+            
+            // شماره موبایل
+            const mobileItem = document.createElement('div');
+            mobileItem.className = 'card-item';
+            
+            const mobileLabel = document.createElement('div');
+            mobileLabel.className = 'card-label';
+            mobileLabel.textContent = 'شماره موبایل';
+            
+            const mobileValue = document.createElement('div');
+            mobileValue.className = 'card-value card-mobile';
+            mobileValue.textContent = cells[3].textContent;
+            
+            mobileItem.appendChild(mobileLabel);
+            mobileItem.appendChild(mobileValue);
+            card.appendChild(mobileItem);
+            
+            cardContainer.appendChild(card);
+        });
+        
+        // اضافه کردن کارت‌ها به تب فعال
+        activeTab.appendChild(cardContainer);
+    }
+    
+    // اضافه کردن رویدادها
+    document.addEventListener('DOMContentLoaded', function() {
+        // بارگذاری داده‌ها
+        loadData();
+        
+        // رویداد جستجو
+        document.getElementById('searchInput').addEventListener('input', searchData);
+        
+        // رویداد فیلتر محدوده وام
+        document.getElementById('loanRangeFilter').addEventListener('change', filterByLoanRange);
+        
+        // رویداد مرتب‌سازی
+        document.getElementById('sortFilter').addEventListener('change', sortByFilter);
+        
+        // رویداد تغییر تم
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            const body = document.body;
+            const icon = this.querySelector('.material-icons');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                icon.textContent = 'dark_mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.textContent = 'light_mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+        
+        // بررسی تم ذخیره شده
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            document.querySelector('.theme-toggle .material-icons').textContent = 'light_mode';
+        }
+        
+        // بررسی حالت نمایش موبایل
+        checkMobileView();
+        
+        // رویداد تغییر اندازه صفحه
+        window.addEventListener('resize', checkMobileView);
+    });
+</script>
 </body>
 </html>
