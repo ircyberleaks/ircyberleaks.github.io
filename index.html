@@ -7,7 +7,7 @@
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@YourTwitterHandle">
+    <meta name="twitter:site" content="@rahbarusd">
     <meta name="twitter:title" content="داده‌های هک شده بانک سپه">
     <meta name="twitter:description" content="اطلاعات وام‌های کلان بانک سپه که از طریق هک به دست آمده‌اند و صرفاً برای اهداف آموزشی نمایش داده می‌شوند.">
     <meta name="twitter:image" content="images/bank-data-preview.jpg">
@@ -732,74 +732,99 @@
             'below100': []
         };
         
-        // تابع بارگذاری داده‌ها از فایل‌های خارجی
-        async function loadData() {
-            document.querySelector('.loading').style.display = 'block';
-            
-            try {
-                // بارگذاری داده‌ها از فایل‌های مختلف
-                const response1 = await fetch('data/1000.html');
-                const response2 = await fetch('data/500.html');
-                const response3 = await fetch('data/100.html');
-                const response4 = await fetch('data/below100.html');
-                
-                if (!response1.ok || !response2.ok || !response3.ok || !response4.ok) {
-                    throw new Error('خطا در بارگذاری داده‌ها');
-                }
-                
-                const html1 = await response1.text();
-                const html2 = await response2.text();
-                const html3 = await response3.text();
-                const html4 = await response4.text();
-                
-                // تبدیل HTML به داده‌های قابل استفاده
-                allData.above1000 = parseHtmlData(html1);
-                allData['500to1000'] = parseHtmlData(html2);
-                allData['100to500'] = parseHtmlData(html3);
-                allData.below100 = parseHtmlData(html4);
-                
-                // نمایش داده‌ها در جداول
-                renderDataToTables();
-                
-                // اجرای صفحه‌بندی برای جدول فعال
-                const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
-                if (activeTab) {
-                    const tableId = activeTab.querySelector('table').id;
-                    setupPagination(tableId);
-                }
-                
-                // بررسی حالت نمایش موبایل
-                checkMobileView();
-                
-            } catch (error) {
-                console.error('خطا در بارگذاری داده‌ها:', error);
-                alert('خطا در بارگذاری داده‌ها. لطفاً صفحه را دوباره بارگذاری کنید.');
-            } finally {
-                document.querySelector('.loading').style.display = 'none';
-            }
+// تابع بارگذاری داده‌ها از فایل‌های خارجی
+async function loadData() {
+    document.querySelector('.loading').style.display = 'block';
+    
+    try {
+        // بارگذاری داده‌ها از یک فایل واحد
+        const response = await fetch('data/vam.html');
+        
+        if (!response.ok) {
+            throw new Error('خطا در بارگذاری داده‌ها');
         }
         
-        // تابع تجزیه HTML و استخراج داده‌ها
-        function parseHtmlData(html) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const rows = doc.querySelectorAll('tbody tr');
-            
-            const data = [];
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (cells.length >= 4) {
-                    data.push({
-                        name: cells[0].textContent.trim(),
-                        nationalId: cells[1].textContent.trim(),
-                        loanAmount: cells[2].textContent.trim(),
-                        mobile: cells[3].textContent.trim()
-                    });
-                }
-            });
-            
-            return data;
+        const html = await response.text();
+        
+        // تجزیه HTML و استخراج همه داده‌ها
+        const allDataArray = parseHtmlData(html);
+        
+        // دسته‌بندی داده‌ها بر اساس مبلغ وام
+        categorizeData(allDataArray);
+        
+        // نمایش داده‌ها در جداول
+        renderDataToTables();
+        
+        // اجرای صفحه‌بندی برای جدول فعال
+        const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
+        if (activeTab) {
+            const tableId = activeTab.querySelector('table').id;
+            setupPagination(tableId);
         }
+        
+        // بررسی حالت نمایش موبایل
+        checkMobileView();
+        
+    } catch (error) {
+        console.error('خطا در بارگذاری داده‌ها:', error);
+        alert('خطا در بارگذاری داده‌ها. لطفاً صفحه را دوباره بارگذاری کنید.');
+    } finally {
+        document.querySelector('.loading').style.display = 'none';
+    }
+}
+
+// تابع تجزیه HTML و استخراج داده‌ها
+function parseHtmlData(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const rows = doc.querySelectorAll('tbody tr');
+    
+    const data = [];
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 4) {
+            data.push({
+                name: cells[0].textContent.trim(),
+                nationalId: cells[1].textContent.trim(),
+                loanAmount: parseFloat(cells[2].textContent.trim().replace(/[^\d.]/g, '')),
+                mobile: cells[3].textContent.trim()
+            });
+        }
+    });
+    
+    return data;
+}
+
+// تابع دسته‌بندی داده‌ها بر اساس مبلغ وام
+function categorizeData(dataArray) {
+    // خالی کردن داده‌های قبلی
+    allData = {
+        'above1000': [],
+        '500to1000': [],
+        '100to500': [],
+        'below100': []
+    };
+    
+    // دسته‌بندی داده‌ها بر اساس مبلغ وام
+    dataArray.forEach(item => {
+        const amount = item.loanAmount;
+        
+        if (amount >= 1000) {
+            allData.above1000.push(item);
+        } else if (amount >= 500) {
+            allData['500to1000'].push(item);
+        } else if (amount >= 100) {
+            allData['100to500'].push(item);
+        } else {
+            allData.below100.push(item);
+        }
+    });
+    
+    // مرتب‌سازی هر دسته بر اساس مبلغ وام (نزولی)
+    for (const key in allData) {
+        allData[key].sort((a, b) => b.loanAmount - a.loanAmount);
+    }
+}
         
         // تابع نمایش داده‌ها در جداول
         function renderDataToTables() {
