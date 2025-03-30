@@ -139,6 +139,14 @@
       width: 100%;
     }
 
+    /* منوی موبایل */
+    .mobile-menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      color: var(--text-light);
+      cursor: pointer;
+    }
+
     /* هیرو پیشرفته */
     .hero {
       min-height: 100vh;
@@ -248,10 +256,6 @@
       transition: opacity 0.4s ease;
     }
 
-    .hero-btn:hover::before {
-      opacity: 1;
-    }
-
     .hero-btn span {
       position: relative;
       z-index: 1;
@@ -261,6 +265,10 @@
       position: relative;
       z-index: 1;
       transition: transform 0.3s ease;
+    }
+
+    .hero-btn:hover::before {
+      opacity: 1;
     }
 
     .hero-btn:hover {
@@ -771,14 +779,53 @@
       .leaks-grid {
         grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       }
+      .about-features {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
     }
 
     @media (max-width: 992px) {
       .hero-content h1 { font-size: 4rem; }
       .section-title { font-size: 2.8rem; }
-      .nav-links { display: none; }
+      .nav-links { 
+        display: none; 
+      }
+      .mobile-menu-toggle {
+        display: block;
+      }
       .leaks-grid {
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      }
+      .about-text p {
+        font-size: 1.2rem;
+      }
+      .feature-item {
+        padding: 2rem;
+      }
+      
+      /* منوی موبایل */
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        height: 100vh;
+        background: var(--dark-light);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        transition: right 0.3s ease;
+        z-index: 1001;
+        box-shadow: -5px 0 30px rgba(0,0,0,0.5);
+      }
+      
+      .nav-links.active {
+        right: 0;
+      }
+      
+      .nav-links a {
+        font-size: 1.3rem;
       }
     }
 
@@ -793,11 +840,17 @@
         gap: 1rem; 
         text-align: center; 
       }
-      .leaks-section {
+      .leaks-section, .about-section {
         padding: 6rem 1.5rem;
       }
-      .about-section {
-        padding: 6rem 1.5rem;
+      .about-text p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+      }
+      .feature-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 1.7rem;
       }
     }
 
@@ -813,6 +866,39 @@
       .footer-social { justify-content: center; }
       .about-features {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .feature-item {
+        padding: 1.5rem;
+      }
+      .feature-text h3 {
+        font-size: 1.3rem;
+      }
+      .feature-text p {
+        font-size: 1rem;
+      }
+      footer {
+        padding: 3rem 1.5rem;
+      }
+    }
+
+    /* برای دستگاه‌های خیلی کوچک */
+    @media (max-width: 400px) {
+      .hero-content h1 { font-size: 2rem; }
+      .hero-badge { font-size: 0.8rem; }
+      .hero-btn { 
+        padding: 0.8rem 1.5rem; 
+        font-size: 1rem; 
+      }
+      .card-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+      }
+      .feature-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
       }
     }
   </style>
@@ -834,6 +920,9 @@
       <a href="#about">درباره ما</a>
       <a href="#contact">تماس</a>
     </nav>
+    <div class="mobile-menu-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
   </header>
 
   <section class="hero">
@@ -854,171 +943,186 @@
     <p class="section-description">مجموعه‌ای از مهم‌ترین داده‌های افشا شده که توسط تیم سایبرلیکس جمع‌آوری و منتشر شده‌اند. این اطلاعات با هدف افزایش شفافیت و آگاهی عمومی در دسترس قرار گرفته‌اند.</p>
     
     <div class="leaks-grid">
-        <div class="leak-card">
-          <div class="leak-card-image">
-            <div class="leak-card-badge">تازه منتشر شده</div>
-            <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="بانک سپه">
-          </div>
-          <div class="card-details">
-            <h3>بانک سپه</h3>
-            <p>اطلاعات جامع حساب‌های بانکی، وام‌های کلان، و تراکنش‌های حساس بیش از 30 میلیون مشتری. این داده‌ها شامل جزئیات وام‌های میلیاردی پرداخت شده به افراد خاص و شرکت‌های وابسته است.</p>
-            <div class="card-meta">
-              <span><i class="fas fa-database"></i> 10TB</span>
-              <span><i class="fas fa-calendar-alt"></i> 1404/01/09</span>
-              <span><i class="fas fa-users"></i> 42M کاربر</span>
-            </div>
-            <a href="https://ircyberleaks.github.io/banksepah" class="card-action">
-              <span>مشاهده و دانلود</span>
-              <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
+      <div class="leak-card">
+        <div class="leak-card-image">
+          <div class="leak-card-badge">تازه منتشر شده</div>
+          <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="بانک سپه">
         </div>
-  
-        <div class="leak-card">
-          <div class="leak-card-image">
-            <div class="leak-card-badge coming-soon-badge">به زودی</div>
-            <img src="https://images.unsplash.com/photo-1509479200622-4503f27f12ef?q=80&w=2669&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dطلاعات+جدید" alt="اطلاعات جدید">
+        <div class="card-details">
+          <h3>بانک سپه</h3>
+          <p>اطلاعات جامع حساب‌های بانکی، وام‌های کلان، و تراکنش‌های حساس بیش از 30 میلیون مشتری. این داده‌ها شامل جزئیات وام‌های میلیاردی پرداخت شده به افراد خاص و شرکت‌های وابسته است.</p>
+          <div class="card-meta">
+            <span><i class="fas fa-database"></i> 10TB</span>
+            <span><i class="fas fa-calendar-alt"></i> 1404/01/09</span>
+            <span><i class="fas fa-users"></i> 42M کاربر</span>
           </div>
-          <div class="card-details">
-            <h3>افشاگری جدید</h3>
-            <p>به‌زودی پایگاه داده مربوط به نشست‌های مهم سازمان‌های دولتی و غیردولتی که پیش‌تر مورد نفوذ قرار گرفته‌اند، شامل اسناد داخلی و مکاتبات اداری، با هدف آگاهی‌رسانی عمومی و پیشگیری از سوءاستفاده‌های احتمالی، به‌صورت تدریجی منتشر خواهد شد.</p>
-            <div class="card-meta">
-              <span><i class="fas fa-database"></i> در حال آماده‌سازی</span>
-              <span><i class="fas fa-calendar-alt"></i> به زودی</span>
-              <span><i class="fas fa-clock"></i> در حال توسعه</span>
-            </div>
-            <div class="card-action coming-soon-action">
-              <span>به زودی منتشر می‌شود</span>
-              <i class="fas fa-clock"></i>
-            </div>
+          <a href="https://ircyberleaks.github.io/banksepah" class="card-action">
+            <span>مشاهده و دانلود</span>
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="leak-card">
+        <div class="leak-card-image">
+          <div class="leak-card-badge coming-soon-badge">به زودی</div>
+          <img src="https://images.unsplash.com/photo-1509479200622-4503f27f12ef?q=80&w=2669&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="اطلاعات جدید">
+        </div>
+        <div class="card-details">
+          <h3>افشاگری جدید</h3>
+          <p>به‌زودی پایگاه داده مربوط به نشست‌های مهم سازمان‌های دولتی و غیردولتی که پیش‌تر مورد نفوذ قرار گرفته‌اند، شامل اسناد داخلی و مکاتبات اداری، با هدف آگاهی‌رسانی عمومی و پیشگیری از سوءاستفاده‌های احتمالی، به‌صورت تدریجی منتشر خواهد شد.</p>
+          <div class="card-meta">
+            <span><i class="fas fa-database"></i> در حال آماده‌سازی</span>
+            <span><i class="fas fa-calendar-alt"></i> به زودی</span>
+            <span><i class="fas fa-clock"></i> در حال توسعه</span>
+          </div>
+          <div class="card-action coming-soon-action">
+            <span>به زودی منتشر می‌شود</span>
+            <i class="fas fa-clock"></i>
           </div>
         </div>
       </div>
-    </section>
-</section>
+    </div>
+  </section>
 
-<!-- بخش درباره ما -->
-<section class="about-section" id="about">
-  <div class="section-badge">درباره ما</div>
-  <h2 class="section-title">سایبرلیکس چیست؟</h2>
-  <div class="about-content">
-    <div class="about-text">
-      <p>سایبرلیکس یک پلتفرم مستقل افشاگری است که با هدف ایجاد شفافیت در فضای دیجیتال و آگاه‌سازی عمومی فعالیت می‌کند. ما معتقدیم دسترسی به اطلاعات حق همه مردم است و سازمان‌ها باید در قبال امنیت داده‌های کاربران خود پاسخگو باشند.</p>
-      
-      <div class="about-features">
-        <div class="feature-item">
-          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-          <div class="feature-text">
-            <h3>افشای مسئولانه</h3>
-            <p>ما داده‌ها را با دقت بررسی و اطلاعات شخصی حساس را پیش از انتشار حذف می‌کنیم.</p>
-          </div>
-        </div>
+  <!-- بخش درباره ما -->
+  <section class="about-section" id="about">
+    <div class="section-badge">درباره ما</div>
+    <h2 class="section-title">سایبرلیکس چیست؟</h2>
+    <div class="about-content">
+      <div class="about-text">
+        <p>سایبرلیکس یک پلتفرم مستقل افشاگری است که با هدف ایجاد شفافیت در فضای دیجیتال و آگاه‌سازی عمومی فعالیت می‌کند. ما معتقدیم دسترسی به اطلاعات حق همه مردم است و سازمان‌ها باید در قبال امنیت داده‌های کاربران خود پاسخگو باشند.</p>
         
-        <div class="feature-item">
-          <div class="feature-icon"><i class="fas fa-search"></i></div>
-          <div class="feature-text">
-            <h3>تحلیل تخصصی</h3>
-            <p>تیم متخصصان امنیت سایبری ما داده‌ها را تحلیل و نقاط ضعف امنیتی را شناسایی می‌کنند.</p>
+        <div class="about-features">
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+            <div class="feature-text">
+              <h3>افشای مسئولانه</h3>
+              <p>ما داده‌ها را با دقت بررسی و اطلاعات شخصی حساس را پیش از انتشار حذف می‌کنیم.</p>
+            </div>
           </div>
-        </div>
-        
-        <div class="feature-item">
-          <div class="feature-icon"><i class="fas fa-bullhorn"></i></div>
-          <div class="feature-text">
-            <h3>آگاهی‌رسانی عمومی</h3>
-            <p>هدف ما افزایش آگاهی عمومی و ایجاد فشار برای بهبود استانداردهای امنیتی است.</p>
+          
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fas fa-search"></i></div>
+            <div class="feature-text">
+              <h3>تحلیل تخصصی</h3>
+              <p>تیم متخصصان امنیت سایبری ما داده‌ها را تحلیل و نقاط ضعف امنیتی را شناسایی می‌کنند.</p>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fas fa-bullhorn"></i></div>
+            <div class="feature-text">
+              <h3>آگاهی‌رسانی عمومی</h3>
+              <p>هدف ما افزایش آگاهی عمومی و ایجاد فشار برای بهبود استانداردهای امنیتی است.</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- فوتر -->
-<footer>
-  <div class="footer-content">
-    <div class="footer-info">
-      <h4>سایبرلیکس</h4>
-      <p>پلتفرم افشای داده‌های هک شده با هدف شفافیت و آگاهی‌رسانی عمومی. ما معتقدیم دسترسی به اطلاعات حق همه مردم است و برای ایجاد جامعه‌ای آگاه‌تر تلاش می‌کنیم.</p>
-      <div class="footer-social">
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-telegram"></i></a>
-        <a href="#"><i class="fab fa-github"></i></a>
-        <a href="#"><i class="fas fa-rss"></i></a>
+ 
+  <!-- فوتر -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-info">
+        <h4>سایبرلیکس</h4>
+        <p>پلتفرم افشای داده‌های هک شده با هدف شفافیت و آگاهی‌رسانی عمومی. ما معتقدیم دسترسی به اطلاعات حق همه مردم است و برای ایجاد جامعه‌ای آگاه‌تر تلاش می‌کنیم.</p>
+        <div class="footer-social">
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-telegram"></i></a>
+          <a href="#"><i class="fab fa-github"></i></a>
+          <a href="#"><i class="fas fa-rss"></i></a>
+        </div>
       </div>
     </div>
-  </div>
-  
-  <div class="footer-bottom">
-    <p>© ۱۴۰۳ سایبرلیکس - تمامی حقوق محفوظ است | میزبانی شده روی <a href="https://pages.github.com/">GitHub Pages</a></p>
-    <div class="visitor-counter">
-      <script src="https://cdn.counter.dev/script.js" data-id="78982a0a-9050-4cc7-b5fe-a80cd6aad3ac" data-utcoffset="-7"></script>
+    
+    <div class="footer-bottom">
+      <p>© ۱۴۰۳ سایبرلیکس - تمامی حقوق محفوظ است | میزبانی شده روی <a href="https://pages.github.com/">GitHub Pages</a></p>
+      <div class="visitor-counter">
+        <script src="https://cdn.counter.dev/script.js" data-id="78982a0a-9050-4cc7-b5fe-a80cd6aad3ac" data-utcoffset="-7"></script>
+      </div>
     </div>
+  </footer>
+
+  <div class="scroll-to-top">
+    <i class="fas fa-arrow-up"></i>
   </div>
-</footer>
 
-<div class="scroll-to-top">
-  <i class="fas fa-arrow-up"></i>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-<script>
-  // ذرات پس‌زمینه
-  particlesJS('particles', {
-    particles: {
-      number: { value: 80, density: { enable: true, value_area: 800 } },
-      color: { value: '#6366f1' },
-      shape: { type: 'circle' },
-      opacity: { value: 0.3, random: true },
-      size: { value: 3, random: true },
-      line_linked: { enable: true, distance: 150, color: '#ec4899', opacity: 0.2, width: 1 },
-      move: { enable: true, speed: 2, direction: 'none', random: false }
-    },
-    interactivity: {
-      detect_on: 'canvas',
-      events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
-      modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
-    },
-    retina_detect: true
-  });
-  
-  // اسکرول به بالا
-  const scrollToTopButton = document.querySelector('.scroll-to-top');
-  
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-      scrollToTopButton.classList.add('show');
-    } else {
-      scrollToTopButton.classList.remove('show');
-    }
-  });
-  
-  scrollToTopButton.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    // ذرات پس‌زمینه
+    particlesJS('particles', {
+      particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: '#6366f1' },
+        shape: { type: 'circle' },
+        opacity: { value: 0.3, random: true },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: '#ec4899', opacity: 0.2, width: 1 },
+        move: { enable: true, speed: 2, direction: 'none', random: false }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
+        modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
+      },
+      retina_detect: true
     });
-  });
-  
-  // انیمیشن ظاهر شدن عناصر هنگام اسکرول
-  const observerOptions = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.1
-  };
-  
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('animate-in');
-        observer.unobserve(entry.target);
+    
+    // اسکرول به بالا
+    const scrollToTopButton = document.querySelector('.scroll-to-top');
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollToTopButton.classList.add('show');
+      } else {
+        scrollToTopButton.classList.remove('show');
       }
     });
-  }, observerOptions);
-  
-  document.querySelectorAll('.leak-card, .section-title, .section-badge, .feature-item').forEach(el => {
-    observer.observe(el);
-  });
-</script>
+    
+    scrollToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // منوی موبایل
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    mobileMenuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+    
+    // بستن منو با کلیک روی لینک‌ها
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+      });
+    });
+    
+    // انیمیشن ظاهر شدن عناصر هنگام اسکرول
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    
+    document.querySelectorAll('.leak-card, .section-title, .section-badge, .feature-item, .contact-card').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
 </body>
 </html>
