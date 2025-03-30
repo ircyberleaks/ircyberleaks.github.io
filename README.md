@@ -1,6 +1,6 @@
 # سایبرلیکس | CyberLeaks
 
-![CyberLeaks Banner](https://via.placeholder.com/1200x300/050914/6366f1?text=سایبرلیکس+-+افشای+داده‌ها)
+![CyberLeaks Banner](https://github.com/ircyberleaks/ircyberleaks.github.io/blob/main/images/cyber.jpg?raw=true)
 
 **سایبرلیکس** پلتفرمی پیشرو برای افشای داده‌های هک‌شده با هدف افزایش شفافیت و امنیت سایبری است. ما اطلاعات حساس سازمان‌ها و شرکت‌ها رو با دقت و مسئولیت‌پذیری منتشر می‌کنیم تا آگاهی عمومی رو بالا ببریم.
 
