@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داده‌های هک شده بانک سپه</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- متا تگ‌های Twitter Card برای نمایش تصویر در اشتراک‌گذاری -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="داده‌های هک شده بانک سپه">
+    <meta name="twitter:description" content="لیست وام‌های کلان بانک سپه منتشر شد. بیش از 1000 نفر وام‌های بالای 1000 میلیارد تومانی دریافت کرده‌اند.">
+    <meta name="twitter:image" content="images/twitter-preview.jpg">
+    
+    <!-- متا تگ‌های Open Graph برای فیسبوک و سایر شبکه‌های اجتماعی -->
+    <meta property="og:title" content="داده‌های هک شده بانک سپه">
+    <meta property="og:description" content="لیست وام‌های کلان بانک سپه منتشر شد. بیش از 1000 نفر وام‌های بالای 1000 میلیارد تومانی دریافت کرده‌اند.">
+    <meta property="og:image" content="images/twitter-preview.jpg">
+    <meta property="og:url" content="https://ircyberleaks.github.io">
+    <meta property="og:type" content="website">
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --text-color: #333;
+            --text-light: #666;
+            --light-bg: #f5f5f5;
+            --border-color: #ddd;
+            --card-bg: #fff;
+            --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --transition-speed: 0.3s;
+        }
+        
+        [data-theme="dark"] {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --text-color: #f5f5f5;
+            --text-light: #aaa;
+            --light-bg: #2c3e50;
+            --border-color: #444;
+            --card-bg: #34495e;
+            --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Vazir', Tahoma, Arial, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-align: center;
+        }
+        
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color var(--transition-speed);
+        }
+        
+        .theme-toggle:hover {
+            color: var(--secondary-color);
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        #searchInput {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: 'Vazir', Tahoma, Arial, sans-serif;
+            font-size: 16px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+        
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: 'Vazir', Tahoma, Arial, sans-serif;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            transition: border-color var(--transition-speed);
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+        
+        .tab {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tablinks {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 12px 16px;
+            font-family: 'Vazir', Tahoma, Arial, sans-serif;
+            font-size: 16px;
+            color: var(--text-light);
+            transition: all var(--transition-speed);
+            position: relative;
+        }
+        
+        .tablinks:hover {
+            color: var(--secondary-color);
+        }
+        
+        .tablinks.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .tablinks.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--secondary-color);
+        }
+        
+        .tabcontent {
+            display: none;
+            padding: 20px 0;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            background-color: var(--card-bg);
+        }
+        
+        .dataTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .dataTable th, .dataTable td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .dataTable th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .dataTable th:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .dataTable th.sort-asc::after {
+            content: '▲';
+            position: absolute;
+            left: 5px;
+        }
+        
+        .dataTable th.sort-desc::after {
+            content: '▼';
+            position: absolute;
+            left: 5px;
+        }
+        
+        .dataTable tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .dataTable tr:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        [data-theme="dark"] .dataTable tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .amount {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .national-id, .mobile {
+            font-family: monospace;
+            direction: ltr;
+            text-align: left;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 20px 0;
+        }
+        
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-speed);
+        }
+        
+        .pagination button:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .pagination button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .pagination-info {
+            text-align: center;
+            margin-bottom: 10px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background-color: var(--border-color);
+            border-radius: 2px;
+            margin: 5px 0 15px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+        
+        /* استایل‌های بخش اشتراک‌گذاری */
+        .share-container {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin: 20px 0;
+        }
+        
+        .share-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .social-share-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 15px 0;
+        }
+        
+        .social-share-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 50px;
+            color: white;
+            font-family: 'Vazir', Tahoma, Arial, sans-serif;
+            cursor: pointer;
+            border: none;
+            transition: all var(--transition-speed);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .twitter-share-button {
+            background-color: #1DA1F2;
+        }
+        
+        .facebook-share-button {
+            background-color: #4267B2;
+        }
+        
+        .telegram-share-button {
+            background-color: #0088cc;
+        }
+        
+        .whatsapp-share-button {
+            background-color: #25D366;
+        }
+        
+        .social-share-button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .twitter-preview {
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            max-width: 400px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .twitter-preview img {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: cover;
+        }
+        
+        .twitter-preview-text {
+            padding: 15px;
+            font-size: 14px;
+            color: var(--text-color);
+            background-color: var(--card-bg);
+        }
+        
+        /* اطلاعات منبع داده */
+        .data-source-info {
+            background-color: #ff0000;
+            color: #000000;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        [data-theme="dark"] .data-source-info {
+            background-color: #856404;
+            color: #ffeeba;
+        }
+        
+        
+        /* فوتر */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 30px;
+            border-radius: var(--border-radius);
+        }
+        
+        .footer-text {
+            margin-bottom: 10px;
+        }
+        
+        .copyright {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* شمارنده بازدید */
+        .visitor-counter {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        /* استایل‌های موبایل */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            .filter-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .dataTable th, .dataTable td {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .tab {
+                flex-wrap: wrap;
+            }
+            
+            .tablinks {
+                flex: 1 0 auto;
+                font-size: 14px;
+                padding: 10px;
+                margin-bottom: 5px;
+            }
+            
+            .social-share-buttons {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .dataTable {
+                display: block;
+            }
+            
+            .dataTable thead {
+                display: none;
+            }
+            
+            .dataTable tbody, .dataTable tr, .dataTable td {
+                display: block;
+                width: 100%;
+            }
+            
+            .dataTable tr {
+                margin-bottom: 15px;
+                border-radius: var(--border-radius);
+                box-shadow: var(--box-shadow);
+                background-color: var(--card-bg);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .mobile-view tr:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 3px;
+                background: linear-gradient(to right, var(--secondary-color), transparent);
+            }
+            
+            .mobile-view td {
+                border: none;
+                border-bottom: 1px solid var(--border-color);
+                position: relative;
+                padding: 12px 50% 12px 12px;
+                text-align: right;
+                min-height: 40px;
+            }
+            
+            .mobile-view td:last-child {
+                border-bottom: none;
+            }
+            
+            .mobile-view td:before {
+                position: absolute;
+                right: 12px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+                color: var(--primary-color);
+                font-size: 12px;
+            }
+            
+            .mobile-view td:nth-of-type(1):before { content: "نام مشتری:"; }
+            .mobile-view td:nth-of-type(2):before { content: "کد ملی:"; }
+            .mobile-view td:nth-of-type(3):before { content: "مجموع وام:"; }
+            .mobile-view td:nth-of-type(4):before { content: "شماره موبایل:"; }
+            
+            /* تنظیم راست‌چین برای کد ملی در نمای موبایل */
+            .mobile-view .national-id, .mobile-view .mobile {
+                text-align: right;
+                direction: rtl;
+            }
+        }
+        
+        /* اضافه کردن اسکرول بار زیبا */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--light-bg);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-light);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-color);
+        }
+        
+        /* اضافه کردن انیمیشن لودینگ */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        [data-theme="dark"] .loading {
+            background-color: rgba(30, 30, 30, 0.9);
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--secondary-color);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* اضافه کردن دکمه اسکرول به بالا */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: all var(--transition-speed);
+        }
+        
+        .scroll-to-top:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        /* استایل پیام کپی شدن لینک */
+        .copy-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        
+        .copy-message.fade-out {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-controls">
+            <h1>داده‌های هک شده بانک سپه</h1>
+            <button id="themeToggle" class="theme-toggle" title="تغییر تم">
+                <span class="material-icons">dark_mode</span>
+            </button>
+        </div>
+        
+        <div class="data-source-info">
+            این اطلاعات در ماه مارس 2025 توسط گروه هکری IRCodeBreakers به‌دست آمده است. ما تنها به‌عنوان یک منبع خبری، در جهت اطلاع‌رسانی و افزایش شفافیت، این داده‌ها را به‌طور عمومی منتشر می‌کنیم. هیچ‌گونه مسئولیتی در قبال صحت، استفاده یا پیامدهای ناشی از این اطلاعات نخواهیم داشت
+        </div>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="جستجو در تمام جداول...">
+        </div>
+        
+        <div class="filter-options">
+            <select id="loanRangeFilter" class="filter-select">
+                <option value="all">همه مبالغ وام</option>
+                <option value="above1000">بالای 1000 میلیارد</option>
+                <option value="500to1000">بین 500 تا 1000 میلیارد</option>
+                <option value="100to500">بین 100 تا 500 میلیارد</option>
+                <option value="below100">زیر 100 میلیارد</option>
+            </select>
+            
+            <select id="sortFilter" class="filter-select">
+                <option value="default">مرتب‌سازی پیش‌فرض</option>
+                <option value="loan-desc">بیشترین وام (نزولی)</option>
+                <option value="loan-asc">کمترین وام (صعودی)</option>
+                <option value="name-asc">نام (الفبا)</option>
+                <option value="name-desc">نام (معکوس الفبا)</option>
+            </select>
+        </div>
+        
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>در حال بارگذاری...</p>
+        </div>
+        
+        <div class="tab-container">
+            <div class="tab">
+                <button class="tablinks active" onclick="openTab(event, 'tab0')">همه وام‌ها</button>
+                <button class="tablinks" onclick="openTab(event, 'tab1')">وام‌های بالای 1000 میلیارد</button>
+                <button class="tablinks" onclick="openTab(event, 'tab2')">وام‌های 500 تا 1000 میلیارد</button>
+                <button class="tablinks" onclick="openTab(event, 'tab3')">وام‌های 100 تا 500 میلیارد</button>
+                <button class="tablinks" onclick="openTab(event, 'tab4')">وام‌های زیر 100 میلیارد</button>
+            </div>
+            
+            <!-- تب جدید: همه وام‌ها -->
+            <div id="tab0" class="tabcontent" style="display: block;">
+                <h2 class="section-title">همه وام‌های بانک سپه</h2>
+                <div class="table-container">
+                    <table id="table0" class="dataTable">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0, 'table0')">نام مشتری</th>
+                                <th onclick="sortTable(1, 'table0')">کد ملی</th>
+                                <th onclick="sortTable(2, 'table0')">مجموع وام دریافتی</th>
+                                <th onclick="sortTable(3, 'table0')">شماره موبایل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- داده‌ها از فایل‌های خارجی بارگذاری می‌شوند -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- تب اول: وام‌های بالای 1000 میلیارد -->
+            <div id="tab1" class="tabcontent">
+                <h2 class="section-title">وام‌های بالای 1000 میلیارد تومان</h2>
+                <div class="table-container">
+                    <table id="table1" class="dataTable">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0, 'table1')">نام مشتری</th>
+                                <th onclick="sortTable(1, 'table1')">کد ملی</th>
+                                <th onclick="sortTable(2, 'table1')">مجموع وام دریافتی</th>
+                                <th onclick="sortTable(3, 'table1')">شماره موبایل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- داده‌ها از فایل‌های خارجی بارگذاری می‌شوند -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- تب دوم: وام‌های 500 تا 1000 میلیارد -->
+            <div id="tab2" class="tabcontent">
+                <h2 class="section-title">وام‌های 500 تا 1000 میلیارد تومان</h2>
+                <div class="table-container">
+                    <table id="table2" class="dataTable">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0, 'table2')">نام مشتری</th>
+                                <th onclick="sortTable(1, 'table2')">کد ملی</th>
+                                <th onclick="sortTable(2, 'table2')">مجموع وام دریافتی</th>
+                                <th onclick="sortTable(3, 'table2')">شماره موبایل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- داده‌ها از فایل‌های خارجی بارگذاری می‌شوند -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- تب سوم: وام‌های 100 تا 500 میلیارد -->
+            <div id="tab3" class="tabcontent">
+                <h2 class="section-title">وام‌های 100 تا 500 میلیارد تومان</h2>
+                <div class="table-container">
+                    <table id="table3" class="dataTable">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0, 'table3')">نام مشتری</th>
+                                <th onclick="sortTable(1, 'table3')">کد ملی</th>
+                                <th onclick="sortTable(2, 'table3')">مجموع وام دریافتی</th>
+                                <th onclick="sortTable(3, 'table3')">شماره موبایل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- داده‌ها از فایل‌های خارجی بارگذاری می‌شوند -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- تب چهارم: وام‌های زیر 100 میلیارد -->
+                        <!-- تب چهارم: وام‌های زیر 100 میلیارد -->
+                        <div id="tab4" class="tabcontent">
+                            <h2 class="section-title">وام‌های زیر 100 میلیارد تومان</h2>
+                            <div class="table-container">
+                                <table id="table4" class="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th onclick="sortTable(0, 'table4')">نام مشتری</th>
+                                            <th onclick="sortTable(1, 'table4')">کد ملی</th>
+                                            <th onclick="sortTable(2, 'table4')">مجموع وام دریافتی</th>
+                                            <th onclick="sortTable(3, 'table4')">شماره موبایل</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- داده‌ها از فایل‌های خارجی بارگذاری می‌شوند -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-container" style="display: none;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="pagination-info">
+                        <div id="pageInfo">صفحه 1 از 1</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="pagination" class="pagination"></div>
+                    
+                    <!-- بخش اشتراک‌گذاری در شبکه‌های اجتماعی -->
+                    <div class="share-container">
+                        <div class="share-title">اشتراک‌گذاری این اطلاعات</div>
+                        <p>با اشتراک‌گذاری این اطلاعات، به آگاهی‌رسانی عمومی کمک کنید.</p>
+                        
+                        <div class="social-share-buttons">
+                            <button class="social-share-button twitter-share-button" onclick="shareOnTwitter()">
+                                <span class="material-icons">twitter</span>
+                                توییتر
+                            </button>
+                            
+                            <button class="social-share-button facebook-share-button" onclick="shareOnFacebook()">
+                                <span class="material-icons">facebook</span>
+                                فیسبوک
+                            </button>
+                            
+                            <button class="social-share-button telegram-share-button" onclick="shareOnTelegram()">
+                                <span class="material-icons">send</span>
+                                تلگرام
+                            </button>
+                            
+                            <button class="social-share-button whatsapp-share-button" onclick="shareOnWhatsApp()">
+                                <span class="material-icons">whatsapp</span>
+                                واتساپ
+                            </button>
+                        </div>
+                        
+                        <div class="twitter-preview">
+                            <img src="images/twitter-preview.jpg" alt="تصویر پیش‌نمایش توییتر">
+                            <div class="twitter-preview-text">
+                                لیست وام‌های کلان بانک سپه منتشر شد. بیش از 100 نفر وام‌های بالای 1000 میلیارد تومانی دریافت کرده‌اند. #شفافیت_بانکی #وام_کلان
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- اطلاعات منبع داده‌ها -->
+                    <div class="data-source-info">
+                        این اطلاعات در ماه مارس 2025 توسط گروه هکری IRCodeBreakers به‌دست آمده است. ما تنها به‌عنوان یک منبع خبری، در جهت اطلاع‌رسانی و افزایش شفافیت، این داده‌ها را به‌طور عمومی منتشر می‌کنیم. هیچ‌گونه مسئولیتی در قبال صحت، استفاده یا پیامدهای ناشی از این اطلاعات نخواهیم داشت
+                    </div>
+                    
+                    <!-- فوتر -->
+                    <div class="footer">
+                        <div class="footer-text">
+                            این اطلاعات در ماه مارس 2025 توسط گروه هکری IRCodeBreakers به‌دست آمده است. ما تنها به‌عنوان یک منبع خبری، در جهت اطلاع‌رسانی و افزایش شفافیت، این داده‌ها را به‌طور عمومی منتشر می‌کنیم.
+                        </div>
+                        <div class="copyright">
+                            © 2025 تمامی حقوق محفوظ است.
+                        </div>
+                    </div>
+                    
+                    <!-- شمارنده بازدید -->
+                    <div class="visitor-counter">
+                        <script src="https://cdn.counter.dev/script.js" data-id="78982a0a-9050-4cc7-b5fe-a80cd6aad3ac" data-utcoffset="-7"></script>
+                    </div>
+                    
+                    <!-- دکمه اسکرول به بالا -->
+                    <div class="scroll-to-top">
+                        <span class="material-icons">arrow_upward</span>
+                    </div>
+                </div>
+                
+                <script>
+                // متغیرهای جهانی برای ذخیره داده‌ها
+                let allData = {
+                    'all': [], // اضافه کردن آرایه برای همه داده‌ها
+                    'above1000': [],
+                    '500to1000': [],
+                    '100to500': [],
+                    'below100': []
+                };
+                
+                // تابع بارگذاری داده‌ها از فایل
+                async function loadData() {
+                    try {
+                        // نمایش لودینگ
+                        document.querySelector('.loading').style.display = 'block';
+                        
+                        // بارگذاری داده‌ها از یک فایل واحد
+                        const response = await fetch('data/vam.html');
+                        const html = await response.text();
+                        
+                        // پردازش داده‌ها
+                        parseHtmlData(html);
+                        
+                        // مخفی کردن لودینگ
+                        document.querySelector('.loading').style.display = 'none';
+                        
+                        // نمایش تب فعال
+                        const activeTab = document.querySelector('.tablinks.active');
+                        if (activeTab) {
+                            const tabId = activeTab.getAttribute('onclick').match(/openTab\(event, '(.+?)'\)/)[1];
+                            document.getElementById(tabId).style.display = 'block';
+                        }
+                        
+                        // بررسی حالت نمایش موبایل
+                        if (window.innerWidth <= 576) {
+                            document.querySelectorAll('.dataTable').forEach(table => {
+                                table.classList.add('mobile-view');
+                            });
+                        }
+                    } catch (error) {
+                        console.error('خطا در بارگذاری داده‌ها:', error);
+                        document.querySelector('.loading').style.display = 'none';
+                        alert('خطا در بارگذاری داده‌ها. لطفاً صفحه را مجدداً بارگذاری کنید.');
+                    }
+                }
+                
+                // تابع پردازش داده‌های HTML
+                function parseHtmlData(html) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const rows = doc.querySelectorAll('table tbody tr');
+                    
+                    // پاک کردن داده‌های قبلی
+                    allData = {
+                        'all': [],
+                        'above1000': [],
+                        '500to1000': [],
+                        '100to500': [],
+                        'below100': []
+                    };
+                    
+                    // پردازش هر ردیف و تقسیم‌بندی داده‌ها
+                    rows.forEach(row => {
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length >= 4) {
+                            const name = cells[0].textContent.trim();
+                            const nationalId = cells[1].textContent.trim();
+                            const loanAmount = parseFloat(cells[2].textContent.replace(/[^\d.]/g, ''));
+                            const mobile = cells[3].textContent.trim();
+                            
+                            // ایجاد ردیف جدید
+                            const newRow = document.createElement('tr');
+                            
+                            // نام مشتری
+                            const nameCell = document.createElement('td');
+                            nameCell.textContent = name;
+                            newRow.appendChild(nameCell);
+                            
+                            // کد ملی
+                            const idCell = document.createElement('td');
+                            idCell.className = 'national-id';
+                            idCell.textContent = nationalId;
+                            newRow.appendChild(idCell);
+                            
+                            // مبلغ وام
+                            const amountCell = document.createElement('td');
+                            amountCell.className = 'amount';
+                            amountCell.textContent = formatCurrency(loanAmount);
+                            newRow.appendChild(amountCell);
+                            
+                            // شماره موبایل
+                            const mobileCell = document.createElement('td');
+                            mobileCell.className = 'mobile';
+                            mobileCell.textContent = mobile;
+                            newRow.appendChild(mobileCell);
+                            
+                            // اضافه کردن به همه داده‌ها
+                            allData['all'].push(newRow.cloneNode(true));
+                            
+                            // دسته‌بندی بر اساس مبلغ وام
+                            if (loanAmount > 1000) {
+                                allData['above1000'].push(newRow.cloneNode(true));
+                            } else if (loanAmount >= 500) {
+                                allData['500to1000'].push(newRow.cloneNode(true));
+                            } else if (loanAmount >= 100) {
+                                allData['100to500'].push(newRow.cloneNode(true));
+                            } else {
+                                allData['below100'].push(newRow.cloneNode(true));
+                            }
+                        }
+                    });
+                    
+                    // نمایش داده‌ها در جداول
+                    displayDataInTables();
+                }
+                
+                // تابع نمایش داده‌ها در جداول
+                function displayDataInTables() {
+                    // نمایش همه داده‌ها
+                    displayTableData('table0', allData['all']);
+                    
+                    // نمایش داده‌های دسته‌بندی شده
+                    displayTableData('table1', allData['above1000']);
+                    displayTableData('table2', allData['500to1000']);
+                    displayTableData('table3', allData['100to500']);
+                    displayTableData('table4', allData['below100']);
+                    
+                    // ذخیره داده‌های فیلتر شده برای صفحه‌بندی
+                    filteredData = {
+                        'table0': [...allData['all']],
+                        'table1': [...allData['above1000']],
+                        'table2': [...allData['500to1000']],
+                        'table3': [...allData['100to500']],
+                        'table4': [...allData['below100']]
+                    };
+                    
+                    // راه‌اندازی صفحه‌بندی برای همه جداول
+                    setupPagination('table0');
+                    setupPagination('table1');
+                    setupPagination('table2');
+                    setupPagination('table3');
+                    setupPagination('table4');
+                }
+                
+                // تابع نمایش داده‌ها در یک جدول
+                function displayTableData(tableId, data) {
+                    const tbody = document.querySelector(`#${tableId} tbody`);
+                    tbody.innerHTML = '';
+                    
+                    // تنظیم تعداد ردیف‌ها در هر صفحه به 50
+                    rowsPerPage = 50;
+                    
+                    data.forEach(row => {
+                        tbody.appendChild(row.cloneNode(true));
+                    });
+                }
+                
+                // تابع فرمت‌کردن اعداد به صورت پول
+                function formatCurrency(amount) {
+                    return new Intl.NumberFormat('fa-IR', {
+                        style: 'decimal',
+                        maximumFractionDigits: 0
+                    }).format(amount) + ' میلیارد تومان';
+                }
+                
+                // متغیرهای صفحه‌بندی
+                let rowsPerPage = 50; // تغییر به 50 ردیف در هر صفحه
+                let currentPage = 1;
+                let filteredData = {};
+                
+                // تابع راه‌اندازی صفحه‌بندی
+                function setupPagination(tableId) {
+                    const data = filteredData[tableId];
+                    if (!data) return;
+                    
+                    const totalPages = Math.ceil(data.length / rowsPerPage);
+                    const paginationDiv = document.getElementById('pagination');
+                    const pageInfoDiv = document.getElementById('pageInfo');
+                    const progressBar = document.querySelector('.progress-bar');
+                    
+                    // نمایش اطلاعات صفحه
+                    pageInfoDiv.textContent = `صفحه ${currentPage} از ${totalPages}`;
+                    
+                    // تنظیم نوار پیشرفت
+                    const progress = (currentPage / totalPages) * 100;
+                    progressBar.style.width = `${progress}%`;
+                    
+                    // ایجاد دکمه‌های صفحه‌بندی
+                    paginationDiv.innerHTML = '';
+                    
+                    // دکمه قبلی
+                    const prevButton = document.createElement('button');
+                    prevButton.textContent = 'قبلی';
+                    prevButton.disabled = currentPage === 1;
+                    prevButton.addEventListener('click', () => {
+                        if (currentPage > 1) {
+                            currentPage--;
+                            showPage(tableId, currentPage);
+                            setupPagination(tableId);
+                        }
+                    });
+                    paginationDiv.appendChild(prevButton);
+                    
+                    // دکمه‌های شماره صفحه
+                    const maxButtons = 5;
+                    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+                    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+                    
+                    if (endPage - startPage + 1 < maxButtons) {
+                        startPage = Math.max(1, endPage - maxButtons + 1);
+                    }
+                    
+                    for (let i = startPage; i <= endPage; i++) {
+                        const pageButton = document.createElement('button');
+                        pageButton.textContent = i;
+                        pageButton.classList.toggle('active', i === currentPage);
+                        pageButton.addEventListener('click', () => {
+                            currentPage = i;
+                            showPage(tableId, currentPage);
+                            setupPagination(tableId);
+                        });
+                        paginationDiv.appendChild(pageButton);
+                    }
+                    
+                    // دکمه بعدی
+                    const nextButton = document.createElement('button');
+                    nextButton.textContent = 'بعدی';
+                    nextButton.disabled = currentPage === totalPages;
+                    nextButton.addEventListener('click', () => {
+                        if (currentPage < totalPages) {
+                            currentPage++;
+                            showPage(tableId, currentPage);
+                            setupPagination(tableId);
+                        }
+                    });
+                    paginationDiv.appendChild(nextButton);
+                    
+                    // نمایش صفحه فعلی
+                    showPage(tableId, currentPage);
+                }
+                
+                // تابع نمایش صفحه
+                function showPage(tableId, page) {
+                    const data = filteredData[tableId];
+                    if (!data) return;
+                    
+                    const tbody = document.querySelector(`#${tableId} tbody`);
+                    tbody.innerHTML = '';
+                    
+                    const startIndex = (page - 1) * rowsPerPage;
+                    const endIndex = Math.min(startIndex + rowsPerPage, data.length);
+                    
+                    for (let i = startIndex; i < endIndex; i++) {
+                        tbody.appendChild(data[i].cloneNode(true));
+                    }
+                }
+                
+                // تابع باز کردن تب
+                function openTab(event, tabId) {
+                    // مخفی کردن همه تب‌ها
+                    const tabcontent = document.getElementsByClassName('tabcontent');
+                    for (let i = 0; i < tabcontent.length; i++) {
+                        tabcontent[i].style.display = 'none';
+                    }
+                    
+                    // حذف کلاس active از همه دکمه‌های تب
+                    const tablinks = document.getElementsByClassName('tablinks');
+                    for (let i = 0; i < tablinks.length; i++) {
+                        tablinks[i].className = tablinks[i].className.replace(' active', '');
+                    }
+                    
+                    // نمایش تب فعال و اضافه کردن کلاس active به دکمه
+                    document.getElementById(tabId).style.display = 'block';
+                    event.currentTarget.className += ' active';
+                    
+                    // تنظیم صفحه‌بندی برای تب فعال
+                    const tableId = 'table' + tabId.replace('tab', '');
+                    currentPage = 1;
+                    setupPagination(tableId);
+                }
+                
+                // تابع مرتب‌سازی جدول
+                function sortTable(columnIndex, tableId) {
+                    const table = document.getElementById(tableId);
+                    const headers = table.querySelectorAll('th');
+                    
+                    // حذف کلاس‌های مرتب‌سازی قبلی
+                    headers.forEach(header => {
+                        header.classList.remove('sort-asc', 'sort-desc');
+                    });
+                    
+                    // تعیین جهت مرتب‌سازی
+                    const currentHeader = headers[columnIndex];
+                    const isAscending = !currentHeader.classList.contains('sort-asc');
+                    
+                    // اضافه کردن کلاس مرتب‌سازی
+                    currentHeader.classList.add(isAscending ? 'sort-asc' : 'sort-desc');
+                    
+                    // مرتب‌سازی داده‌ها
+                    const rows = Array.from(filteredData[tableId]);
+                    rows.sort((a, b) => {
+                        let aValue = a.cells[columnIndex].textContent.trim();
+                        let bValue = b.cells[columnIndex].textContent.trim();
+                        
+                        // اگر ستون مبلغ وام است، به عدد تبدیل شود
+                        if (columnIndex === 2) {
+                            aValue = parseFloat(aValue.replace(/[^\d.]/g, ''));
+                            bValue = parseFloat(bValue.replace(/[^\d.]/g, ''));
+                            return isAscending ? aValue - bValue : bValue - aValue;
+                        }
+                        
+                        // مرتب‌سازی متنی
+                        return isAscending ? 
+                            aValue.localeCompare(bValue, 'fa') : 
+                            bValue.localeCompare(aValue, 'fa');
+                    });
+                    
+                    // بروزرسانی داده‌های فیلتر شده
+                    filteredData[tableId] = rows;
+                    
+                    // نمایش صفحه اول
+                    currentPage = 1;
+                    showPage(tableId, currentPage);
+                    setupPagination(tableId);
+                }
+                
+                // تابع جستجو در داده‌ها
+                function searchData() {
+                    const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+                    
+                    // جستجو در هر جدول
+                    Object.keys(allData).forEach(key => {
+                        const tableId = key === 'all' ? 'table0' : 
+                                        key === 'above1000' ? 'table1' : 
+                                        key === '500to1000' ? 'table2' : 
+                                        key === '100to500' ? 'table3' : 'table4';
+                        
+                        // فیلتر کردن داده‌ها
+                        filteredData[tableId] = allData[key].filter(row => {
+                            const name = row.cells[0].textContent.toLowerCase();
+                            const nationalId = row.cells[1].textContent;
+                            const amount = row.cells[2].textContent;
+                            const mobile = row.cells[3].textContent;
+                            
+                            return name.includes(searchTerm) || 
+                                   nationalId.includes(searchTerm) || 
+                                   amount.includes(searchTerm) || 
+                                   mobile.includes(searchTerm);
+                        });
+                        
+                        // بروزرسانی صفحه‌بندی
+                        currentPage = 1;
+                        setupPagination(tableId);
+                    });
+                }
+                
+                // تابع فیلتر بر اساس محدوده وام
+                function filterByLoanRange() {
+                    const selectedRange = document.getElementById('loanRangeFilter').value;
+                    
+                    // تغییر تب فعال بر اساس محدوده انتخاب شده
+                    const tabLinks = document.querySelectorAll('.tablinks');
+                    const tabIndex = selectedRange === 'all' ? 0 : 
+                                    selectedRange === 'above1000' ? 1 : 
+                                    selectedRange === '500to1000' ? 2 : 
+                                    selectedRange === '100to500' ? 3 : 4;
+                    
+                    // شبیه‌سازی کلیک روی تب
+                    tabLinks[tabIndex].click();
+                }
+                
+                // تابع مرتب‌سازی بر اساس فیلتر
+                function sortByFilter() {
+                    const selectedSort = document.getElementById('sortFilter').value;
+                    const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
+                    if (!activeTab) return;
+                    
+                    const tableId = activeTab.querySelector('table').id;
+                    
+                    // مرتب‌سازی بر اساس فیلتر انتخاب شده
+                    switch (selectedSort) {
+                        case 'loan-desc':
+                            sortTable(2, tableId); // مرتب‌سازی نزولی بر اساس مبلغ وام
+                            const headerLoanDesc = document.querySelector(`#${tableId} th:nth-child(3)`);
+                            headerLoanDesc.classList.remove('sort-asc');
+                            headerLoanDesc.classList.add('sort-desc');
+                            break;
+                        
+                        case 'loan-asc':
+                            sortTable(2, tableId); // مرتب‌سازی صعودی بر اساس مبلغ وام
+                            const headerLoanAsc = document.querySelector(`#${tableId} th:nth-child(3)`);
+                            headerLoanAsc.classList.remove('sort-desc');
+                            headerLoanAsc.classList.add('sort-asc');
+                            break;
+                        
+                        case 'name-asc':
+                            sortTable(0, tableId); // مرتب‌سازی صعودی بر اساس نام
+                            const headerNameAsc = document.querySelector(`#${tableId} th:nth-child(1)`);
+                            headerNameAsc.classList.remove('sort-desc');
+                            headerNameAsc.classList.add('sort-asc');
+                            break;
+                        
+                        case 'name-desc':
+                            sortTable(0, tableId); // مرتب‌سازی نزولی بر اساس نام
+                            const headerNameDesc = document.querySelector(`#${tableId} th:nth-child(1)`);
+                            headerNameDesc.classList.remove('sort-asc');
+                            headerNameDesc.classList.add('sort-desc');
+                            break;
+                    }
+                }
+                
+                // تابع اشتراک‌گذاری در توییتر
+                function shareOnTwitter() {
+                    const text = 'لیست وام‌های کلان بانک سپه منتشر شد. بیش از 100 نفر وام‌های بالای 1000 میلیارد تومانی دریافت کرده‌اند. #شفافیت_بانکی #وام_کلان';
+                    const url = window.location.href;
+                    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+                    window.open(twitterUrl, '_blank');
+                }
+                
+                // تابع اشتراک‌گذاری در فیسبوک
+                function shareOnFacebook() {
+                    const url = window.location.href;
+                    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+                    window.open(facebookUrl, '_blank');
+                }
+                
+                // تابع اشتراک‌گذاری در تلگرام
+                function shareOnTelegram() {
+                    const text = 'لیست وام‌های کلان بانک سپه منتشر شد. بیش از 100 نفر وام‌های بالای 1000 میلیارد تومانی دریافت کرده‌اند.';
+                    const url = window.location.href;
+                    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+                    window.open(telegramUrl, '_blank');
+                }
+                
+                // تابع اشتراک‌گذاری در واتساپ
+                function shareOnWhatsApp() {
+                    const text = 'لیست وام‌های کلان بانک سپه منتشر شد. بیش از 100 نفر وام‌های بالای 1000 میلیارد تومانی دریافت کرده‌اند.';
+                    const url = window.location.href;
+                    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`;
+                    window.open(whatsappUrl, '_blank');
+                }
+                
+                // تابع تغییر تم
+                function toggleTheme() {
+                    const body = document.body;
+                    const themeToggle = document.getElementById('themeToggle');
+                    const themeIcon = themeToggle.querySelector('.material-icons');
+                    
+                    if (body.getAttribute('data-theme') === 'dark') {
+                        // تغییر به تم روشن
+                        body.removeAttribute('data-theme');
+                        themeIcon.textContent = 'dark_mode';
+                        localStorage.setItem('theme', 'light');
+                    } else {
+                        // تغییر به تم تاریک
+                        body.setAttribute('data-theme', 'dark');
+                        themeIcon.textContent = 'light_mode';
+                        localStorage.setItem('theme', 'dark');
+                    }
+                }
+                
+                // تابع بررسی تم ذخیره شده
+                function checkSavedTheme() {
+                    const savedTheme = localStorage.getItem('theme');
+                    const themeToggle = document.getElementById('themeToggle');
+                    const themeIcon = themeToggle.querySelector('.material-icons');
+                    
+                    if (savedTheme === 'dark') {
+                        document.body.setAttribute('data-theme', 'dark');
+                        themeIcon.textContent = 'light_mode';
+                    }
+                }
+                
+                // تابع اسکرول به بالا
+                function scrollToTop() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                // راه‌اندازی رویدادها
+                document.addEventListener('DOMContentLoaded', () => {
+                    // بارگذاری داده‌ها
+                    loadData();
+                    
+                    // بررسی تم ذخیره شده
+                    checkSavedTheme();
+                    
+                    // تنظیم رویداد تغییر تم
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                    
+                    // تنظیم رویداد جستجو
+                    document.getElementById('searchInput').addEventListener('input', searchData);
+                    
+                    // تنظیم رویداد فیلتر محدوده وام
+                    document.getElementById('loanRangeFilter').addEventListener('change', filterByLoanRange);
+                    
+                    // تنظیم رویداد مرتب‌سازی
+                    document.getElementById('sortFilter').addEventListener('change', sortByFilter);
+                    
+                    // تنظیم رویداد اسکرول به بالا
+                    document.querySelector('.scroll-to-top').addEventListener('click', scrollToTop);
+                    
+                    // نمایش/مخفی کردن دکمه اسکرول به بالا
+                    window.addEventListener('scroll', () => {
+                        const scrollButton = document.querySelector('.scroll-to-top');
+                        if (window.scrollY > 300) {
+                            scrollButton.style.display = 'flex';
+                        } else {
+                            scrollButton.style.display = 'none';
+                        }
+                    });
+                });
+                </script>
+            </body>
+            </html>
