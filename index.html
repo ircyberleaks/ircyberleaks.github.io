@@ -18,7 +18,7 @@
   <meta name="twitter:description" content="مرجع پیشرو در افشای داده‌های هک شده با هدف شفافیت کامل و افزایش امنیت سایبری" />
   <meta name="twitter:image" content="https://ircyberleaks.github.io/assets/preview.jpg" />
   
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
@@ -32,6 +32,16 @@
       --text-lighter: #a5b4fc;
       --glow-primary: rgba(99,102,241,0.5);
       --glow-secondary: rgba(236,72,153,0.5);
+      --transition-normal: all 0.3s ease;
+      --transition-slow: all 0.5s ease;
+      --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+      --gradient-primary-dark: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+      --gradient-green: linear-gradient(135deg, #10b981, #3b82f6);
+      --gradient-green-dark: linear-gradient(135deg, #059669, #2563eb);
+      --border-light: 1px solid rgba(99,102,241,0.15);
+      --shadow-sm: 0 5px 15px rgba(0,0,0,0.2);
+      --shadow-md: 0 15px 35px rgba(0,0,0,0.3);
+      --shadow-lg: 0 25px 50px rgba(0,0,0,0.4), 0 0 30px rgba(99,102,241,0.2);
     }
 
     * {
@@ -49,7 +59,7 @@
       position: relative;
     }
 
-    /* افکت پس‌زمینه ذرات و گرید */
+    /* افکت پس‌زمینه ذرات و گرید - بهینه شده */
     #particles {
       position: fixed;
       top: 0;
@@ -73,26 +83,27 @@
       z-index: -2;
     }
 
-    /* هدر پیشرفته */
+    /* هدر پیشرفته - بهینه شده */
     header {
       position: fixed;
       top: 0;
       width: 100%;
       background: rgba(5, 9, 20, 0.85);
       backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
       padding: 1.5rem 3rem;
       z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(99,102,241,0.1);
-      box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+      border-bottom: var(--border-light);
+      box-shadow: var(--shadow-sm);
     }
 
     .logo {
       font-size: 2rem;
       font-weight: 900;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: var(--gradient-primary);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -116,7 +127,7 @@
       text-decoration: none;
       font-weight: 500;
       font-size: 1.1rem;
-      transition: all 0.3s ease;
+      transition: var(--transition-normal);
       position: relative;
     }
 
@@ -131,7 +142,7 @@
       left: 0;
       width: 0;
       height: 2px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      background: var(--gradient-primary);
       transition: width 0.3s ease;
     }
 
@@ -139,7 +150,7 @@
       width: 100%;
     }
 
-    /* منوی موبایل */
+    /* منوی موبایل - بهینه شده */
     .mobile-menu-toggle {
       display: none;
       font-size: 1.5rem;
@@ -147,7 +158,7 @@
       cursor: pointer;
     }
 
-    /* هیرو پیشرفته */
+    /* هیرو پیشرفته - بهینه شده */
     .hero {
       min-height: 100vh;
       display: flex;
@@ -157,33 +168,7 @@
       padding: 8rem 2rem 6rem;
       position: relative;
       overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 50%);
-      top: -50%;
-      left: -50%;
-      animation: orbit 25s infinite ease-in-out;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      width: 150%;
-      height: 150%;
-      background: radial-gradient(circle, rgba(236,72,153,0.05) 0%, transparent 60%);
-      bottom: -25%;
-      right: -25%;
-      animation: orbit 30s infinite ease-in-out reverse;
-    }
-
-    @keyframes orbit {
-      0%, 100% { transform: rotate(0deg) scale(1); }
-      50% { transform: rotate(15deg) scale(1.15); }
+      background: radial-gradient(circle at center, rgba(99,102,241,0.08) 0%, transparent 70%);
     }
 
     .hero-content {
@@ -200,20 +185,18 @@
       border-radius: 50px;
       font-weight: 600;
       margin-bottom: 2rem;
-      border: 1px solid rgba(99,102,241,0.2);
-      animation: fadeIn 1s ease-out;
+      border: var(--border-light);
     }
 
     .hero-content h1 {
       font-size: 5.5rem;
       font-weight: 900;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: var(--gradient-primary);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       margin-bottom: 1.5rem;
       line-height: 1.2;
-      animation: slideIn 1s ease-out;
       text-shadow: 0 0 30px rgba(99,102,241,0.3);
     }
 
@@ -223,7 +206,6 @@
       color: var(--text-lighter);
       font-weight: 300;
       margin: 0 auto 3rem;
-      animation: slideIn 1.2s ease-out;
     }
 
     .hero-btn {
@@ -231,14 +213,13 @@
       align-items: center;
       gap: 0.75rem;
       padding: 1.2rem 3.5rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: var(--gradient-primary);
       color: white;
       text-decoration: none;
       border-radius: 50px;
       font-size: 1.3rem;
       font-weight: 700;
-      transition: all 0.4s ease;
-      animation: slideIn 1.4s ease-out;
+      transition: var(--transition-normal);
       position: relative;
       overflow: hidden;
       box-shadow: 0 10px 25px rgba(99,102,241,0.4);
@@ -251,19 +232,17 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+      background: var(--gradient-primary-dark);
       opacity: 0;
       transition: opacity 0.4s ease;
     }
 
-    .hero-btn span {
+    .hero-btn span, .hero-btn i {
       position: relative;
       z-index: 1;
     }
 
     .hero-btn i {
-      position: relative;
-      z-index: 1;
       transition: transform 0.3s ease;
     }
 
@@ -280,18 +259,8 @@
       transform: translateY(5px);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* بخش داده‌ها با طراحی پیشرفته */
-    .leaks-section {
+    /* بخش داده‌ها - بهینه شده */
+    .leaks-section, .about-section {
       padding: 10rem 3rem;
       max-width: 1600px;
       margin: 0 auto;
@@ -313,7 +282,7 @@
       font-weight: 800;
       text-align: center;
       margin-bottom: 1.5rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: var(--gradient-primary);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -339,9 +308,9 @@
       border-radius: 30px;
       overflow: hidden;
       position: relative;
-      transition: all 0.5s ease;
-      border: 1px solid rgba(99,102,241,0.15);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      transition: var(--transition-slow);
+      border: var(--border-light);
+      box-shadow: var(--shadow-md);
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -364,8 +333,8 @@
     }
 
     .leak-card:hover {
-      transform: translateY(-20px) scale(1.02);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.4), 0 0 30px rgba(99,102,241,0.2);
+      transform: translateY(-20px);
+      box-shadow: var(--shadow-lg);
       border-color: var(--primary);
     }
 
@@ -380,6 +349,7 @@
       height: 100%;
       object-fit: cover;
       transition: transform 0.8s ease;
+      loading: lazy;
     }
 
     .leak-card:hover img {
@@ -390,18 +360,18 @@
       position: absolute;
       top: 20px;
       right: 20px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: var(--gradient-primary);
       color: white;
       padding: 0.5rem 1.5rem;
       border-radius: 50px;
       font-weight: 700;
       font-size: 0.9rem;
       z-index: 2;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      box-shadow: var(--shadow-sm);
     }
 
     .coming-soon-badge {
-      background: linear-gradient(135deg, #10b981, #3b82f6);
+      background: var(--gradient-green);
     }
 
     .card-details {
@@ -427,7 +397,7 @@
       left: 0;
       width: 50px;
       height: 3px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      background: var(--gradient-primary);
     }
 
     .card-details p {
@@ -457,21 +427,24 @@
       font-size: 1.1rem;
     }
 
-    .card-action {
+    .card-action, .coming-soon-action {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.75rem;
       padding: 1rem 2.5rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
       text-decoration: none;
       border-radius: 50px;
       font-weight: 700;
-      transition: all 0.4s ease;
+      transition: var(--transition-normal);
       position: relative;
       overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-action {
+      background: var(--gradient-primary);
     }
 
     .card-action::before {
@@ -481,17 +454,17 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+      background: var(--gradient-primary-dark);
       opacity: 0;
       transition: opacity 0.4s ease;
     }
 
-    .card-action span, .card-action i {
+    .card-action span, .card-action i, .coming-soon-action span, .coming-soon-action i {
       position: relative;
       z-index: 1;
     }
 
-    .card-action i {
+    .card-action i, .coming-soon-action i {
       transition: transform 0.3s ease;
     }
 
@@ -509,22 +482,15 @@
     }
 
     .coming-soon-action {
-      background: linear-gradient(135deg, #10b981, #3b82f6);
+      background: var(--gradient-green);
       cursor: default;
     }
 
     .coming-soon-action::before {
-      background: linear-gradient(135deg, #059669, #2563eb);
+      background: var(--gradient-green-dark);
     }
 
-    /* بخش درباره ما */
-    .about-section {
-      padding: 10rem 3rem;
-      max-width: 1400px;
-      margin: 0 auto;
-      position: relative;
-    }
-
+    /* بخش درباره ما - بهینه شده */
     .about-content {
       display: flex;
       flex-direction: column;
@@ -556,8 +522,8 @@
       background: rgba(17, 24, 39, 0.7);
       border-radius: 20px;
       padding: 2.5rem;
-      border: 1px solid rgba(99,102,241,0.15);
-      transition: all 0.4s ease;
+      border: var(--border-light);
+      transition: var(--transition-normal);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -566,7 +532,7 @@
 
     .feature-item:hover {
       transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.3), 0 0 20px rgba(99,102,241,0.2);
+      box-shadow: var(--shadow-md);
       border-color: var(--primary);
     }
 
@@ -581,13 +547,12 @@
       margin-bottom: 1.5rem;
       font-size: 2rem;
       color: var(--primary);
-      transition: all 0.4s ease;
+      transition: var(--transition-normal);
     }
 
     .feature-item:hover .feature-icon {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: var(--gradient-primary);
       color: white;
-      transform: scale(1.1);
     }
 
     .feature-text h3 {
@@ -603,9 +568,9 @@
       font-weight: 300;
     }
 
-    /* فوتر ساده‌تر */
+    /* فوتر بهینه شده */
     footer {
-      padding: 5rem 3rem;
+      padding: 3rem 3rem;
       background: rgba(5, 9, 20, 0.95);
       border-top: 1px solid rgba(99,102,241,0.15);
       position: relative;
@@ -628,39 +593,68 @@
       margin: 0 auto;
     }
 
-    .footer-info h4 {
+    .footer-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .footer-info {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       font-size: 1.8rem;
-      font-weight: 700;
+      font-weight: 800;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-logo i {
+      font-size: 1.6rem;
+      color: var(--primary);
     }
 
     .footer-info p {
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--text-lighter);
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       font-weight: 300;
       line-height: 1.8;
+      max-width: 500px;
+    }
+
+    .footer-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1.5rem;
     }
 
     .footer-social {
       display: flex;
-      gap: 1.5rem;
+      gap: 1rem;
     }
 
     .footer-social a {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 45px;
-      height: 45px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background: rgba(99,102,241,0.1);
       color: var(--primary);
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       transition: all 0.3s ease;
       border: 1px solid rgba(99,102,241,0.2);
     }
@@ -672,37 +666,61 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.3);
     }
 
-    .footer-bottom {
-      max-width: 1400px;
-      margin: 3rem auto 0;
-      padding-top: 2rem;
-      border-top: 1px solid rgba(99,102,241,0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .footer-copyright {
+      text-align: right;
       color: var(--text-lighter);
       font-weight: 300;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
-    .footer-bottom a {
+    .footer-copyright a {
       color: var(--primary);
       text-decoration: none;
       transition: color 0.3s ease;
     }
 
-    .footer-bottom a:hover {
+    .footer-copyright a:hover {
       color: var(--secondary);
     }
 
-    /* اسکرول به بالا */
+    .visitor-counter {
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .footer-main {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      
+      .footer-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .footer-info p {
+        text-align: center;
+      }
+      
+      .footer-right {
+        align-items: center;
+      }
+      
+      .footer-copyright {
+        text-align: center;
+      }
+    }
+
+    /* اسکرول به بالا - بهینه شده */
     .scroll-to-top {
       position: fixed;
       bottom: 30px;
       right: 30px;
       width: 50px;
       height: 50px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: var(--gradient-primary);
       color: white;
       border-radius: 50%;
       display: flex;
@@ -712,8 +730,8 @@
       z-index: 99;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: var(--transition-normal);
+      box-shadow: var(--shadow-sm);
     }
 
     .scroll-to-top.show {
@@ -726,39 +744,7 @@
       box-shadow: 0 10px 20px rgba(99,102,241,0.5);
     }
 
-    /* افکت‌های اضافی */
-    .glow {
-      position: absolute;
-      width: 500px;
-      height: 500px;
-      border-radius: 50%;
-      pointer-events: none;
-      mix-blend-mode: soft-light;
-      z-index: -1;
-    }
-
-    .glow-1 {
-      background: radial-gradient(circle, var(--glow-primary), transparent 70%);
-      top: 20%;
-      right: 15%;
-      animation: float 15s infinite ease-in-out;
-    }
-
-    .glow-2 {
-      background: radial-gradient(circle, var(--glow-secondary), transparent 70%);
-      bottom: 10%;
-      left: 20%;
-      animation: float 20s infinite ease-in-out reverse;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0); }
-      25% { transform: translate(50px, -50px); }
-      50% { transform: translate(0, -100px); }
-      75% { transform: translate(-50px, -50px); }
-    }
-
-    /* انیمیشن ظاهر شدن عناصر */
+    /* انیمیشن ظاهر شدن عناصر - بهینه شده */
     .animate-in {
       animation: fadeInUp 0.8s ease forwards;
     }
@@ -774,7 +760,12 @@
       }
     }
 
-    /* رسپانسیو */
+    /* رسپانسیو - بهینه شده */
+    @media (max-width: 1400px) {
+      .hero-content h1 { font-size: 4.5rem; }
+      .section-title { font-size: 3rem; }
+    }
+
     @media (max-width: 1200px) {
       .leaks-grid {
         grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -782,10 +773,11 @@
       .about-features {
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       }
+      .hero-content h1 { font-size: 4rem; }
     }
 
     @media (max-width: 992px) {
-      .hero-content h1 { font-size: 4rem; }
+      .hero-content h1 { font-size: 3.5rem; }
       .section-title { font-size: 2.8rem; }
       .nav-links { 
         display: none; 
@@ -795,6 +787,7 @@
       }
       .leaks-grid {
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2.5rem;
       }
       .about-text p {
         font-size: 1.2rem;
@@ -802,8 +795,11 @@
       .feature-item {
         padding: 2rem;
       }
+      .leaks-section, .about-section {
+        padding: 8rem 2rem;
+      }
       
-      /* منوی موبایل */
+      /* منوی موبایل - بهینه شده */
       .nav-links {
         position: fixed;
         top: 0;
@@ -831,7 +827,7 @@
 
     @media (max-width: 768px) {
       header { padding: 1.2rem 1.5rem; }
-      .hero-content h1 { font-size: 3.2rem; }
+      .hero-content h1 { font-size: 3rem; }
       .hero-content p { font-size: 1.2rem; }
       .section-title { font-size: 2.2rem; }
       .leak-card-image { height: 240px; }
@@ -852,6 +848,12 @@
         height: 70px;
         font-size: 1.7rem;
       }
+      .card-details h3 {
+        font-size: 1.8rem;
+      }
+      .card-details p {
+        font-size: 1.1rem;
+      }
     }
 
     @media (max-width: 576px) {
@@ -859,7 +861,10 @@
       .hero-content h1 { font-size: 2.5rem; }
       .hero-btn { padding: 1rem 2rem; font-size: 1.1rem; }
       .section-title { font-size: 1.8rem; }
-      .leaks-grid { grid-template-columns: 1fr; }
+      .leaks-grid { 
+        grid-template-columns: 1fr; 
+        gap: 2rem;
+      }
       .card-details { padding: 1.5rem; }
       .card-details h3 { font-size: 1.6rem; }
       .card-details p { font-size: 1rem; }
@@ -882,7 +887,6 @@
       }
     }
 
-    /* برای دستگاه‌های خیلی کوچک */
     @media (max-width: 400px) {
       .hero-content h1 { font-size: 2rem; }
       .hero-badge { font-size: 0.8rem; }
@@ -906,9 +910,6 @@
 <body>
   <div id="particles"></div>
   <div class="grid-background"></div>
-  
-  <div class="glow glow-1"></div>
-  <div class="glow glow-2"></div>
   
   <header>
     <div class="logo">
@@ -946,7 +947,7 @@
       <div class="leak-card">
         <div class="leak-card-image">
           <div class="leak-card-badge">تازه منتشر شده</div>
-          <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="بانک سپه">
+          <img src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="بانک سپه" loading="lazy">
         </div>
         <div class="card-details">
           <h3>بانک سپه</h3>
@@ -966,7 +967,7 @@
       <div class="leak-card">
         <div class="leak-card-image">
           <div class="leak-card-badge coming-soon-badge">به زودی</div>
-          <img src="https://images.unsplash.com/photo-1509479200622-4503f27f12ef?q=80&w=2669&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="اطلاعات جدید">
+          <img src="https://images.unsplash.com/photo-1509479200622-4503f27f12ef?q=80&w=2669&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="اطلاعات جدید" loading="lazy">
         </div>
         <div class="card-details">
           <h3>افشاگری جدید</h3>
@@ -1002,7 +1003,6 @@
             </div>
           </div>
           
-          
           <div class="feature-item">
             <div class="feature-icon"><i class="fas fa-bullhorn"></i></div>
             <div class="feature-text">
@@ -1015,26 +1015,32 @@
     </div>
   </section>
 
- 
-  <!-- فوتر -->
+  <!-- فوتر بهینه شده -->
   <footer>
     <div class="footer-content">
-      <div class="footer-info">
-        <h4>سایبرلیکس</h4>
-        <p>پلتفرم افشای داده‌های هک شده با هدف شفافیت و آگاهی‌رسانی عمومی. ما معتقدیم دسترسی به اطلاعات حق همه مردم است و برای ایجاد جامعه‌ای آگاه‌تر تلاش می‌کنیم.</p>
-        <div class="footer-social">
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-telegram"></i></a>
-          <a href="#"><i class="fab fa-github"></i></a>
-          <a href="#"><i class="fas fa-rss"></i></a>
+      <div class="footer-main">
+        <div class="footer-info">
+          <div class="footer-logo">
+            <i class="fas fa-shield-virus"></i>
+            <span>سایبرلیکس</span>
+          </div>
+          <p>پلتفرم افشای داده‌های هک شده با هدف شفافیت و آگاهی‌رسانی عمومی. ما معتقدیم دسترسی به اطلاعات حق همه مردم است.</p>
         </div>
-      </div>
-    </div>
-    
-    <div class="footer-bottom">
-      <p>© ۱۴۰۳ سایبرلیکس - تمامی حقوق محفوظ است | میزبانی شده روی <a href="https://pages.github.com/">GitHub Pages</a></p>
-      <div class="visitor-counter">
-        <script src="https://cdn.counter.dev/script.js" data-id="78982a0a-9050-4cc7-b5fe-a80cd6aad3ac" data-utcoffset="-7"></script>
+        <div class="footer-right">
+          <div class="footer-social">
+            <a href="#" aria-label="توییتر"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="تلگرام"><i class="fab fa-telegram"></i></a>
+            <a href="#" aria-label="گیت‌هاب"><i class="fab fa-github"></i></a>
+            <a href="#" aria-label="آر‌اس‌اس"><i class="fas fa-rss"></i></a>
+          </div>
+          <div class="footer-copyright">
+            <p>© ۱۴۰۳ سایبرلیکس - تمامی حقوق محفوظ است</p>
+            <p>میزبانی شده روی <a href="https://pages.github.com/">GitHub Pages</a></p>
+          </div>
+          <div class="visitor-counter">
+            <script src="https://cdn.counter.dev/script.js" data-id="78982a0a-9050-4cc7-b5fe-a80cd6aad3ac" data-utcoffset="-7"></script>
+          </div>
+        </div>
       </div>
     </div>
   </footer>
@@ -1042,19 +1048,18 @@
   <div class="scroll-to-top">
     <i class="fas fa-arrow-up"></i>
   </div>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
   <script>
-    // ذرات پس‌زمینه
+    // ذرات پس‌زمینه - بهینه شده
     particlesJS('particles', {
       particles: {
-        number: { value: 80, density: { enable: true, value_area: 800 } },
+        number: { value: 60, density: { enable: true, value_area: 1000 } },
         color: { value: '#6366f1' },
         shape: { type: 'circle' },
         opacity: { value: 0.3, random: true },
         size: { value: 3, random: true },
         line_linked: { enable: true, distance: 150, color: '#ec4899', opacity: 0.2, width: 1 },
-        move: { enable: true, speed: 2, direction: 'none', random: false }
+        move: { enable: true, speed: 1.5, direction: 'none', random: false }
       },
       interactivity: {
         detect_on: 'canvas',
@@ -1097,7 +1102,7 @@
       });
     });
     
-    // انیمیشن ظاهر شدن عناصر هنگام اسکرول
+    // انیمیشن ظاهر شدن عناصر هنگام اسکرول - بهینه شده
     const observerOptions = {
       root: null,
       rootMargin: '0px',
@@ -1113,7 +1118,8 @@
       });
     }, observerOptions);
     
-    document.querySelectorAll('.leak-card, .section-title, .section-badge, .feature-item, .contact-card').forEach(el => {
+    // فقط عناصر مهم را مشاهده می‌کنیم برای بهبود عملکرد
+    document.querySelectorAll('.leak-card, .section-title, .section-badge, .feature-item').forEach(el => {
       observer.observe(el);
     });
   </script>
