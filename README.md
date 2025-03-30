@@ -1,6 +1,6 @@
 # سایبرلیکس | CyberLeaks
 
-![CyberLeaks Banner](https://github.com/ircyberleaks/ircyberleaks.github.io/blob/main/images/cyber.jpg?raw=true){:height="80px"}
+![CyberLeaks Banner](https://github.com/ircyberleaks/ircyberleaks.github.io/blob/main/images/cyber.jpg?raw=true){:height="50px"}
 
 **سایبرلیکس** پلتفرمی پیشرو برای افشای داده‌های هک‌شده با هدف افزایش شفافیت و امنیت سایبری است. ما اطلاعات حساس سازمان‌ها و شرکت‌ها را با دقت و مسئولیت‌پذیری منتشر می‌کنیم تا آگاهی عمومی را بالا ببریم.
 
