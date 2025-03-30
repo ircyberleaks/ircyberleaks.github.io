@@ -1,6 +1,6 @@
 # سایبرلیکس | CyberLeaks
 
-![CyberLeaks Banner](https://github.com/ircyberleaks/ircyberleaks.github.io/blob/main/images/cyber.jpg?raw=true){:height="150px"}
+![CyberLeaks Banner](https://github.com/ircyberleaks/ircyberleaks.github.io/blob/main/images/cyber.jpg?raw=true){:height="80px"}
 
 **سایبرلیکس** پلتفرمی پیشرو برای افشای داده‌های هک‌شده با هدف افزایش شفافیت و امنیت سایبری است. ما اطلاعات حساس سازمان‌ها و شرکت‌ها را با دقت و مسئولیت‌پذیری منتشر می‌کنیم تا آگاهی عمومی را بالا ببریم.
 
@@ -10,7 +10,7 @@
 
 این پروژه داده‌های هک‌شده از منابع مختلف را جمع‌آوری و در دسترس عموم قرار می‌دهد. ما هیچ‌گونه مسئولیت قانونی در قبال استفاده نادرست از این اطلاعات نداریم.
 
-- **وب‌سایت**: [https://subfucker.github.io](https://subfucker.github.io/cyberleaks)
+- **وب‌سایت**: [https://ircyberleaks.github.io/](https://ircyberleaks.github.io/)
 - **تاریخ شروع**: 1400/01/09
 
 ---
@@ -25,7 +25,7 @@
 
 ## نحوه استفاده
 
-1. به صفحه اصلی پروژه ([اینجا](https://subfucker.github.io/cyberleaks)) برید.
+1. به صفحه اصلی پروژه ([اینجا](https://ircyberleaks.github.io)) برید.
 2. از بخش "آرشیو افشاگری‌ها"، داده مورد نظرتان را انتخاب کنید.
 3. داده‌ها را می‌توانید به صورت ساده مشاهده کنید یا در آن‌ها جستجو انجام دهید.
 
