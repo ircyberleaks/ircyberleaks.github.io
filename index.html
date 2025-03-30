@@ -19,6 +19,8 @@
             --transition-speed: 0.3s;
             --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --border-radius: 8px;
+            --font-numbers: 'Vazirmatn FD', 'Vazir', monospace; /* فونت اختصاصی برای اعداد */
+            --header-gradient: linear-gradient(135deg, #3498db, #2c3e50); /* گرادیانت هدر */
         }
         
         [data-theme="dark"] {
@@ -52,6 +54,15 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 24px;
         }
         
         .header-controls {
@@ -61,43 +72,32 @@
             margin-bottom: 20px;
         }
         
-        h1 {
-            color: var(--primary-color);
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        
-        .header-alert {
-            background-color: var(--accent-color);
-            color: white;
-            padding: 12px 20px;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: bold;
-            box-shadow: var(--box-shadow);
-        }
-        
         .theme-toggle {
-            background: none;
+            background-color: transparent;
             border: none;
             color: var(--text-color);
             cursor: pointer;
-            font-size: 24px;
+            padding: 5px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
             transition: all var(--transition-speed);
-            background-color: var(--card-bg);
-            box-shadow: var(--box-shadow);
         }
         
         .theme-toggle:hover {
-            background-color: var(--secondary-color);
-            color: white;
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: rotate(30deg);
+        }
+        
+        .header-alert {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--accent-color);
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-right: 4px solid var(--accent-color);
         }
         
         .search-container {
@@ -110,53 +110,54 @@
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
             font-family: 'Vazir', Tahoma, Arial, sans-serif;
-            font-size: 16px;
+            font-size: 14px;
             color: var(--text-color);
             background-color: var(--card-bg);
-            box-shadow: var(--box-shadow);
             transition: all var(--transition-speed);
         }
         
         #searchInput:focus {
             outline: none;
             border-color: var(--secondary-color);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         }
         
         .filter-options {
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
-            flex-wrap: wrap;
         }
         
         .filter-select {
             flex: 1;
-            min-width: 200px;
-            padding: 10px 15px;
+            padding: 12px 15px;
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
             font-family: 'Vazir', Tahoma, Arial, sans-serif;
             font-size: 14px;
             color: var(--text-color);
             background-color: var(--card-bg);
-            cursor: pointer;
             transition: all var(--transition-speed);
+            cursor: pointer;
         }
         
         .filter-select:focus {
             outline: none;
             border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .tab-container {
+            margin-bottom: 20px;
         }
         
         .tab {
             display: flex;
             overflow-x: auto;
-            white-space: nowrap;
-            margin-bottom: 20px;
             border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
             scrollbar-width: thin;
-            scrollbar-color: var(--secondary-color) var(--light-bg);
+            scrollbar-color: var(--text-light) transparent;
         }
         
         .tab::-webkit-scrollbar {
@@ -164,18 +165,17 @@
         }
         
         .tab::-webkit-scrollbar-track {
-            background: var(--light-bg);
+            background: transparent;
         }
         
         .tab::-webkit-scrollbar-thumb {
-            background-color: var(--secondary-color);
+            background-color: var(--text-light);
             border-radius: 10px;
         }
         
         .tablinks {
             background-color: transparent;
             border: none;
-            outline: none;
             cursor: pointer;
             padding: 12px 20px;
             font-family: 'Vazir', Tahoma, Arial, sans-serif;
@@ -247,6 +247,7 @@
             border-collapse: collapse;
             text-align: center;
             font-size: 14px;
+            table-layout: fixed; /* برای کنترل بهتر عرض ستون‌ها */
         }
         
         .dataTable th {
@@ -256,6 +257,7 @@
             position: relative;
             cursor: pointer;
             transition: all var(--transition-speed);
+            white-space: nowrap; /* جلوگیری از شکستن متن */
         }
         
         .dataTable th:hover {
@@ -289,6 +291,7 @@
             padding: 12px 15px;
             border-bottom: 1px solid var(--border-color);
             transition: all var(--transition-speed);
+            word-break: break-word; /* شکستن کلمات طولانی */
         }
         
         .dataTable tbody tr {
@@ -306,15 +309,23 @@
             border-bottom: none;
         }
         
+        /* بهبود نمایش اعداد */
         .amount {
             font-weight: bold;
             color: var(--accent-color);
+            font-family: var(--font-numbers);
+            direction: ltr; /* جهت چپ به راست برای اعداد */
+            display: inline-block;
         }
         
         .national-id, .mobile {
-            font-family: monospace;
+            font-family: var(--font-numbers);
             direction: ltr;
             text-align: center;
+            letter-spacing: 0.5px; /* فاصله بین اعداد */
+            background-color: rgba(0, 0, 0, 0.03);
+            padding: 3px 6px;
+            border-radius: 4px;
         }
         
         .pagination {
@@ -392,6 +403,18 @@
             box-shadow: var(--box-shadow);
             transition: all var(--transition-speed);
             border-right: 4px solid var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .data-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--secondary-color), transparent);
         }
         
         .data-card:hover {
@@ -403,6 +426,7 @@
             margin-bottom: 10px;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
+            position: relative;
         }
         
         .card-item:last-child {
@@ -416,6 +440,18 @@
             color: var(--primary-color);
             margin-bottom: 5px;
             font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-label:before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            margin-left: 8px;
         }
         
         .card-value {
@@ -425,19 +461,103 @@
         .card-amount {
             color: var(--accent-color);
             font-weight: bold;
+            font-family: var(--font-numbers);
+            direction: ltr;
+            display: inline-block;
         }
         
         .card-id, .card-mobile {
-            font-family: monospace;
+            font-family: var(--font-numbers);
             direction: ltr;
             text-align: left;
             font-size: 13px;
+            background-color: var(--light-bg);
+            padding: 5px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+        
+        /* اضافه کردن قابلیت اشتراک‌گذاری در توییتر */
+        .share-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--light-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border-right: 4px solid #1DA1F2;
+        }
+        
+        .share-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .share-title:before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #1DA1F2;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        
+        .twitter-share-button {
+            display: inline-flex;
+            align-items: center;
+            background-color: #1DA1F2;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all var(--transition-speed);
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .twitter-share-button:hover {
+            background-color: #0c85d0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(29, 161, 242, 0.3);
+        }
+        
+        .twitter-share-button .material-icons {
+            margin-left: 8px;
+            font-size: 18px;
+        }
+        
+        .twitter-preview {
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background-color: var(--card-bg);
+        }
+        
+        .twitter-preview img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .twitter-preview-text {
+            padding: 15px;
+            font-size: 14px;
+            color: var(--text-color);
+            border-top: 1px solid var(--border-color);
         }
         
         /* استایل برای موبایل */
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
+                margin: 10px;
             }
             
             h1 {
@@ -473,14 +593,41 @@
             .card-container {
                 grid-template-columns: 1fr;
             }
+            
+            .twitter-preview {
+                margin-top: 10px;
+            }
         }
         
         @media (max-width: 576px) {
+            .container {
+                padding: 10px;
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .header-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .header-controls h1 {
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+            
+            .theme-toggle {
+                align-self: flex-end;
+                margin-top: -30px;
+            }
+            
             .mobile-data-label {
                 display: block;
                 font-weight: bold;
                 margin-bottom: 5px;
                 color: var(--primary-color);
+                font-size: 12px;
             }
             
             /* تغییر نمایش جدول در موبایل */
@@ -502,16 +649,30 @@
             .mobile-view tr {
                 border: 1px solid var(--border-color);
                 margin-bottom: 15px;
-                border-radius: 8px;
-                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                border-radius: var(--border-radius);
+                box-shadow: var(--box-shadow);
+                background-color: var(--card-bg);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .mobile-view tr:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 3px;
+                background: linear-gradient(to right, var(--secondary-color), transparent);
             }
             
             .mobile-view td {
                 border: none;
                 border-bottom: 1px solid var(--border-color);
                 position: relative;
-                padding-right: 50%;
+                padding: 12px 50% 12px 12px;
                 text-align: right;
+                min-height: 40px;
             }
             
             .mobile-view td:last-child {
@@ -520,12 +681,13 @@
             
             .mobile-view td:before {
                 position: absolute;
-                right: 10px;
+                right: 12px;
                 width: 45%;
                 padding-right: 10px;
                 white-space: nowrap;
                 font-weight: bold;
                 color: var(--primary-color);
+                font-size: 12px;
             }
             
             .mobile-view td:nth-of-type(1):before { content: "نام مشتری:"; }
@@ -627,6 +789,37 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* اضافه کردن دکمه اسکرول به بالا */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-speed);
+            z-index: 100;
+        }
+        
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-to-top:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
     </style>
 </head>
 <body>
@@ -709,6 +902,9 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- نمایش کارتی برای موبایل -->
+                <div class="card-container" style="display: none;"></div>
             </div>
             
             <!-- تب اول: وام‌های بالای 1000 میلیارد -->
@@ -729,6 +925,9 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- نمایش کارتی برای موبایل -->
+                <div class="card-container" style="display: none;"></div>
             </div>
             
             <!-- تب دوم: وام‌های 500 تا 1000 میلیارد -->
@@ -749,6 +948,9 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- نمایش کارتی برای موبایل -->
+                <div class="card-container" style="display: none;"></div>
             </div>
             
             <!-- تب سوم: وام‌های 100 تا 500 میلیارد -->
@@ -769,6 +971,9 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- نمایش کارتی برای موبایل -->
+                <div class="card-container" style="display: none;"></div>
             </div>
             
             <!-- تب چهارم: وام‌های زیر 100 میلیارد -->
@@ -789,6 +994,9 @@
                         </tbody>
                     </table>
                 </div>
+                
+                <!-- نمایش کارتی برای موبایل -->
+                <div class="card-container" style="display: none;"></div>
             </div>
         </div>
         
@@ -800,6 +1008,29 @@
         </div>
         
         <div id="pagination" class="pagination"></div>
+        
+        <!-- بخش اشتراک‌گذاری در توییتر -->
+        <div class="share-container">
+            <div class="share-title">اشتراک‌گذاری این اطلاعات در توییتر</div>
+            <p>با اشتراک‌گذاری این اطلاعات، به آگاهی‌رسانی عمومی کمک کنید.</p>
+            
+            <button class="twitter-share-button" onclick="shareOnTwitter()">
+                <span class="material-icons">share</span>
+                اشتراک‌گذاری در توییتر
+            </button>
+            
+            <div class="twitter-preview">
+                <img src="images/twitter-preview.jpg" alt="تصویر پیش‌نمایش توییتر">
+                <div class="twitter-preview-text">
+                    لیست وام‌های کلان بانک سپه منتشر شد. بیش از 100 نفر وام‌های بالای 1000 میلیارد تومانی دریافت کرده‌اند. #شفافیت_بانکی #وام_کلان
+                </div>
+            </div>
+        </div>
+        
+        <!-- دکمه اسکرول به بالا -->
+        <div class="scroll-to-top">
+            <span class="material-icons">arrow_upward</span>
+        </div>
     </div>
     
     <script>
@@ -1190,233 +1421,222 @@
         if (!activeTab) return;
         
         const tableId = activeTab.querySelector('table').id;
-        const tbody = activeTab.querySelector('tbody');
-        const rows = Array.from(filteredData[tableId]);
         
         // مرتب‌سازی بر اساس فیلتر انتخاب شده
-        rows.sort((a, b) => {
-            switch (selectedSort) {
-                case 'loan-desc':
-                    const aAmount1 = parseFloat(a.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
-                    const bAmount1 = parseFloat(b.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
-                    return bAmount1 - aAmount1;
-                
-                case 'loan-asc':
-                    const aAmount2 = parseFloat(a.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
-                    const bAmount2 = parseFloat(b.querySelector('.amount').textContent.replace(/[^\d.]/g, ''));
-                    return aAmount2 - bAmount2;
-                
-                case 'name-asc':
-                    const aName1 = a.querySelector('td').textContent.trim();
-                    const bName1 = b.querySelector('td').textContent.trim();
-                    return aName1.localeCompare(bName1, 'fa');
-                
-                case 'name-desc':
-                    const aName2 = a.querySelector('td').textContent.trim();
-                    const bName2 = b.querySelector('td').textContent.trim();
-                    return bName2.localeCompare(aName2, 'fa');
-                
-                default:
-                    return 0;
-            }
-        });
-        
-        // بازسازی جدول
-        tbody.innerHTML = '';
-        rows.forEach(row => tbody.appendChild(row));
-        
-        // بروزرسانی صفحه‌بندی
-        filteredData[tableId] = rows;
-        currentPage = 1;
-        setupPagination(tableId);
+        switch (selectedSort) {
+            case 'loan-desc':
+                sortTable(2, tableId); // مرتب‌سازی نزولی بر اساس مبلغ وام
+                const headerLoanDesc = document.querySelector(`#${tableId} th:nth-child(3)`);
+                headerLoanDesc.classList.remove('sort-asc');
+                headerLoanDesc.classList.add('sort-desc');
+                break;
+            
+            case 'loan-asc':
+                sortTable(2, tableId); // مرتب‌سازی صعودی بر اساس مبلغ وام
+                const headerLoanAsc = document.querySelector(`#${tableId} th:nth-child(3)`);
+                headerLoanAsc.classList.remove('sort-desc');
+                headerLoanAsc.classList.add('sort-asc');
+                break;
+            
+            case 'name-asc':
+                sortTable(0, tableId); // مرتب‌سازی صعودی بر اساس نام
+                const headerNameAsc = document.querySelector(`#${tableId} th:nth-child(1)`);
+                headerNameAsc.classList.remove('sort-desc');
+                headerNameAsc.classList.add('sort-asc');
+                break;
+            
+            case 'name-desc':
+                sortTable(0, tableId); // مرتب‌سازی نزولی بر اساس نام
+                const headerNameDesc = document.querySelector(`#${tableId} th:nth-child(1)`);
+                headerNameDesc.classList.remove('sort-asc');
+                headerNameDesc.classList.add('sort-desc');
+                break;
+        }
     }
     
-    // تابع بررسی حالت نمایش موبایل
-    function checkMobileView() {
-        if (window.innerWidth <= 576) {
-            setupMobileViewToggle();
-        }
+    // تابع تبدیل جداول به کارت‌ها برای نمایش موبایل
+    function convertTablesToCards() {
+        const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
+        if (!activeTab) return;
+        
+        const tableId = activeTab.querySelector('table').id;
+        const tableContainer = activeTab.querySelector('.table-container');
+        const cardContainer = activeTab.querySelector('.card-container');
+        
+        // مخفی کردن جدول و نمایش کارت‌ها
+        tableContainer.style.display = 'none';
+        cardContainer.style.display = 'grid';
+        
+        // پاک کردن کارت‌های قبلی
+        cardContainer.innerHTML = '';
+        
+        // دریافت داده‌های جدول فعلی
+        const rows = document.querySelectorAll(`#${tableId} tbody tr`);
+        
+        // ایجاد کارت برای هر ردیف
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 4) {
+                const name = cells[0].textContent;
+                const nationalId = cells[1].textContent;
+                const amount = cells[2].textContent;
+                const mobile = cells[3].textContent;
+                
+                // ایجاد کارت
+                const card = document.createElement('div');
+                card.className = 'data-card';
+                
+                // اضافه کردن اطلاعات به کارت
+                card.innerHTML = `
+                    <div class="card-item">
+                        <div class="card-label">نام مشتری</div>
+                        <div class="card-value">${name}</div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-label">کد ملی</div>
+                        <div class="card-value"><span class="card-id">${nationalId}</span></div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-label">مجموع وام دریافتی</div>
+                        <div class="card-value"><span class="card-amount">${amount}</span></div>
+                    </div>
+                    <div class="card-item">
+                        <div class="card-label">شماره موبایل</div>
+                        <div class="card-value"><span class="card-mobile">${mobile}</span></div>
+                    </div>
+                `;
+                
+                // اضافه کردن کارت به کانتینر
+                cardContainer.appendChild(card);
+            }
+        });
+    }
+    
+    // تابع تبدیل کارت‌ها به جداول
+    function convertCardsToTables() {
+        const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
+        if (!activeTab) return;
+        
+        const tableContainer = activeTab.querySelector('.table-container');
+        const cardContainer = activeTab.querySelector('.card-container');
+        
+        // مخفی کردن کارت‌ها و نمایش جدول
+        cardContainer.style.display = 'none';
+        tableContainer.style.display = 'block';
     }
     
     // تابع راه‌اندازی تغییر حالت نمایش برای موبایل
     function setupMobileViewToggle() {
         const tableViewBtn = document.getElementById('tableView');
         const cardViewBtn = document.getElementById('cardView');
-        const tabContainer = document.querySelector('.tab-container');
         
-        // حالت نمایش جدولی
-        tableViewBtn.addEventListener('click', function() {
-            tableViewBtn.classList.add('active');
+        // تنظیم رویداد کلیک برای دکمه نمایش جدولی
+        tableViewBtn.addEventListener('click', () => {
+            // حذف کلاس active از دکمه نمایش کارتی
             cardViewBtn.classList.remove('active');
-            tabContainer.classList.remove('mobile-view');
-            
-            // حذف نمایش کارتی
-            document.querySelectorAll('.card-container').forEach(container => {
-                container.remove();
-            });
-            
-            // نمایش جداول
-            document.querySelectorAll('.table-container').forEach(container => {
-                container.style.display = '';
-            });
+            // اضافه کردن کلاس active به دکمه نمایش جدولی
+            tableViewBtn.classList.add('active');
+            // تبدیل کارت‌ها به جداول
+            convertCardsToTables();
         });
         
-        // حالت نمایش کارتی
-        cardViewBtn.addEventListener('click', function() {
-            cardViewBtn.classList.add('active');
+        // تنظیم رویداد کلیک برای دکمه نمایش کارتی
+        cardViewBtn.addEventListener('click', () => {
+            // حذف کلاس active از دکمه نمایش جدولی
             tableViewBtn.classList.remove('active');
-            tabContainer.classList.add('mobile-view');
-            
+            // اضافه کردن کلاس active به دکمه نمایش کارتی
+            cardViewBtn.classList.add('active');
             // تبدیل جداول به کارت‌ها
             convertTablesToCards();
         });
     }
     
-    // تابع تبدیل جداول به کارت‌ها
-    function convertTablesToCards() {
-        const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
-        if (!activeTab) return;
-        
-        const tableContainer = activeTab.querySelector('.table-container');
-        const table = tableContainer.querySelector('table');
-        const rows = table.querySelectorAll('tbody tr');
-        
-        // مخفی کردن جدول
-        tableContainer.style.display = 'none';
-        
-        // حذف کارت‌های قبلی
-        const existingCardContainer = activeTab.querySelector('.card-container');
-        if (existingCardContainer) {
-            existingCardContainer.remove();
-        }
-        
-        // ایجاد کانتینر کارت‌ها
-        const cardContainer = document.createElement('div');
-        cardContainer.className = 'card-container';
-        
-        // تبدیل هر ردیف به یک کارت
-        rows.forEach(row => {
-            if (row.style.display === 'none') return;
-            
-            const cells = row.querySelectorAll('td');
-            
-            const card = document.createElement('div');
-            card.className = 'data-card';
-            
-            // نام مشتری
-            const nameItem = document.createElement('div');
-            nameItem.className = 'card-item';
-            
-            const nameLabel = document.createElement('div');
-            nameLabel.className = 'card-label';
-            nameLabel.textContent = 'نام مشتری';
-            
-            const nameValue = document.createElement('div');
-            nameValue.className = 'card-value';
-            nameValue.textContent = cells[0].textContent;
-            
-            nameItem.appendChild(nameLabel);
-            nameItem.appendChild(nameValue);
-            card.appendChild(nameItem);
-            
-            // کد ملی
-            const idItem = document.createElement('div');
-            idItem.className = 'card-item';
-            
-            const idLabel = document.createElement('div');
-            idLabel.className = 'card-label';
-            idLabel.textContent = 'کد ملی';
-            
-            const idValue = document.createElement('div');
-            idValue.className = 'card-value card-id';
-            idValue.textContent = cells[1].textContent;
-            
-            idItem.appendChild(idLabel);
-            idItem.appendChild(idValue);
-            card.appendChild(idItem);
-            
-            // مجموع وام
-            const amountItem = document.createElement('div');
-            amountItem.className = 'card-item';
-            
-            const amountLabel = document.createElement('div');
-            amountLabel.className = 'card-label';
-            amountLabel.textContent = 'مجموع وام دریافتی';
-            
-            const amountValue = document.createElement('div');
-            amountValue.className = 'card-value card-amount';
-            amountValue.textContent = cells[2].textContent;
-            
-            amountItem.appendChild(amountLabel);
-            amountItem.appendChild(amountValue);
-            card.appendChild(amountItem);
-            
-            // شماره موبایل
-            const mobileItem = document.createElement('div');
-            mobileItem.className = 'card-item';
-            
-            const mobileLabel = document.createElement('div');
-            mobileLabel.className = 'card-label';
-            mobileLabel.textContent = 'شماره موبایل';
-            
-            const mobileValue = document.createElement('div');
-            mobileValue.className = 'card-value card-mobile';
-            mobileValue.textContent = cells[3].textContent;
-            
-            mobileItem.appendChild(mobileLabel);
-            mobileItem.appendChild(mobileValue);
-            card.appendChild(mobileItem);
-            
-            cardContainer.appendChild(card);
-        });
-        
-        // اضافه کردن کارت‌ها به تب فعال
-        activeTab.appendChild(cardContainer);
+    // تابع اشتراک‌گذاری در توییتر
+    function shareOnTwitter() {
+        const text = 'لیست وام‌های کلان بانک سپه منتشر شد. بیش از 100 نفر وام‌های بالای 1000 میلیارد تومانی دریافت کرده‌اند. #شفافیت_بانکی #وام_کلان';
+        const url = window.location.href;
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+        window.open(twitterUrl, '_blank');
     }
     
-    // اضافه کردن رویدادها
-    document.addEventListener('DOMContentLoaded', function() {
+    // تابع تغییر تم
+    function toggleTheme() {
+        const body = document.body;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('.material-icons');
+        
+        if (body.getAttribute('data-theme') === 'dark') {
+            // تغییر به تم روشن
+            body.removeAttribute('data-theme');
+            themeIcon.textContent = 'dark_mode';
+            localStorage.setItem('theme', 'light');
+        } else {
+            // تغییر به تم تاریک
+            body.setAttribute('data-theme', 'dark');
+            themeIcon.textContent = 'light_mode';
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+    
+    // تابع بررسی تم ذخیره شده
+    function checkSavedTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('.material-icons');
+        
+        if (savedTheme === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            themeIcon.textContent = 'light_mode';
+        }
+    }
+    
+    // تابع اسکرول به بالا
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+    
+    // راه‌اندازی رویدادها
+    document.addEventListener('DOMContentLoaded', () => {
         // بارگذاری داده‌ها
         loadData();
         
-        // رویداد جستجو
+        // بررسی تم ذخیره شده
+        checkSavedTheme();
+        
+        // تنظیم رویداد تغییر تم
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        
+        // تنظیم رویداد جستجو
         document.getElementById('searchInput').addEventListener('input', searchData);
         
-        // رویداد فیلتر محدوده وام
+        // تنظیم رویداد فیلتر محدوده وام
         document.getElementById('loanRangeFilter').addEventListener('change', filterByLoanRange);
         
-        // رویداد مرتب‌سازی
+        // تنظیم رویداد مرتب‌سازی
         document.getElementById('sortFilter').addEventListener('change', sortByFilter);
         
-        // رویداد تغییر تم
-        document.getElementById('themeToggle').addEventListener('click', function() {
-            const body = document.body;
-            const icon = this.querySelector('.material-icons');
-            
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.removeAttribute('data-theme');
-                icon.textContent = 'dark_mode';
-                localStorage.setItem('theme', 'light');
+        // تنظیم رویداد اسکرول به بالا
+        document.querySelector('.scroll-to-top').addEventListener('click', scrollToTop);
+        
+        // نمایش/مخفی کردن دکمه اسکرول به بالا
+        window.addEventListener('scroll', () => {
+            const scrollButton = document.querySelector('.scroll-to-top');
+            if (window.scrollY > 300) {
+                scrollButton.style.display = 'flex';
             } else {
-                body.setAttribute('data-theme', 'dark');
-                icon.textContent = 'light_mode';
-                localStorage.setItem('theme', 'dark');
+                scrollButton.style.display = 'none';
             }
         });
-        
-        // بررسی تم ذخیره شده
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.body.setAttribute('data-theme', 'dark');
-            document.querySelector('.theme-toggle .material-icons').textContent = 'light_mode';
-        }
         
         // بررسی حالت نمایش موبایل
         checkMobileView();
         
-        // رویداد تغییر اندازه صفحه
+        // تنظیم رویداد تغییر اندازه صفحه
         window.addEventListener('resize', checkMobileView);
     });
-</script>
+    </script>
 </body>
 </html>
