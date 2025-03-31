@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اطلاعات مشتریان بانک</title>
+    
+    <!-- استایل‌ها -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Vazirmatn', 'Tahoma', sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        h1 {
+            color: #0d6efd;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+        
+        #search-box {
+            margin-bottom: 20px;
+        }
+        
+        #data-container {
+            width: 100%;
+            min-height: 600px;
+            border: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>اطلاعات مشتریان بانک</h1>
+        
+        <div id="search-box" class="input-group mb-3">
+            <input type="text" id="search-input" class="form-control" placeholder="جستجو...">
+            <button class="btn btn-primary" type="button" id="search-button">جستجو</button>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">در حال بارگذاری...</span>
+            </div>
+            <p>در حال بارگذاری داده‌ها...</p>
+        </div>
+        
+        <iframe id="data-container" style="display:none;"></iframe>
+    </div>
+    
+    <!-- اسکریپت‌ها -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // بارگذاری فایل داده
+            const iframe = document.getElementById('data-container');
+            iframe.src = 'data.html';
+            
+            // وقتی iframe بارگذاری شد
+            iframe.onload = function() {
+                // نمایش iframe و مخفی کردن لودینگ
+                $('#loading').hide();
+                $('#data-container').show();
+                
+                // اعمال استایل به جدول داخل iframe
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                const style = iframeDoc.createElement('style');
+                style.textContent = `
+                    body { font-family: 'Vazirmatn', 'Tahoma', sans-serif; }
+                    .dataframe {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-bottom: 20px;
+                    }
+                    .dataframe thead th {
+                        background-color: #0d6efd;
+                        color: white;
+                        padding: 12px;
+                        text-align: center;
+                        font-weight: bold;
+                    }
+                    .dataframe tbody td {
+                        padding: 10px;
+                        border-bottom: 1px solid #dee2e6;
+                    }
+                    .dataframe tbody tr:hover {
+                        background-color: #f1f8ff;
+                    }
+                    .highlight { background-color: yellow; }
+                `;
+                iframeDoc.head.appendChild(style);
+                
+                // اضافه کردن لینک فونت به iframe
+                const fontLink = iframeDoc.createElement('link');
+                fontLink.href = 'https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css';
+                fontLink.rel = 'stylesheet';
+                fontLink.type = 'text/css';
+                iframeDoc.head.appendChild(fontLink);
+                
+                // تنظیم عرض جدول
+                const table = iframeDoc.querySelector('.dataframe');
+                if (table) {
+                    table.style.width = '100%';
+                }
+            };
+            
+            // جستجو در جدول
+            $('#search-button').click(function() {
+                searchTable();
+            });
+            
+            $('#search-input').keypress(function(e) {
+                if (e.which === 13) {
+                    searchTable();
+                }
+            });
+            
+            function searchTable() {
+                const searchText = $('#search-input').val().toLowerCase();
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                // حذف هایلایت‌های قبلی
+                const highlightedElements = iframeDoc.querySelectorAll('.highlight');
+                highlightedElements.forEach(el => {
+                    el.classList.remove('highlight');
+                });
+                
+                if (!searchText) return;
+                
+                // جستجو در سلول‌های جدول
+                const cells = iframeDoc.querySelectorAll('.dataframe td');
+                let found = false;
+                
+                cells.forEach(cell => {
+                    const cellText = cell.textContent.toLowerCase();
+                    if (cellText.includes(searchText)) {
+                        cell.classList.add('highlight');
+                        found = true;
+                        
+                        // اسکرول به اولین نتیجه
+                        if (!found) {
+                            cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
