@@ -3,27 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بارگذاری داده‌ها</title>
+    <title>در حال بارگذاری داده‌ها</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .content {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-
-    <h2>داده‌ها</h2>
-    <div id="data-container">در حال بارگیری...</div>
+    <div class="container">
+        <h1>در حال بارگذاری داده‌ها...</h1>
+        <div class="content" id="dataContent">
+            <p>در حال بارگذاری محتوا...</p>
+        </div>
+    </div>
 
     <script>
-        async function loadData() {
-            try {
-                let response = await fetch('data/sepahbilion.html', { cache: "no-store" });
-                let html = await response.text();
-                document.getElementById("data-container").innerHTML = html;
-            } catch (error) {
-                console.error("خطا در بارگیری:", error);
-                document.getElementById("data-container").innerHTML = "بارگیری ناموفق!";
-            }
-        }
-
-        loadData();
+        // بارگذاری داده‌ها از URL
+        fetch('https://ircyberleaks.github.io/data/sepahbilion.html')
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('مشکلی در بارگذاری داده‌ها پیش آمده است.');
+            })
+            .then(data => {
+                // نمایش داده‌های بارگذاری شده
+                document.getElementById('dataContent').innerHTML = data;
+            })
+            .catch(error => {
+                document.getElementById('dataContent').innerHTML = `<p>${error.message}</p>`;
+            });
     </script>
-
 </body>
 </html>
