@@ -49,16 +49,19 @@
   </table>
 
   <script>
-    // تابعی برای بارگذاری داده‌ها از فایل HTML
+    // خواندن داده‌ها از فایل HTML
     fetch('data/sepahbilion.html')
       .then(response => response.text())
       .then(data => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(data, 'text/html');
+        
+        // استخراج ردیف‌های جدول از فایل HTML
         const rows = doc.querySelectorAll('table tbody tr');
-
+        
         // اضافه کردن ردیف‌ها به جدول اصلی
         const tableBody = document.querySelector('#customerTable tbody');
+        
         rows.forEach(row => {
           const newRow = document.createElement('tr');
           row.querySelectorAll('td').forEach(cell => {
@@ -69,7 +72,7 @@
           tableBody.appendChild(newRow);
         });
       })
-      .catch(err => console.log('Error loading file:', err));
+      .catch(err => console.log('Error loading data:', err));
   </script>
 
 </body>
