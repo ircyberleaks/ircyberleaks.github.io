@@ -1,399 +1,46 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>1اطلاعات مشتریان بانک سپه</title>
-  <style>
-    body {
-      font-family: Tahoma, Arial, sans-serif;
-      direction: rtl;
-      margin: 20px;
-      background-color: #f5f5f5;
-    }
-    
-    h1 {
-      text-align: center;
-    }
-    
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border-radius: 5px;
-    }
-    
-    .search-box {
-      margin-bottom: 20px;
-    }
-    
-    .search-box input {
-      width: 100%;
-      padding: 10px;
-      font-family: Tahoma, Arial, sans-serif;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    
-    th, td {
-      padding: 8px;
-      text-align: right;
-      border: 1px solid #ddd;
-    }
-    
-    th {
-      background-color: #f2f2f2;
-      position: sticky;
-      top: 0;
-    }
-    
-    .loading {
-      text-align: center;
-      padding: 20px;
-    }
-    
-    .error {
-      color: red;
-      text-align: center;
-      padding: 10px;
-    }
-    
-    .stats {
-      margin-top: 10px;
-      text-align: center;
-      font-size: 0.9em;
-      color: #666;
-    }
-    
-    .table-container {
-      max-height: 500px;
-      overflow-y: auto;
-      margin-top: 20px;
-    }
-    
-    .progress-container {
-      width: 100%;
-      background-color: #f1f1f1;
-      border-radius: 4px;
-      margin: 10px 0;
-    }
-    
-    .progress-bar {
-      height: 20px;
-      background-color: #4CAF50;
-      border-radius: 4px;
-      width: 0%;
-      text-align: center;
-      line-height: 20px;
-      color: white;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>لیست مشتریان</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 </head>
-<body>
-  <div class="container">
-    <h1>1اطلاعات مشتریان بانک سپه</h1>
-    
-    <div id="errorMessage" class="error" style="display: none;"></div>
-    <div id="loading" class="loading">در حال بارگذاری اطلاعات...</div>
-    
-    <div id="progressContainer" class="progress-container" style="display: none;">
-      <div id="progressBar" class="progress-bar">0%</div>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="text-center">لیست مشتریان</h1>
+        <table id="customer-table" class="table table-striped table-bordered mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>نام مشتری</th>
+                    <th>کد ملی</th>
+                    <th>محل تولد</th>
+                    <th>شماره موبایل</th>
+                    <th>گروه مشتریان</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
-    
-    <div class="search-box" style="display: none;" id="searchContainer">
-      <input type="text" id="searchInput" placeholder="جستجو (نام، کد ملی یا شماره موبایل)...">
-    </div>
-    
-    <div id="stats" class="stats"></div>
-    
-    <div class="table-container">
-      <table id="customerTable" style="display: none;">
-        <thead>
-          <tr>
-            <th>نام مشتری</th>
-            <th>کد ملی</th>
-            <th>محل تولد</th>
-            <th>شماره موبایل</th>
-            <th>گروه مشتریان</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          <!-- داده‌ها اینجا قرار می‌گیرند -->
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-  <!-- کتابخانه SQL.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
-  
-  <script>
-    // اجرای کد پس از بارگذاری صفحه
-    document.addEventListener('DOMContentLoaded', function() {
-      // تنظیم رویداد جستجو با تأخیر برای جلوگیری از فراخوانی مکرر
-      let searchTimeout;
-      document.getElementById('searchInput').addEventListener('input', function() {
-        const searchText = this.value.trim();
-        
-        // پاک کردن تایمر قبلی
-        clearTimeout(searchTimeout);
-        
-        // تنظیم تایمر جدید (300 میلی‌ثانیه تأخیر)
-        searchTimeout = setTimeout(() => {
-          if (searchText.length >= 2) {
-            searchDatabase(searchText);
-          } else if (searchText.length === 0) {
-            clearResults();
-          }
-        }, 300);
-      });
-      
-      // بارگذاری دیتابیس
-      initDatabase();
-    });
-    
-    // متغیرهای سراسری
-    let db = null;
-    
-    // راه‌اندازی دیتابیس با نمایش پیشرفت
-    async function initDatabase() {
-      try {
-        // نمایش وضعیت بارگذاری
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('progressContainer').style.display = 'block';
-        document.getElementById('customerTable').style.display = 'none';
-        document.getElementById('searchContainer').style.display = 'none';
-        document.getElementById('errorMessage').style.display = 'none';
-        
-        // راه‌اندازی SQL.js
-        const SQL = await window.initSqlJs({
-          locateFile: filename => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${filename}`
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.getJSON("data/sepahbilion.json", function(data) {
+                let table = $('#customer-table').DataTable();
+                data.forEach(customer => {
+                    table.row.add([
+                        customer.name,
+                        customer.national_id,
+                        customer.birth_place,
+                        customer.phone,
+                        customer.customer_group
+                    ]).draw(false);
+                });
+            });
         });
-        
-        // بارگذاری فایل دیتابیس با نمایش پیشرفت
-        const response = await fetch('data/customers.db');
-        
-        if (!response.ok) {
-          throw new Error(`خطا در بارگذاری دیتابیس: ${response.status} ${response.statusText}`);
-        }
-        
-        const contentLength = response.headers.get('Content-Length');
-        const total = contentLength ? parseInt(contentLength, 10) : 0;
-        let loaded = 0;
-        
-        const reader = response.body.getReader();
-        const chunks = [];
-        
-        // خواندن داده‌ها به صورت جریانی
-        while (true) {
-          const { done, value } = await reader.read();
-          
-          if (done) {
-            break;
-          }
-          
-          chunks.push(value);
-          loaded += value.length;
-          
-          // به‌روزرسانی نوار پیشرفت
-          if (total > 0) {
-            const percent = Math.round((loaded / total) * 100);
-            document.getElementById('progressBar').style.width = `${percent}%`;
-            document.getElementById('progressBar').textContent = `${percent}%`;
-          }
-        }
-        
-        // ترکیب تکه‌ها
-        const chunksAll = new Uint8Array(loaded);
-        let position = 0;
-        
-        for (const chunk of chunks) {
-          chunksAll.set(chunk, position);
-          position += chunk.length;
-        }
-        
-        // ایجاد دیتابیس
-        db = new SQL.Database(chunksAll);
-        
-        // نمایش آمار دیتابیس
-        showDatabaseStats();
-        
-        // مخفی کردن وضعیت بارگذاری
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('progressContainer').style.display = 'none';
-        document.getElementById('customerTable').style.display = 'table';
-        document.getElementById('searchContainer').style.display = 'block';
-        
-        console.log('دیتابیس با موفقیت بارگذاری شد.');
-      } catch (error) {
-        console.error('خطا در راه‌اندازی دیتابیس:', error);
-        
-        // نمایش پیام خطا
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('progressContainer').style.display = 'none';
-        document.getElementById('errorMessage').style.display = 'block';
-        document.getElementById('errorMessage').textContent = `خطا در بارگذاری دیتابیس: ${error.message}`;
-      }
-    }
-    
-    // نمایش آمار دیتابیس
-    function showDatabaseStats() {
-      if (!db) return;
-      
-      try {
-        // دریافت تعداد کل رکوردها
-        const totalCountResult = db.exec("SELECT COUNT(*) FROM customers");
-        const totalCount = totalCountResult[0].values[0][0];
-        
-        // نمایش آمار
-        const statsElement = document.getElementById('stats');
-        statsElement.textContent = `تعداد کل رکوردها: ${totalCount.toLocaleString()} | برای جستجو، حداقل ۲ کاراکتر وارد کنید`;
-      } catch (error) {
-        console.error('خطا در نمایش آمار:', error);
-      }
-    }
-    
-    // جستجو در دیتابیس
-    function searchDatabase(searchText) {
-      if (!db) return;
-      
-      try {
-        // نمایش وضعیت بارگذاری
-        document.getElementById('loading').style.display = 'block';
-        
-        // اجرای کوئری جستجو با محدودیت تعداد نتایج
-        const query = `
-          SELECT name, national_id, birth_place, mobile, customer_group 
-          FROM customers 
-          WHERE name LIKE ? OR national_id LIKE ? OR mobile LIKE ? 
-          LIMIT 200
-        `;
-        
-        const searchPattern = `%${searchText}%`;
-        const stmt = db.prepare(query);
-        stmt.bind([searchPattern, searchPattern, searchPattern]);
-        
-        // جمع‌آوری نتایج
-        const customers = [];
-        while (stmt.step()) {
-          const row = stmt.getAsObject();
-          customers.push({
-            name: row.name,
-            national_id: row.national_id,
-            birth_place: row.birth_place,
-            mobile: row.mobile,
-            customer_group: row.customer_group
-          });
-        }
-        
-        // آزادسازی منابع
-        stmt.free();
-        
-        // مخفی کردن وضعیت بارگذاری
-        document.getElementById('loading').style.display = 'none';
-        
-        // نمایش نتایج
-        displayData(customers);
-        
-        // به‌روزرسانی آمار جستجو
-        const statsElement = document.getElementById('stats');
-        statsElement.textContent = `نتایج جستجو برای "${searchText}": ${customers.length} رکورد یافت شد${customers.length >= 200 ? ' (حداکثر 200 مورد نمایش داده می‌شود)' : ''}`;
-      } catch (error) {
-        console.error('خطا در جستجو:', error);
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('errorMessage').style.display = 'block';
-        document.getElementById('errorMessage').textContent = `خطا در جستجو: ${error.message}`;
-      }
-    }
-    
-    // پاک کردن نتایج
-    function clearResults() {
-      const tableBody = document.getElementById('tableBody');
-      tableBody.innerHTML = '';
-      
-      // بازگرداندن آمار اصلی
-      showDatabaseStats();
-    }
-    
-    // نمایش داده‌ها در جدول با روش بهینه
-    function displayData(customers) {
-      const tableBody = document.getElementById('tableBody');
-      tableBody.innerHTML = '';
-      
-      if (customers.length === 0) {
-        // نمایش پیام خالی بودن
-        const emptyRow = document.createElement('tr');
-        const emptyCell = document.createElement('td');
-        emptyCell.colSpan = 5;
-        emptyCell.textContent = 'هیچ نتیجه‌ای یافت نشد.';
-        emptyCell.style.textAlign = 'center';
-        emptyRow.appendChild(emptyCell);
-        tableBody.appendChild(emptyRow);
-        return;
-      }
-      
-      // استفاده از تکنیک تکه‌تکه کردن برای بهبود عملکرد
-      const fragment = document.createDocumentFragment();
-      const chunkSize = 50; // تعداد رکورد در هر تکه
-      
-      function processChunk(startIndex) {
-        // محاسبه شاخص پایان
-        const endIndex = Math.min(startIndex + chunkSize, customers.length);
-        
-        // پردازش رکوردها در این تکه
-        for (let i = startIndex; i < endIndex; i++) {
-          const customer = customers[i];
-          const row = document.createElement('tr');
-          
-          // نام مشتری
-          const nameCell = document.createElement('td');
-          nameCell.textContent = customer.name;
-          row.appendChild(nameCell);
-          
-          // کد ملی
-          const nationalIdCell = document.createElement('td');
-          nationalIdCell.textContent = customer.national_id;
-          row.appendChild(nationalIdCell);
-          
-          // محل تولد
-          const birthPlaceCell = document.createElement('td');
-          birthPlaceCell.textContent = customer.birth_place;
-          row.appendChild(birthPlaceCell);
-          
-          // شماره موبایل
-          const mobileCell = document.createElement('td');
-          mobileCell.textContent = customer.mobile;
-          row.appendChild(mobileCell);
-          
-          // گروه مشتریان
-          const customerGroupCell = document.createElement('td');
-          customerGroupCell.textContent = customer.customer_group;
-          row.appendChild(customerGroupCell);
-          
-          fragment.appendChild(row);
-        }
-        
-        // اگر هنوز رکوردهایی باقی مانده‌اند
-        if (endIndex < customers.length) {
-          // زمان‌بندی پردازش تکه بعدی
-          setTimeout(() => processChunk(endIndex), 0);
-        } else {
-          // افزودن همه تکه‌ها به جدول
-          tableBody.appendChild(fragment);
-        }
-      }
-      
-      // شروع پردازش از اولین تکه
-      processChunk(0);
-    }
-  </script>
+    </script>
 </body>
 </html>
