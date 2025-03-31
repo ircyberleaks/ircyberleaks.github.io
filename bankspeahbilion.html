@@ -58,6 +58,13 @@
       text-align: center;
       padding: 10px;
     }
+    
+    .stats {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #666;
+    }
   </style>
 </head>
 <body>
@@ -68,8 +75,10 @@
     <div id="loading" class="loading">در حال بارگذاری اطلاعات...</div>
     
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="جستجو...">
+      <input type="text" id="searchInput" placeholder="جستجو (نام، کد ملی یا شماره موبایل)...">
     </div>
+    
+    <div id="stats" class="stats"></div>
     
     <table id="customerTable" style="display: none;">
       <thead>
@@ -87,192 +96,214 @@
     </table>
   </div>
 
+  <!-- کتابخانه SQL.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+  
   <script>
     // اجرای کد پس از بارگذاری صفحه
     document.addEventListener('DOMContentLoaded', function() {
-      // بارگذاری داده‌ها
-      loadData();
-      
       // تنظیم رویداد جستجو
       document.getElementById('searchInput').addEventListener('input', function() {
-        filterTable(this.value);
+        const searchText = this.value.trim();
+        if (searchText.length >= 2) {
+          searchDatabase(searchText);
+        } else if (searchText.length === 0) {
+          clearResults();
+        }
       });
+      
+      // بارگذاری دیتابیس
+      initSqlJs();
     });
     
-    // بارگذاری داده‌ها از فایل HTML
-    function loadData() {
-      // نمایش وضعیت بارگذاری
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('customerTable').style.display = 'none';
-      document.getElementById('errorMessage').style.display = 'none';
-      
-      // تلاش برای بارگذاری داده‌ها از فایل HTML - مسیر دقیق
-      fetch('data/sepahbilion.html')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`فایل یافت نشد: ${response.status} ${response.statusText}`);
-          }
-          return response.text();
-        })
-        .then(html => {
-          try {
-            // پردازش HTML
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            
-            // استخراج ردیف‌های جدول
-            const rows = tempDiv.querySelectorAll('table tbody tr');
-            
-            if (rows.length === 0) {
-              throw new Error('هیچ داده‌ای در فایل HTML یافت نشد');
-            }
-            
-            // تبدیل هر ردیف به یک آبجکت مشتری
-            const customers = [];
-            rows.forEach(row => {
-              const cells = row.querySelectorAll('td');
-              if (cells.length >= 5) {
-                const customer = {
-                  name: cells[0].textContent.trim(),
-                  national_id: cells[1].textContent.trim(),
-                  birth_place: cells[2].textContent.trim(),
-                  mobile: cells[3].textContent.trim(),
-                  customer_group: cells[4].textContent.trim()
-                };
-                customers.push(customer);
-              }
-            });
-            
-            // مخفی کردن وضعیت بارگذاری
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('customerTable').style.display = 'table';
-            
-            // نمایش داده‌ها
-            displayData(customers);
-            console.log(`${customers.length} رکورد از فایل بارگذاری شد.`);
-          } catch (error) {
-            throw new Error(`خطا در پردازش HTML: ${error.message}`);
-          }
-        })
-        .catch(error => {
-          console.error('خطا در بارگذاری داده‌ها:', error);
-          
-          // نمایش پیام خطا با جزئیات بیشتر
-          document.getElementById('loading').style.display = 'none';
-          document.getElementById('errorMessage').style.display = 'block';
-          document.getElementById('errorMessage').textContent = `خطا در بارگذاری اطلاعات: ${error.message}. استفاده از داده‌های نمونه...`;
-          
-          // استفاده از داده‌های نمونه در صورت خطا
-          const sampleData = [
-            {
-              name: 'كيوان كركودي',
-              national_id: '3256268145',
-              birth_place: 'کرمانشاه',
-              mobile: '09362603905',
-              customer_group: 'مشتری عادی'
-            },
-            {
-              name: 'محمدحامي نيازمندمنفردقلندرآبادي',
-              national_id: '440956811',
-              birth_place: 'شميران',
-              mobile: '09121192525',
-              customer_group: 'مشتری عادی'
-            },
-            {
-              name: 'سيدسعيد ميربد',
-              national_id: '1199029947',
-              birth_place: 'شهرضا',
-              mobile: '09138258015',
-              customer_group: 'مشتری عادی'
-            }
-          ];
-          
-          // نمایش داده‌های نمونه
-          document.getElementById('customerTable').style.display = 'table';
-          displayData(sampleData);
-        });
+    // متغیرهای سراسری
+    let db = null;
+    let SQL = null;
+    
+    // راه‌اندازی SQL.js و بارگذاری دیتابیس
+    async function initSqlJs() {
+      try {
+        // نمایش وضعیت بارگذاری
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('customerTable').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+        
+        // راه‌اندازی SQL.js
+        SQL = await initSqlJsLibrary();
+        
+        // بارگذاری فایل دیتابیس
+        const dbResponse = await fetch('data/customers.db');
+        if (!dbResponse.ok) {
+          throw new Error(`خطا در بارگذاری دیتابیس: ${dbResponse.status} ${dbResponse.statusText}`);
+        }
+        
+        const dbBuffer = await dbResponse.arrayBuffer();
+        const uInt8Array = new Uint8Array(dbBuffer);
+        
+        // ایجاد دیتابیس
+        db = new SQL.Database(uInt8Array);
+        
+        // نمایش آمار دیتابیس
+        showDatabaseStats();
+        
+        // مخفی کردن وضعیت بارگذاری
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('customerTable').style.display = 'table';
+        
+        console.log('دیتابیس با موفقیت بارگذاری شد.');
+      } catch (error) {
+        console.error('خطا در راه‌اندازی دیتابیس:', error);
+        
+        // نمایش پیام خطا
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorMessage').textContent = `خطا در بارگذاری دیتابیس: ${error.message}`;
+      }
     }
     
-    // نمایش داده‌ها در جدول با پردازش تدریجی
+    // راه‌اندازی کتابخانه SQL.js
+    function initSqlJsLibrary() {
+      return new Promise((resolve, reject) => {
+        try {
+          // تنظیم مسیر فایل‌های wasm
+          const config = {
+            locateFile: filename => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${filename}`
+          };
+          
+          // راه‌اندازی SQL.js
+          initSqlJs(config).then(resolve).catch(reject);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+    
+    // نمایش آمار دیتابیس
+    function showDatabaseStats() {
+      if (!db) return;
+      
+      try {
+        // دریافت تعداد کل رکوردها
+        const totalCountResult = db.exec("SELECT COUNT(*) FROM customers");
+        const totalCount = totalCountResult[0].values[0][0];
+        
+        // نمایش آمار
+        const statsElement = document.getElementById('stats');
+        statsElement.textContent = `تعداد کل رکوردها: ${totalCount.toLocaleString()} | برای جستجو، حداقل ۲ کاراکتر وارد کنید`;
+      } catch (error) {
+        console.error('خطا در نمایش آمار:', error);
+      }
+    }
+    
+    // جستجو در دیتابیس
+    function searchDatabase(searchText) {
+      if (!db) return;
+      
+      try {
+        // اجرای کوئری جستجو
+        const query = `
+          SELECT name, national_id, birth_place, mobile, customer_group 
+          FROM customers 
+          WHERE name LIKE ? OR national_id LIKE ? OR mobile LIKE ? 
+          LIMIT 500
+        `;
+        
+        const searchPattern = `%${searchText}%`;
+        const stmt = db.prepare(query);
+        stmt.bind([searchPattern, searchPattern, searchPattern]);
+        
+        // جمع‌آوری نتایج
+        const customers = [];
+        while (stmt.step()) {
+          const row = stmt.getAsObject();
+          customers.push({
+            name: row.name,
+            national_id: row.national_id,
+            birth_place: row.birth_place,
+            mobile: row.mobile,
+            customer_group: row.customer_group
+          });
+        }
+        
+        // آزادسازی منابع
+        stmt.free();
+        
+        // نمایش نتایج
+        displayData(customers);
+        
+        // به‌روزرسانی آمار جستجو
+        const statsElement = document.getElementById('stats');
+        statsElement.textContent = `نتایج جستجو برای "${searchText}": ${customers.length} رکورد یافت شد${customers.length >= 500 ? ' (حداکثر 500 مورد نمایش داده می‌شود)' : ''}`;
+      } catch (error) {
+        console.error('خطا در جستجو:', error);
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorMessage').textContent = `خطا در جستجو: ${error.message}`;
+      }
+    }
+    
+    // پاک کردن نتایج
+    function clearResults() {
+      const tableBody = document.getElementById('tableBody');
+      tableBody.innerHTML = '';
+      
+      // بازگرداندن آمار اصلی
+      showDatabaseStats();
+    }
+    
+    // نمایش داده‌ها در جدول
     function displayData(customers) {
       const tableBody = document.getElementById('tableBody');
       tableBody.innerHTML = '';
       
-      // برای داده‌های بزرگ، از پردازش تدریجی استفاده می‌کنیم
-      const batchSize = 500; // تعداد رکوردهایی که در هر مرحله پردازش می‌شوند
-      let index = 0;
-      
-      function processBatch() {
-        const fragment = document.createDocumentFragment();
-        const end = Math.min(index + batchSize, customers.length);
-        
-        for (let i = index; i < end; i++) {
-          const customer = customers[i];
-          const row = document.createElement('tr');
-          
-          // نام مشتری
-          const nameCell = document.createElement('td');
-          nameCell.textContent = customer.name;
-          row.appendChild(nameCell);
-          
-          // کد ملی
-          const nationalIdCell = document.createElement('td');
-          nationalIdCell.textContent = customer.national_id;
-          row.appendChild(nationalIdCell);
-          
-          // محل تولد
-          const birthPlaceCell = document.createElement('td');
-          birthPlaceCell.textContent = customer.birth_place;
-          row.appendChild(birthPlaceCell);
-          
-          // شماره موبایل
-          const mobileCell = document.createElement('td');
-          mobileCell.textContent = customer.mobile;
-          row.appendChild(mobileCell);
-          
-          // گروه مشتریان
-          const customerGroupCell = document.createElement('td');
-          customerGroupCell.textContent = customer.customer_group;
-          row.appendChild(customerGroupCell);
-          
-          fragment.appendChild(row);
-        }
-        
-        tableBody.appendChild(fragment);
-        index = end;
-        
-        // اگر هنوز رکوردهایی باقی مانده‌اند، مرحله بعدی را برنامه‌ریزی کن
-        if (index < customers.length) {
-          setTimeout(processBatch, 0);
-        }
+      if (customers.length === 0) {
+        // نمایش پیام خالی بودن
+        const emptyRow = document.createElement('tr');
+        const emptyCell = document.createElement('td');
+        emptyCell.colSpan = 5;
+        emptyCell.textContent = 'هیچ نتیجه‌ای یافت نشد.';
+        emptyCell.style.textAlign = 'center';
+        emptyRow.appendChild(emptyCell);
+        tableBody.appendChild(emptyRow);
+        return;
       }
       
-      // شروع پردازش تدریجی
-      processBatch();
-    }
-    
-    // فیلتر جدول بر اساس متن جستجو
-    function filterTable(searchText) {
-      const tableBody = document.getElementById('tableBody');
-      const rows = tableBody.getElementsByTagName('tr');
+      // ایجاد فرگمنت برای بهبود عملکرد
+      const fragment = document.createDocumentFragment();
       
-      searchText = searchText.toLowerCase();
+      // نمایش داده‌ها
+      customers.forEach(customer => {
+        const row = document.createElement('tr');
+        
+        // نام مشتری
+        const nameCell = document.createElement('td');
+        nameCell.textContent = customer.name;
+        row.appendChild(nameCell);
+        
+        // کد ملی
+        const nationalIdCell = document.createElement('td');
+        nationalIdCell.textContent = customer.national_id;
+        row.appendChild(nationalIdCell);
+        
+        // محل تولد
+        const birthPlaceCell = document.createElement('td');
+        birthPlaceCell.textContent = customer.birth_place;
+        row.appendChild(birthPlaceCell);
+        
+        // شماره موبایل
+        const mobileCell = document.createElement('td');
+        mobileCell.textContent = customer.mobile;
+        row.appendChild(mobileCell);
+        
+        // گروه مشتریان
+        const customerGroupCell = document.createElement('td');
+        customerGroupCell.textContent = customer.customer_group;
+        row.appendChild(customerGroupCell);
+        
+        fragment.appendChild(row);
+      });
       
-      for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const cells = row.getElementsByTagName('td');
-        let found = false;
-        
-        for (let j = 0; j < cells.length; j++) {
-          const cellText = cells[j].textContent.toLowerCase();
-          if (cellText.includes(searchText)) {
-            found = true;
-            break;
-          }
-        }
-        
-        row.style.display = found ? '' : 'none';
-      }
+      // افزودن به جدول
+      tableBody.appendChild(fragment);
     }
   </script>
 </body>
