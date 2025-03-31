@@ -24,6 +24,7 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             padding: 25px;
             margin-top: 20px;
+            max-width: 1200px;
         }
         
         h1 {
@@ -61,6 +62,7 @@
         tbody td {
             padding: 10px;
             border-bottom: 1px solid #dee2e6;
+            text-align: center;
         }
         
         tbody tr:hover {
@@ -75,6 +77,23 @@
             text-align: center;
             padding: 50px;
         }
+        
+        .stats {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d;
+        }
+        
+        .filter-section {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-section select {
+            min-width: 150px;
+        }
     </style>
 </head>
 <body>
@@ -82,8 +101,18 @@
         <h1>اطلاعات مشتریان بانک</h1>
         
         <div id="search-box" class="input-group mb-3">
-            <input type="text" id="search-input" class="form-control" placeholder="جستجو...">
+            <input type="text" id="search-input" class="form-control" placeholder="جستجو در تمام فیلدها...">
             <button class="btn btn-primary" type="button" id="search-button">جستجو</button>
+        </div>
+        
+        <div class="filter-section">
+            <select id="filter-city" class="form-select">
+                <option value="">همه شهرها</option>
+            </select>
+            <select id="filter-group" class="form-select">
+                <option value="">همه گروه‌ها</option>
+            </select>
+            <button id="reset-filters" class="btn btn-outline-secondary">حذف فیلترها</button>
         </div>
         
         <div id="loading" class="loading">
@@ -93,7 +122,7 @@
             <p>در حال بارگذاری داده‌ها...</p>
         </div>
         
-        <div id="table-container">
+        <div id="table-container" style="display: none;">
             <table>
                 <thead>
                     <tr>
@@ -113,6 +142,11 @@
                 </table>
             </div>
         </div>
+        
+        <div class="stats">
+            <p id="total-records">تعداد کل رکوردها: <span>0</span></p>
+            <p id="filtered-records" style="display: none;">تعداد رکوردهای فیلتر شده: <span>0</span></p>
+        </div>
     </div>
     
     <!-- اسکریپت‌ها -->
@@ -122,81 +156,113 @@
     
     <script>
         $(document).ready(function() {
-            // داده‌های جدول - این قسمت را با داده‌های واقعی خود جایگزین کنید
-            const tableData = [
+            // داده‌های جدول - این قسمت با داده‌های واقعی جایگزین خواهد شد
+            let allData = [
                 ['كيوان كركودي', '3256268145', 'کرمانشاه', '09362603905', 'مشتری عادی'],
                 ['شهاب دائي چين', '3241340430', 'کرمانشاه', '09182247480', 'اشخاص نظامی'],
                 ['سعيد درخشان سهلان', '1362262048', 'تبريز', '09025397653', 'مشتری عادی']
-                // داده‌های بیشتر را اینجا اضافه کنید
             ];
             
+            let filteredData = [...allData]; // کپی از داده‌ها برای فیلتر کردن
+            
             // تبدیل داده‌ها به ردیف‌های HTML
-            const rows = tableData.map(row => {
-                return `<tr>
-                    <td>${row[0]}</td>
-                    <td>${row[1]}</td>
-                    <td>${row[2]}</td>
-                    <td>${row[3]}</td>
-                    <td>${row[4]}</td>
-                </tr>`;
-            });
+            function createRows(data) {
+                return data.map(row => {
+                    return `<tr>
+                        <td>${row[0] || ''}</td>
+                        <td>${row[1] || ''}</td>
+                        <td>${row[2] || ''}</td>
+                        <td>${row[3] || ''}</td>
+                        <td>${row[4] || ''}</td>
+                    </tr>`;
+                });
+            }
             
             // راه‌اندازی Clusterize.js
             const clusterize = new Clusterize({
-                rows: rows,
+                rows: createRows(allData),
                 scrollId: 'scrollArea',
                 contentId: 'contentArea',
                 rows_in_block: 50,
-                blocks_in_cluster: 4
+                blocks_in_cluster: 4,
+                no_data_text: 'داده‌ای برای نمایش وجود ندارد'
             });
             
-            // مخفی کردن لودینگ
-            $('#loading').hide();
-            $('#table-container').show();
-            
-            // جستجو در جدول
-            $('#search-button').click(function() {
-                searchTable();
-            });
-            
-            $('#search-input').keypress(function(e) {
-                if (e.which === 13) {
-                    searchTable();
-                }
-            });
-            
-            function searchTable() {
-                const searchText = $('#search-input').val().toLowerCase();
+            // به‌روزرسانی آمار
+            function updateStats() {
+                $('#total-records span').text(allData.length);
                 
-                if (!searchText) {
-                    // بازگرداندن همه ردیف‌ها بدون هایلایت
-                    clusterize.update(rows);
-                    return;
-                }
-                
-                // جستجو در داده‌ها و هایلایت کردن نتایج
-                const filteredRows = tableData.map((rowData, index) => {
-                    const rowText = rowData.join(' ').toLowerCase();
-                    if (rowText.includes(searchText)) {
-                        // ایجاد ردیف با هایلایت
-                        return `<tr>
-                            <td>${highlightText(rowData[0], searchText)}</td>
-                            <td>${highlightText(rowData[1], searchText)}</td>
-                            <td>${highlightText(rowData[2], searchText)}</td>
-                            <td>${highlightText(rowData[3], searchText)}</td>
-                            <td>${highlightText(rowData[4], searchText)}</td>
-                        </tr>`;
-                    } else {
-                        return null; // ردیف‌های نامرتبط را حذف می‌کنیم
-                    }
-                }).filter(row => row !== null); // حذف ردیف‌های null
-                
-                if (filteredRows.length > 0) {
-                    clusterize.update(filteredRows);
+                if (filteredData.length !== allData.length) {
+                    $('#filtered-records span').text(filteredData.length);
+                    $('#filtered-records').show();
                 } else {
-                    // اگر نتیجه‌ای یافت نشد
-                    clusterize.update(['<tr><td colspan="5" style="text-align:center">نتیجه‌ای یافت نشد</td></tr>']);
+                    $('#filtered-records').hide();
                 }
+            }
+            
+            // پر کردن فیلترهای شهر و گروه
+            function populateFilters() {
+                const cities = new Set();
+                const groups = new Set();
+                
+                allData.forEach(row => {
+                    if (row[2]) cities.add(row[2]);
+                    if (row[4]) groups.add(row[4]);
+                });
+                
+                // اضافه کردن شهرها به فیلتر
+                cities.forEach(city => {
+                    $('#filter-city').append(`<option value="${city}">${city}</option>`);
+                });
+                
+                // اضافه کردن گروه‌ها به فیلتر
+                groups.forEach(group => {
+                    $('#filter-group').append(`<option value="${group}">${group}</option>`);
+                });
+            }
+            
+            // اعمال فیلترها
+            function applyFilters() {
+                const searchText = $('#search-input').val().toLowerCase();
+                const selectedCity = $('#filter-city').val();
+                const selectedGroup = $('#filter-group').val();
+                
+                filteredData = allData.filter(row => {
+                    // فیلتر متن جستجو
+                    const rowText = row.join(' ').toLowerCase();
+                    const matchesSearch = !searchText || rowText.includes(searchText);
+                    
+                    // فیلتر شهر
+                    const matchesCity = !selectedCity || row[2] === selectedCity;
+                    
+                    // فیلتر گروه
+                    const matchesGroup = !selectedGroup || row[4] === selectedGroup;
+                    
+                    return matchesSearch && matchesCity && matchesGroup;
+                });
+                
+                // اگر متن جستجو وجود دارد، هایلایت کنیم
+                let rowsToDisplay;
+                if (searchText) {
+                    rowsToDisplay = filteredData.map(row => {
+                        return `<tr>
+                            <td>${highlightText(row[0], searchText)}</td>
+                            <td>${highlightText(row[1], searchText)}</td>
+                            <td>${highlightText(row[2], searchText)}</td>
+                            <td>${highlightText(row[3], searchText)}</td>
+                            <td>${highlightText(row[4], searchText)}</td>
+                        </tr>`;
+                    });
+                } else {
+                    rowsToDisplay = createRows(filteredData);
+                }
+                
+                if (rowsToDisplay.length === 0) {
+                    rowsToDisplay = ['<tr><td colspan="5" style="text-align:center">نتیجه‌ای یافت نشد</td></tr>'];
+                }
+                
+                clusterize.update(rowsToDisplay);
+                updateStats();
             }
             
             // تابع هایلایت کردن متن
@@ -222,45 +288,120 @@
             
             // اضافه کردن داده‌های واقعی از فایل HTML
             function loadDataFromHTML() {
+                console.log('شروع بارگذاری داده‌ها...');
+                
                 fetch('data.html')
-                    .then(response => response.text())
+                    .then(response => {
+                        console.log('وضعیت پاسخ:', response.status);
+                        if (!response.ok) {
+                            throw new Error(`خطای HTTP! وضعیت: ${response.status}`);
+                        }
+                        return response.text();
+                    })
                     .then(html => {
+                        console.log('داده‌های HTML دریافت شد، طول:', html.length);
+                        
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(html, 'text/html');
-                        const tableRows = doc.querySelectorAll('table.dataframe tbody tr');
                         
-                        const extractedData = [];
-                        tableRows.forEach(row => {
-                            const cells = row.querySelectorAll('td');
-                            const rowData = [];
-                            cells.forEach(cell => {
-                                rowData.push(cell.textContent.trim());
-                            });
-                            extractedData.push(rowData);
-                        });
+                        // انتخاب جدول با کلاس dataframe
+                        let tableRows = doc.querySelectorAll('table.dataframe tbody tr');
+                        console.log('تعداد ردیف‌های جدول یافت شده:', tableRows.length);
                         
-                        if (extractedData.length > 0) {
-                            // تبدیل داده‌ها به ردیف‌های HTML
-                            const newRows = extractedData.map(row => {
-                                return `<tr>
-                                    <td>${row[0] || ''}</td>
-                                    <td>${row[1] || ''}</td>
-                                    <td>${row[2] || ''}</td>
-                                    <td>${row[3] || ''}</td>
-                                    <td>${row[4] || ''}</td>
-                                </tr>`;
+                        if (tableRows.length === 0) {
+                            // بررسی کل ساختار HTML برای یافتن جدول
+                            console.log('جدول با کلاس dataframe یافت نشد، جستجو برای هر نوع جدول...');
+                            const allTables = doc.querySelectorAll('table');
+                            console.log('تعداد کل جداول یافت شده:', allTables.length);
+                            
+                            if (allTables.length > 0) {
+                                tableRows = allTables[0].querySelectorAll('tbody tr');
+                                console.log('تعداد ردیف‌ها در اولین جدول:', tableRows.length);
+                            }
+                        }
+                        
+                        if (tableRows.length > 0) {
+                            const extractedData = [];
+                            
+                            tableRows.forEach(row => {
+                                const cells = row.querySelectorAll('td');
+                                if (cells.length > 0) {
+                                    const rowData = [];
+                                    cells.forEach(cell => {
+                                        rowData.push(cell.textContent.trim());
+                                    });
+                                    extractedData.push(rowData);
+                                }
                             });
                             
-                            // به‌روزرسانی Clusterize با داده‌های جدید
-                            clusterize.update(newRows);
+                            console.log('تعداد ردیف‌های استخراج شده:', extractedData.length);
+                            
+                            if (extractedData.length > 0) {
+                                // جایگزینی داده‌های نمونه با داده‌های واقعی
+                                allData = extractedData;
+                                filteredData = [...allData];
+                                
+                                // به‌روزرسانی جدول
+                                clusterize.update(createRows(allData));
+                                
+                                // پر کردن فیلترها
+                                populateFilters();
+                                
+                                // به‌روزرسانی آمار
+                                updateStats();
+                                
+                                console.log('جدول با موفقیت به‌روزرسانی شد');
+                            }
                         }
+                        
+                        // مخفی کردن لودینگ و نمایش جدول
+                        $('#loading').hide();
+                        $('#table-container').show();
                     })
                     .catch(error => {
                         console.error('خطا در بارگذاری فایل HTML:', error);
+                        
+                        // در صورت خطا، از داده‌های نمونه استفاده می‌کنیم
+                        console.log('استفاده از داده‌های نمونه به دلیل خطا');
+                        
+                        // پر کردن فیلترها
+                        populateFilters();
+                        
+                        // به‌روزرسانی آمار
+                        updateStats();
+                        
+                        // مخفی کردن لودینگ و نمایش جدول
+                        $('#loading').hide();
+                        $('#table-container').show();
                     });
             }
             
-            // تلاش برای بارگذاری داده‌ها از فایل HTML
+            // رویدادها
+            $('#search-button').click(function() {
+                applyFilters();
+            });
+            
+            $('#search-input').keypress(function(e) {
+                if (e.which === 13) {
+                    applyFilters();
+                }
+            });
+            
+            $('#filter-city, #filter-group').change(function() {
+                applyFilters();
+            });
+            
+            $('#reset-filters').click(function() {
+                $('#search-input').val('');
+                $('#filter-city').val('');
+                $('#filter-group').val('');
+                filteredData = [...allData];
+                clusterize.update(createRows(allData));
+                $('#filtered-records').hide();
+                updateStats();
+            });
+            
+            // شروع بارگذاری داده‌ها
             loadDataFromHTML();
         });
     </script>
