@@ -1,302 +1,76 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اطلاعات مشتریان بانک سپه - نسخه ساده</title>
-    <style>
-        body {
-            font-family: Tahoma, Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-            direction: rtl;
-        }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        h1 {
-            color: #1e3a8a;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .loading {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        
-        th, td {
-            padding: 10px;
-            text-align: right;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        th {
-            background-color: #1e3a8a;
-            color: white;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        
-        .error-message {
-            color: red;
-            text-align: center;
-            margin: 20px 0;
-            padding: 10px;
-            background-color: #ffeeee;
-            border: 1px solid #ffcccc;
-            border-radius: 5px;
-        }
-        
-        .success-message {
-            color: green;
-            text-align: center;
-            margin: 20px 0;
-            padding: 10px;
-            background-color: #eeffee;
-            border: 1px solid #ccffcc;
-            border-radius: 5px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>داده‌های مشتریان</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      direction: rtl;
+      padding: 20px;
+    }
+    table {
+      width: 80%;
+      margin: auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    td {
+      background-color: #f9f9f9;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>اطلاعات مشتریان بانک سپه</h1>
-        
-        <div id="loading" class="loading">
-            در حال بارگذاری داده‌ها...
-        </div>
-        
-        <div id="error-message" class="error-message" style="display: none;"></div>
-        <div id="success-message" class="success-message" style="display: none;"></div>
-        
-        <table id="dataTable">
-            <thead>
-                <tr>
-                    <th>نام مشتری</th>
-                    <th>کد ملی</th>
-                    <th>محل تولد</th>
-                    <th>شماره موبایل</th>
-                    <th>گروه مشتریان</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- داده‌ها اینجا قرار می‌گیرند -->
-            </tbody>
-        </table>
-    </div>
-    
-    <script>
-        // تابع نمایش پیام خطا
-        function showError(message) {
-            const errorElement = document.getElementById('error-message');
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-            document.getElementById('loading').style.display = 'none';
-        }
-        
-        // تابع نمایش پیام موفقیت
-        function showSuccess(message) {
-            const successElement = document.getElementById('success-message');
-            successElement.textContent = message;
-            successElement.style.display = 'block';
-            document.getElementById('loading').style.display = 'none';
-        }
-        
-        // تابع بارگذاری داده‌ها
-        async function loadData() {
-            try {
-                console.log('شروع بارگذاری داده‌ها...');
-                
-                // بارگذاری فایل HTML
-                const response = await fetch('data/sepahbilion.html');
-                
-                if (!response.ok) {
-                    throw new Error(`خطای HTTP: ${response.status}`);
-                }
-                
-                const html = await response.text();
-                console.log(`داده با طول ${html.length} کاراکتر دریافت شد`);
-                
-                if (html.length === 0) {
-                    throw new Error('فایل HTML خالی است');
-                }
-                
-                // پردازش داده‌ها
-                parseHtmlData(html);
-                
-            } catch (error) {
-                console.error('خطا در بارگذاری داده‌ها:', error);
-                showError(`خطا در بارگذاری داده‌ها: ${error.message}`);
-                
-                // نمایش داده‌های نمونه
-                createSampleData();
-            }
-        }
-        
-        // تابع پردازش داده‌های HTML
-        function parseHtmlData(html) {
-            try {
-                console.log('شروع پردازش داده‌ها...');
-                
-                // روش 1: استفاده از DOMParser
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                // بررسی وجود جدول در HTML
-                let table = doc.querySelector('table');
-                
-                if (!table) {
-                    console.log('جدول با DOMParser یافت نشد، تلاش با روش جایگزین...');
-                    
-                    // روش 2: استفاده از div موقت
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = html;
-                    table = tempDiv.querySelector('table');
-                    
-                    if (!table) {
-                        throw new Error('جدول در فایل HTML یافت نشد');
-                    }
-                }
-                
-                console.log('جدول پیدا شد، در حال استخراج ردیف‌ها...');
-                
-                // یافتن ردیف‌ها در جدول
-                let rows = table.querySelectorAll('tr');
-                
-                if (rows.length === 0) {
-                    throw new Error('هیچ ردیفی در جدول یافت نشد');
-                }
-                
-                console.log(`تعداد ${rows.length} ردیف پیدا شد، در حال پردازش...`);
-                
-                // پاک کردن جدول فعلی
-                const tbody = document.querySelector('#dataTable tbody');
-                tbody.innerHTML = '';
-                
-                // بررسی آیا ردیف اول هدر است
-                const startIndex = rows[0].querySelector('th') ? 1 : 0;
-                let processedRows = 0;
-                
-                // پردازش هر ردیف
-                for (let i = startIndex; i < rows.length; i++) {
-                    const row = rows[i];
-                    const cells = row.querySelectorAll('td');
-                    
-                    // اگر تعداد سلول‌ها کمتر از 5 است، ادامه بده
-                    if (cells.length < 5) continue;
-                    
-                    const name = cells[0].textContent.trim();
-                    const nationalId = cells[1].textContent.trim();
-                    const birthplace = cells[2].textContent.trim();
-                    const mobile = cells[3].textContent.trim();
-                    const customerGroup = cells[4].textContent.trim();
-                    
-                    // ایجاد ردیف جدید
-                    const newRow = document.createElement('tr');
-                    
-                    // نام مشتری
-                    const nameCell = document.createElement('td');
-                    nameCell.textContent = name;
-                    newRow.appendChild(nameCell);
-                    
-                    // کد ملی
-                    const idCell = document.createElement('td');
-                    idCell.textContent = nationalId;
-                    newRow.appendChild(idCell);
-                    
-                    // محل تولد
-                    const birthplaceCell = document.createElement('td');
-                    birthplaceCell.textContent = birthplace;
-                    newRow.appendChild(birthplaceCell);
-                    
-                    // شماره موبایل
-                    const mobileCell = document.createElement('td');
-                    mobileCell.textContent = mobile;
-                    newRow.appendChild(mobileCell);
-                    
-                    // گروه مشتریان
-                    const groupCell = document.createElement('td');
-                    groupCell.textContent = customerGroup;
-                    newRow.appendChild(groupCell);
-                    
-                    // اضافه کردن به جدول
-                    tbody.appendChild(newRow);
-                    processedRows++;
-                }
-                
-                console.log(`${processedRows} ردیف با موفقیت پردازش شد`);
-                
-                // اگر هیچ داده‌ای پردازش نشد، خطا نمایش دهیم
-                if (processedRows === 0) {
-                    throw new Error('هیچ داده‌ای از جدول استخراج نشد');
-                }
-                
-                // نمایش پیام موفقیت
-                showSuccess(`${processedRows} ردیف داده با موفقیت بارگذاری شد`);
-                
-            } catch (error) {
-                console.error('خطا در پردازش داده‌ها:', error);
-                showError(`خطا در پردازش داده‌ها: ${error.message}`);
-                
-                // ایجاد داده‌های نمونه
-                createSampleData();
-            }
-        }
-        
-        // تابع ایجاد داده‌های نمونه
-        function createSampleData() {
-            console.log('ایجاد داده‌های نمونه...');
-            
-            // داده‌های نمونه
-            const sampleData = [
-                ['علی محمدی', '0123456789', 'تهران', '09123456789', 'عادی'],
-                ['رضا احمدی', '9876543210', 'مشهد', '09187654321', 'عادی'],
-                ['محمد حسینی', '1234567890', 'اصفهان', '09123456780', 'نظامی'],
-                ['حسن کریمی', '0987654321', 'شیراز', '09187654320', 'نظامی'],
-                ['مریم رضایی', '1122334455', 'تبریز', '09123456781', 'عادی']
-            ];
-            
-            // پاک کردن جدول فعلی
-            const tbody = document.querySelector('#dataTable tbody');
-            tbody.innerHTML = '';
-            
-            // ایجاد ردیف‌ها
-            sampleData.forEach(data => {
-                const newRow = document.createElement('tr');
-                
-                data.forEach(cellData => {
-                    const cell = document.createElement('td');
-                    cell.textContent = cellData;
-                    newRow.appendChild(cell);
-                });
-                
-                tbody.appendChild(newRow);
-            });
-            
-            // نمایش پیام
-            showSuccess('داده‌های واقعی یافت نشد. داده‌های نمونه نمایش داده شده است.');
-        }
-        
-        // بارگذاری داده‌ها هنگام بارگذاری صفحه
-        document.addEventListener('DOMContentLoaded', loadData);
-    </script>
+
+  <h1>داده‌های مشتریان</h1>
+
+  <table id="customerTable">
+    <thead>
+      <tr>
+        <th>نام مشتری</th>
+        <th>کد ملی</th>
+        <th>محل تولد</th>
+        <th>شماره موبایل</th>
+        <th>گروه مشتریان</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- داده‌ها اینجا به صورت داینامیک اضافه خواهند شد -->
+    </tbody>
+  </table>
+
+  <script>
+    // تابعی برای بارگذاری داده‌ها از فایل HTML
+    fetch('data/sepahbilion.html')
+      .then(response => response.text())
+      .then(data => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data, 'text/html');
+        const rows = doc.querySelectorAll('table tbody tr');
+
+        // اضافه کردن ردیف‌ها به جدول اصلی
+        const tableBody = document.querySelector('#customerTable tbody');
+        rows.forEach(row => {
+          const newRow = document.createElement('tr');
+          row.querySelectorAll('td').forEach(cell => {
+            const newCell = document.createElement('td');
+            newCell.textContent = cell.textContent;
+            newRow.appendChild(newCell);
+          });
+          tableBody.appendChild(newRow);
+        });
+      })
+      .catch(err => console.log('Error loading file:', err));
+  </script>
+
 </body>
 </html>
