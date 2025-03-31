@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>اطلاعات مشتریان بانک سپه</title>
+  <title>اطلاعات مشتریان بانک سپههه</title>
   <style>
     body {
       font-family: Tahoma, Arial, sans-serif;
@@ -21,6 +21,8 @@
       margin: 0 auto;
       background-color: white;
       padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 5px;
     }
     
     .search-box {
@@ -31,6 +33,9 @@
       width: 100%;
       padding: 10px;
       font-family: Tahoma, Arial, sans-serif;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
     }
     
     table {
@@ -46,6 +51,8 @@
     
     th {
       background-color: #f2f2f2;
+      position: sticky;
+      top: 0;
     }
     
     .loading {
@@ -65,6 +72,12 @@
       font-size: 0.9em;
       color: #666;
     }
+    
+    .table-container {
+      max-height: 500px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -80,20 +93,22 @@
     
     <div id="stats" class="stats"></div>
     
-    <table id="customerTable" style="display: none;">
-      <thead>
-        <tr>
-          <th>نام مشتری</th>
-          <th>کد ملی</th>
-          <th>محل تولد</th>
-          <th>شماره موبایل</th>
-          <th>گروه مشتریان</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-        <!-- داده‌ها اینجا قرار می‌گیرند -->
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table id="customerTable" style="display: none;">
+        <thead>
+          <tr>
+            <th>نام مشتری</th>
+            <th>کد ملی</th>
+            <th>محل تولد</th>
+            <th>شماره موبایل</th>
+            <th>گروه مشتریان</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- داده‌ها اینجا قرار می‌گیرند -->
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <!-- کتابخانه SQL.js -->
@@ -102,45 +117,60 @@
   <script>
     // اجرای کد پس از بارگذاری صفحه
     document.addEventListener('DOMContentLoaded', function() {
-      // تنظیم رویداد جستجو
+      // تنظیم رویداد جستجو با تأخیر برای جلوگیری از فراخوانی مکرر
+      let searchTimeout;
       document.getElementById('searchInput').addEventListener('input', function() {
         const searchText = this.value.trim();
-        if (searchText.length >= 2) {
-          searchDatabase(searchText);
-        } else if (searchText.length === 0) {
-          clearResults();
-        }
+        
+        // پاک کردن تایمر قبلی
+        clearTimeout(searchTimeout);
+        
+        // تنظیم تایمر جدید (300 میلی‌ثانیه تأخیر)
+        searchTimeout = setTimeout(() => {
+          if (searchText.length >= 2) {
+            searchDatabase(searchText);
+          } else if (searchText.length === 0) {
+            clearResults();
+          }
+        }, 300);
       });
       
       // بارگذاری دیتابیس
-      initSqlJs();
+      initDatabase();
     });
     
     // متغیرهای سراسری
     let db = null;
-    let SQL = null;
     
-    // راه‌اندازی SQL.js و بارگذاری دیتابیس
-    async function initSqlJs() {
+    // راه‌اندازی دیتابیس
+    async function initDatabase() {
       try {
         // نمایش وضعیت بارگذاری
         document.getElementById('loading').style.display = 'block';
         document.getElementById('customerTable').style.display = 'none';
         document.getElementById('errorMessage').style.display = 'none';
         
-        // راه‌اندازی SQL.js
-        SQL = await initSqlJsLibrary();
+        // راه‌اندازی SQL.js - اصلاح شده برای جلوگیری از فراخوانی بازگشتی
+        const SQL = await window.initSqlJs({
+          locateFile: filename => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${filename}`
+        });
+        
+        console.log('SQL.js با موفقیت راه‌اندازی شد.');
         
         // بارگذاری فایل دیتابیس
+        console.log('در حال بارگذاری فایل دیتابیس...');
         const dbResponse = await fetch('data/customers.db');
         if (!dbResponse.ok) {
           throw new Error(`خطا در بارگذاری دیتابیس: ${dbResponse.status} ${dbResponse.statusText}`);
         }
         
+        // تبدیل پاسخ به آرایه بافر
+        console.log('در حال تبدیل پاسخ به آرایه...');
         const dbBuffer = await dbResponse.arrayBuffer();
         const uInt8Array = new Uint8Array(dbBuffer);
         
         // ایجاد دیتابیس
+        console.log('در حال ایجاد دیتابیس...');
         db = new SQL.Database(uInt8Array);
         
         // نمایش آمار دیتابیس
@@ -159,23 +189,6 @@
         document.getElementById('errorMessage').style.display = 'block';
         document.getElementById('errorMessage').textContent = `خطا در بارگذاری دیتابیس: ${error.message}`;
       }
-    }
-    
-    // راه‌اندازی کتابخانه SQL.js
-    function initSqlJsLibrary() {
-      return new Promise((resolve, reject) => {
-        try {
-          // تنظیم مسیر فایل‌های wasm
-          const config = {
-            locateFile: filename => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${filename}`
-          };
-          
-          // راه‌اندازی SQL.js
-          initSqlJs(config).then(resolve).catch(reject);
-        } catch (error) {
-          reject(error);
-        }
-      });
     }
     
     // نمایش آمار دیتابیس
@@ -200,12 +213,15 @@
       if (!db) return;
       
       try {
-        // اجرای کوئری جستجو
+        // نمایش وضعیت بارگذاری
+        document.getElementById('loading').style.display = 'block';
+        
+        // اجرای کوئری جستجو با محدودیت تعداد نتایج
         const query = `
           SELECT name, national_id, birth_place, mobile, customer_group 
           FROM customers 
           WHERE name LIKE ? OR national_id LIKE ? OR mobile LIKE ? 
-          LIMIT 500
+          LIMIT 200
         `;
         
         const searchPattern = `%${searchText}%`;
@@ -228,14 +244,18 @@
         // آزادسازی منابع
         stmt.free();
         
+        // مخفی کردن وضعیت بارگذاری
+        document.getElementById('loading').style.display = 'none';
+        
         // نمایش نتایج
         displayData(customers);
         
         // به‌روزرسانی آمار جستجو
         const statsElement = document.getElementById('stats');
-        statsElement.textContent = `نتایج جستجو برای "${searchText}": ${customers.length} رکورد یافت شد${customers.length >= 500 ? ' (حداکثر 500 مورد نمایش داده می‌شود)' : ''}`;
+        statsElement.textContent = `نتایج جستجو برای "${searchText}": ${customers.length} رکورد یافت شد${customers.length >= 200 ? ' (حداکثر 200 مورد نمایش داده می‌شود)' : ''}`;
       } catch (error) {
         console.error('خطا در جستجو:', error);
+        document.getElementById('loading').style.display = 'none';
         document.getElementById('errorMessage').style.display = 'block';
         document.getElementById('errorMessage').textContent = `خطا در جستجو: ${error.message}`;
       }
@@ -250,7 +270,7 @@
       showDatabaseStats();
     }
     
-    // نمایش داده‌ها در جدول
+    // نمایش داده‌ها در جدول با روش بهینه
     function displayData(customers) {
       const tableBody = document.getElementById('tableBody');
       tableBody.innerHTML = '';
@@ -267,43 +287,59 @@
         return;
       }
       
-      // ایجاد فرگمنت برای بهبود عملکرد
+      // استفاده از تکنیک تکه‌تکه کردن برای بهبود عملکرد
       const fragment = document.createDocumentFragment();
+      const chunkSize = 50; // تعداد رکورد در هر تکه
       
-      // نمایش داده‌ها
-      customers.forEach(customer => {
-        const row = document.createElement('tr');
+      function processChunk(startIndex) {
+        // محاسبه شاخص پایان
+        const endIndex = Math.min(startIndex + chunkSize, customers.length);
         
-        // نام مشتری
-        const nameCell = document.createElement('td');
-        nameCell.textContent = customer.name;
-        row.appendChild(nameCell);
+        // پردازش رکوردها در این تکه
+        for (let i = startIndex; i < endIndex; i++) {
+          const customer = customers[i];
+          const row = document.createElement('tr');
+          
+          // نام مشتری
+          const nameCell = document.createElement('td');
+          nameCell.textContent = customer.name;
+          row.appendChild(nameCell);
+          
+          // کد ملی
+          const nationalIdCell = document.createElement('td');
+          nationalIdCell.textContent = customer.national_id;
+          row.appendChild(nationalIdCell);
+          
+          // محل تولد
+          const birthPlaceCell = document.createElement('td');
+          birthPlaceCell.textContent = customer.birth_place;
+          row.appendChild(birthPlaceCell);
+          
+          // شماره موبایل
+          const mobileCell = document.createElement('td');
+          mobileCell.textContent = customer.mobile;
+          row.appendChild(mobileCell);
+          
+          // گروه مشتریان
+          const customerGroupCell = document.createElement('td');
+          customerGroupCell.textContent = customer.customer_group;
+          row.appendChild(customerGroupCell);
+          
+          fragment.appendChild(row);
+        }
         
-        // کد ملی
-        const nationalIdCell = document.createElement('td');
-        nationalIdCell.textContent = customer.national_id;
-        row.appendChild(nationalIdCell);
-        
-        // محل تولد
-        const birthPlaceCell = document.createElement('td');
-        birthPlaceCell.textContent = customer.birth_place;
-        row.appendChild(birthPlaceCell);
-        
-        // شماره موبایل
-        const mobileCell = document.createElement('td');
-        mobileCell.textContent = customer.mobile;
-        row.appendChild(mobileCell);
-        
-        // گروه مشتریان
-        const customerGroupCell = document.createElement('td');
-        customerGroupCell.textContent = customer.customer_group;
-        row.appendChild(customerGroupCell);
-        
-        fragment.appendChild(row);
-      });
+        // اگر هنوز رکوردهایی باقی مانده‌اند
+        if (endIndex < customers.length) {
+          // زمان‌بندی پردازش تکه بعدی
+          setTimeout(() => processChunk(endIndex), 0);
+        } else {
+          // افزودن همه تکه‌ها به جدول
+          tableBody.appendChild(fragment);
+        }
+      }
       
-      // افزودن به جدول
-      tableBody.appendChild(fragment);
+      // شروع پردازش از اولین تکه
+      processChunk(0);
     }
   </script>
 </body>
