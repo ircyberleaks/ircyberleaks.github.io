@@ -77,6 +77,30 @@
       margin-bottom: 20px;
       text-align: center;
     }
+    
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .stat-card {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      flex: 1;
+      min-width: 150px;
+      margin: 5px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #0c4b8e;
+    }
   </style>
 </head>
 <body>
@@ -85,13 +109,20 @@
     
     <div id="errorMessage" class="error" style="display: none;"></div>
     
+    <div class="stats">
+      <div class="stat-card">
+        <div>تعداد کل مشتریان</div>
+        <div id="totalCustomers" class="stat-value">0</div>
+      </div>
+    </div>
+    
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="جستجو...">
+      <input type="text" id="searchInput" placeholder="جستجو بر اساس نام، کد ملی، محل تولد یا شماره موبایل...">
     </div>
     
     <div id="loading" class="loading">در حال بارگذاری اطلاعات...</div>
     
-    <table id="customerTable">
+    <table id="customerTable" style="display: none;">
       <thead>
         <tr>
           <th>نام مشتری</th>
@@ -108,6 +139,10 @@
   </div>
 
   <script>
+    // متغیرهای سراسری
+    let allCustomers = [];
+    let filteredCustomers = [];
+    
     // اجرای کد پس از بارگذاری صفحه
     document.addEventListener('DOMContentLoaded', function() {
       // بارگذاری داده‌ها
@@ -115,7 +150,7 @@
       
       // تنظیم رویداد جستجو
       document.getElementById('searchInput').addEventListener('input', function() {
-        filterTable(this.value);
+        filterData(this.value);
       });
     });
     
@@ -129,30 +164,43 @@
       fetch('data/sepahbilion.json')
         .then(response => {
           if (!response.ok) {
-            throw new Error('فایل یافت نشد');
+            throw new Error(`فایل یافت نشد: ${response.status}`);
           }
           return response.json();
         })
         .then(data => {
+          // ذخیره داده‌ها در متغیر سراسری
+          allCustomers = data;
+          
+          // بروزرسانی آمار
+          document.getElementById('totalCustomers').textContent = allCustomers.length.toLocaleString('fa-IR');
+          
           // مخفی کردن وضعیت بارگذاری
           document.getElementById('loading').style.display = 'none';
           document.getElementById('customerTable').style.display = 'table';
           
           // نمایش داده‌ها
-          displayData(data);
-          console.log(`${data.length} رکورد از فایل بارگذاری شد.`);
+          filteredCustomers = allCustomers;
+          displayData(filteredCustomers);
+          console.log(`${allCustomers.length} رکورد از فایل بارگذاری شد.`);
         })
         .catch(error => {
           console.error('خطا در بارگذاری داده‌ها:', error);
           
-          // نمایش پیام خطا
+          // نمایش پیام خطا با جزئیات بیشتر
           document.getElementById('loading').style.display = 'none';
           document.getElementById('errorMessage').style.display = 'block';
-          document.getElementById('errorMessage').textContent = 'خطا در بارگذاری اطلاعات. استفاده از داده‌های نمونه...';
+          document.getElementById('errorMessage').textContent = `خطا در بارگذاری اطلاعات: ${error.message}. لطفاً مطمئن شوید فایل sepahbilion.json در پوشه data قرار دارد.`;
           
           // استفاده از داده‌های نمونه در صورت خطا
-          const sampleData = [
-
+          allCustomers = [
+            {
+              "name": "كيوان كركودي",
+              "national_id": "3256268145",
+              "birth_place": "کرمانشاه",
+              "mobile": "09362603905",
+              "customer_group": "مشتری عادی"
+            },
             {
               "name": "نام مشتری 2",
               "national_id": "9876543210",
@@ -162,71 +210,116 @@
             }
           ];
           
+          // بروزرسانی آمار
+          document.getElementById('totalCustomers').textContent = allCustomers.length.toLocaleString('fa-IR');
+          
           // نمایش داده‌های نمونه
           document.getElementById('customerTable').style.display = 'table';
-          displayData(sampleData);
+          filteredCustomers = allCustomers;
+          displayData(filteredCustomers);
         });
     }
     
-    // نمایش داده‌ها در جدول
+    // فیلتر داده‌ها بر اساس متن جستجو
+    function filterData(searchText) {
+      if (!searchText) {
+        // اگر متن جستجو خالی باشد، همه داده‌ها را نمایش بده
+        filteredCustomers = allCustomers;
+      } else {
+        searchText = searchText.toLowerCase();
+        
+        // فیلتر داده‌ها بر اساس متن جستجو
+        filteredCustomers = allCustomers.filter(customer => 
+          customer.name.toLowerCase().includes(searchText) ||
+          customer.national_id.includes(searchText) ||
+          customer.birth_place.toLowerCase().includes(searchText) ||
+          customer.mobile.includes(searchText)
+        );
+      }
+      
+      // نمایش داده‌های فیلتر شده
+      displayData(filteredCustomers);
+    }
+    
+    // نمایش داده‌ها در جدول با پردازش تدریجی
     function displayData(customers) {
       const tableBody = document.getElementById('tableBody');
       tableBody.innerHTML = '';
       
-      customers.forEach(customer => {
-        const row = document.createElement('tr');
+      // اگر تعداد داده‌ها زیاد است، از پردازش تدریجی استفاده کن
+      if (customers.length > 1000) {
+        displayLargeDataset(customers);
+      } else {
+        // برای داده‌های کوچک، همه را یکجا نمایش بده
+        const fragment = document.createDocumentFragment();
         
-        // نام مشتری
-        const nameCell = document.createElement('td');
-        nameCell.textContent = customer.name;
-        row.appendChild(nameCell);
+        customers.forEach(customer => {
+          const row = createCustomerRow(customer);
+          fragment.appendChild(row);
+        });
         
-        // کد ملی
-        const nationalIdCell = document.createElement('td');
-        nationalIdCell.textContent = customer.national_id;
-        row.appendChild(nationalIdCell);
-        
-        // محل تولد
-        const birthPlaceCell = document.createElement('td');
-        birthPlaceCell.textContent = customer.birth_place;
-        row.appendChild(birthPlaceCell);
-        
-        // شماره موبایل
-        const mobileCell = document.createElement('td');
-        mobileCell.textContent = customer.mobile;
-        row.appendChild(mobileCell);
-        
-        // گروه مشتریان
-        const customerGroupCell = document.createElement('td');
-        customerGroupCell.textContent = customer.customer_group;
-        row.appendChild(customerGroupCell);
-        
-        tableBody.appendChild(row);
-      });
+        tableBody.appendChild(fragment);
+      }
     }
     
-    // فیلتر جدول بر اساس متن جستجو
-    function filterTable(searchText) {
+    // نمایش داده‌های بزرگ به صورت تدریجی
+    function displayLargeDataset(customers) {
       const tableBody = document.getElementById('tableBody');
-      const rows = tableBody.getElementsByTagName('tr');
+      const batchSize = 100; // تعداد رکوردهایی که در هر مرحله پردازش می‌شوند
+      let index = 0;
       
-      searchText = searchText.toLowerCase();
-      
-      for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const cells = row.getElementsByTagName('td');
-        let found = false;
+      function processBatch() {
+        const fragment = document.createDocumentFragment();
+        const end = Math.min(index + batchSize, customers.length);
         
-        for (let j = 0; j < cells.length; j++) {
-          const cellText = cells[j].textContent.toLowerCase();
-          if (cellText.includes(searchText)) {
-            found = true;
-            break;
-          }
+        for (let i = index; i < end; i++) {
+          const row = createCustomerRow(customers[i]);
+          fragment.appendChild(row);
         }
         
-        row.style.display = found ? '' : 'none';
+        tableBody.appendChild(fragment);
+        index = end;
+        
+        // اگر هنوز رکوردهایی باقی مانده‌اند، مرحله بعدی را برنامه‌ریزی کن
+        if (index < customers.length) {
+          setTimeout(processBatch, 0);
+        }
       }
+      
+      // شروع پردازش تدریجی
+      processBatch();
+    }
+    
+    // ایجاد یک ردیف جدول برای یک مشتری
+    function createCustomerRow(customer) {
+      const row = document.createElement('tr');
+      
+      // نام مشتری
+      const nameCell = document.createElement('td');
+      nameCell.textContent = customer.name;
+      row.appendChild(nameCell);
+      
+      // کد ملی
+      const nationalIdCell = document.createElement('td');
+      nationalIdCell.textContent = customer.national_id;
+      row.appendChild(nationalIdCell);
+      
+      // محل تولد
+      const birthPlaceCell = document.createElement('td');
+      birthPlaceCell.textContent = customer.birth_place;
+      row.appendChild(birthPlaceCell);
+      
+      // شماره موبایل
+      const mobileCell = document.createElement('td');
+      mobileCell.textContent = customer.mobile;
+      row.appendChild(mobileCell);
+      
+      // گروه مشتریان
+      const customerGroupCell = document.createElement('td');
+      customerGroupCell.textContent = customer.customer_group;
+      row.appendChild(customerGroupCell);
+      
+      return row;
     }
   </script>
 </body>
