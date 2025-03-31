@@ -13,7 +13,6 @@
     }
     
     h1 {
-      color: #0c4b8e;
       text-align: center;
     }
     
@@ -22,8 +21,6 @@
       margin: 0 auto;
       background-color: white;
       padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     .search-box {
@@ -33,8 +30,6 @@
     .search-box input {
       width: 100%;
       padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
       font-family: Tahoma, Arial, sans-serif;
     }
     
@@ -44,22 +39,24 @@
     }
     
     th, td {
-      padding: 10px;
+      padding: 8px;
       text-align: right;
-      border-bottom: 1px solid #ddd;
+      border: 1px solid #ddd;
     }
     
     th {
-      background-color: #0c4b8e;
-      color: white;
-    }
-    
-    tr:nth-child(even) {
       background-color: #f2f2f2;
     }
     
-    tr:hover {
-      background-color: #e6e6e6;
+    .loading {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .error {
+      color: red;
+      text-align: center;
+      padding: 10px;
     }
   </style>
 </head>
@@ -67,11 +64,14 @@
   <div class="container">
     <h1>اطلاعات مشتریان بانک سپه</h1>
     
+    <div id="errorMessage" class="error" style="display: none;"></div>
+    <div id="loading" class="loading">در حال بارگذاری اطلاعات...</div>
+    
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="جستجو...">
     </div>
     
-    <table id="customerTable">
+    <table id="customerTable" style="display: none;">
       <thead>
         <tr>
           <th>نام مشتری</th>
@@ -88,35 +88,10 @@
   </div>
 
   <script>
-    // داده‌های نمونه
-    const sampleData = [
-      {
-        name: 'كيوان كركودي',
-        nationalId: '3256268145',
-        birthPlace: 'کرمانشاه',
-        mobile: '09362603905',
-        customerGroup: 'مشتری عادی'
-      },
-      {
-        name: 'محمدحامي نيازمندمنفردقلندرآبادي',
-        nationalId: '440956811',
-        birthPlace: 'شميران',
-        mobile: '09121192525',
-        customerGroup: 'مشتری عادی'
-      },
-      {
-        name: 'سيدسعيد ميربد',
-        nationalId: '1199029947',
-        birthPlace: 'شهرضا',
-        mobile: '09138258015',
-        customerGroup: 'مشتری عادی'
-      }
-    ];
-    
     // اجرای کد پس از بارگذاری صفحه
     document.addEventListener('DOMContentLoaded', function() {
-      // تلاش برای بارگذاری داده‌ها از فایل HTML
-      loadDataFromHTML();
+      // بارگذاری داده‌ها
+      loadData();
       
       // تنظیم رویداد جستجو
       document.getElementById('searchInput').addEventListener('input', function() {
@@ -124,92 +99,173 @@
       });
     });
     
-    // بارگذاری داده‌ها از فایل HTML
-    function loadDataFromHTML() {
-      // ابتدا داده‌های نمونه را نمایش بده
-      displayData(sampleData);
-      
+    // بارگذاری داده‌ها از فایل
+    function loadData() {
       // تلاش برای بارگذاری داده‌ها از فایل
-      fetch('data/sepahbilion.html')
+      fetch('sepahbilion.json')
+        .then(response => {
+          if (!response.ok) {
+            return fetch('data/sepahbilion.json');
+          }
+          return response;
+        })
+        .then(response => {
+          if (!response.ok) {
+            return fetch('sepahbilion.html');
+          }
+          return response;
+        })
+        .then(response => {
+          if (!response.ok) {
+            return fetch('data/sepahbilion.html');
+          }
+          return response;
+        })
         .then(response => {
           if (!response.ok) {
             throw new Error('فایل یافت نشد');
           }
-          return response.text();
-        })
-        .then(html => {
-          // ایجاد یک المان موقت برای تجزیه HTML
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = html;
           
-          // استخراج ردیف‌های جدول
-          const rows = tempDiv.querySelectorAll('table tbody tr');
-          
-          if (rows.length === 0) {
-            throw new Error('هیچ داده‌ای در فایل HTML یافت نشد');
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            return response.json();
+          } else {
+            return response.text().then(html => {
+              // پردازش HTML
+              const tempDiv = document.createElement('div');
+              tempDiv.innerHTML = html;
+              
+              // استخراج ردیف‌های جدول
+              const rows = tempDiv.querySelectorAll('table tbody tr');
+              
+              if (rows.length === 0) {
+                throw new Error('هیچ داده‌ای در فایل HTML یافت نشد');
+              }
+              
+              // تبدیل هر ردیف به یک آبجکت مشتری
+              const customers = [];
+              rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 5) {
+                  const customer = {
+                    name: cells[0].textContent.trim(),
+                    national_id: cells[1].textContent.trim(),
+                    birth_place: cells[2].textContent.trim(),
+                    mobile: cells[3].textContent.trim(),
+                    customer_group: cells[4].textContent.trim()
+                  };
+                  customers.push(customer);
+                }
+              });
+              
+              return customers;
+            });
           }
-          
-          // تبدیل هر ردیف به یک آبجکت مشتری
-          const customers = [];
-          rows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            if (cells.length >= 5) {
-              const customer = {
-                name: cells[0].textContent.trim(),
-                nationalId: cells[1].textContent.trim(),
-                birthPlace: cells[2].textContent.trim(),
-                mobile: cells[3].textContent.trim(),
-                customerGroup: cells[4].textContent.trim()
-              };
-              customers.push(customer);
-            }
-          });
+        })
+        .then(data => {
+          // مخفی کردن وضعیت بارگذاری
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('customerTable').style.display = 'table';
           
           // نمایش داده‌ها
-          displayData(customers);
-          console.log(`${customers.length} رکورد از فایل بارگذاری شد.`);
+          displayData(data);
+          console.log(`${data.length} رکورد از فایل بارگذاری شد.`);
         })
         .catch(error => {
           console.error('خطا در بارگذاری داده‌ها:', error);
-          // داده‌های نمونه قبلاً نمایش داده شده‌اند
+          
+          // نمایش پیام خطا
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('errorMessage').style.display = 'block';
+          document.getElementById('errorMessage').textContent = 'خطا در بارگذاری اطلاعات. استفاده از داده‌های نمونه...';
+          
+          // استفاده از داده‌های نمونه در صورت خطا
+          const sampleData = [
+            {
+              name: 'كيوان كركودي',
+              national_id: '3256268145',
+              birth_place: 'کرمانشاه',
+              mobile: '09362603905',
+              customer_group: 'مشتری عادی'
+            },
+            {
+              name: 'محمدحامي نيازمندمنفردقلندرآبادي',
+              national_id: '440956811',
+              birth_place: 'شميران',
+              mobile: '09121192525',
+              customer_group: 'مشتری عادی'
+            },
+            {
+              name: 'سيدسعيد ميربد',
+              national_id: '1199029947',
+              birth_place: 'شهرضا',
+              mobile: '09138258015',
+              customer_group: 'مشتری عادی'
+            }
+          ];
+          
+          // نمایش داده‌های نمونه
+          document.getElementById('customerTable').style.display = 'table';
+          displayData(sampleData);
         });
     }
     
-    // نمایش داده‌ها در جدول
+    // نمایش داده‌ها در جدول با پردازش تدریجی
     function displayData(customers) {
       const tableBody = document.getElementById('tableBody');
       tableBody.innerHTML = '';
       
-      customers.forEach(customer => {
-        const row = document.createElement('tr');
+      // برای داده‌های بزرگ، از پردازش تدریجی استفاده می‌کنیم
+      const batchSize = 500; // تعداد رکوردهایی که در هر مرحله پردازش می‌شوند
+      let index = 0;
+      
+      function processBatch() {
+        const fragment = document.createDocumentFragment();
+        const end = Math.min(index + batchSize, customers.length);
         
-        // نام مشتری
-        const nameCell = document.createElement('td');
-        nameCell.textContent = customer.name;
-        row.appendChild(nameCell);
+        for (let i = index; i < end; i++) {
+          const customer = customers[i];
+          const row = document.createElement('tr');
+          
+          // نام مشتری
+          const nameCell = document.createElement('td');
+          nameCell.textContent = customer.name;
+          row.appendChild(nameCell);
+          
+          // کد ملی
+          const nationalIdCell = document.createElement('td');
+          nationalIdCell.textContent = customer.national_id || customer.nationalId;
+          row.appendChild(nationalIdCell);
+          
+          // محل تولد
+          const birthPlaceCell = document.createElement('td');
+          birthPlaceCell.textContent = customer.birth_place || customer.birthPlace;
+          row.appendChild(birthPlaceCell);
+          
+          // شماره موبایل
+          const mobileCell = document.createElement('td');
+          mobileCell.textContent = customer.mobile;
+          row.appendChild(mobileCell);
+          
+          // گروه مشتریان
+          const customerGroupCell = document.createElement('td');
+          customerGroupCell.textContent = customer.customer_group || customer.customerGroup;
+          row.appendChild(customerGroupCell);
+          
+          fragment.appendChild(row);
+        }
         
-        // کد ملی
-        const nationalIdCell = document.createElement('td');
-        nationalIdCell.textContent = customer.nationalId;
-        row.appendChild(nationalIdCell);
+        tableBody.appendChild(fragment);
+        index = end;
         
-        // محل تولد
-        const birthPlaceCell = document.createElement('td');
-        birthPlaceCell.textContent = customer.birthPlace;
-        row.appendChild(birthPlaceCell);
-        
-        // شماره موبایل
-        const mobileCell = document.createElement('td');
-        mobileCell.textContent = customer.mobile;
-        row.appendChild(mobileCell);
-        
-        // گروه مشتریان
-        const customerGroupCell = document.createElement('td');
-        customerGroupCell.textContent = customer.customerGroup;
-        row.appendChild(customerGroupCell);
-        
-        tableBody.appendChild(row);
-      });
+        // اگر هنوز رکوردهایی باقی مانده‌اند، مرحله بعدی را برنامه‌ریزی کن
+        if (index < customers.length) {
+          setTimeout(processBatch, 0);
+        }
+      }
+      
+      // شروع پردازش تدریجی
+      processBatch();
     }
     
     // فیلتر جدول بر اساس متن جستجو
