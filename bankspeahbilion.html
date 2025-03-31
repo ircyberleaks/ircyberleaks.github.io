@@ -51,7 +51,7 @@
   <script>
     // خواندن داده‌ها از دو فایل JSON به طور همزمان
     Promise.all([
-      fetch('data/sepahbilion1.json').then(response => response.json()),
+      fetch('data/sepahbilion.json').then(response => response.json()),
       fetch('data/sepahbilion2.json').then(response => response.json())
     ])
     .then(([data1, data2]) => {
