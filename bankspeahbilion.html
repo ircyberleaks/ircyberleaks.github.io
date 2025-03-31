@@ -3,185 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اطلاعات مشتریان بانک سپه</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>اطلاعات مشتریان بانک سپه - نسخه ساده</title>
     <style>
-        @font-face {
-            font-family: 'Vazir';
-            src: url('fonts/Vazir.eot');
-            src: url('fonts/Vazir.eot?#iefix') format('embedded-opentype'),
-                 url('fonts/Vazir.woff2') format('woff2'),
-                 url('fonts/Vazir.woff') format('woff'),
-                 url('fonts/Vazir.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-        
-        :root {
-            --primary-color: #1e3a8a;
-            --secondary-color: #3b82f6;
-            --accent-color: #f59e0b;
-            --text-color: #1f2937;
-            --bg-color: #f9fafb;
-            --card-bg: #ffffff;
-            --border-color: #e5e7eb;
-        }
-        
-        [data-theme="dark"] {
-            --primary-color: #3b82f6;
-            --secondary-color: #60a5fa;
-            --accent-color: #fbbf24;
-            --text-color: #f9fafb;
-            --bg-color: #111827;
-            --card-bg: #1f2937;
-            --border-color: #374151;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
         body {
-            font-family: 'Vazir', Tahoma, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            transition: background-color 0.3s, color 0.3s;
+            font-family: Tahoma, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            direction: rtl;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
+            background-color: white;
             padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo img {
-            height: 50px;
-            margin-left: 15px;
-        }
-        
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        
-        .theme-toggle {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            font-size: 0.9rem;
-        }
-        
-        .theme-toggle .material-icons {
-            margin-right: 5px;
-        }
-        
-        .search-filter-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+        h1 {
+            color: #1e3a8a;
+            text-align: center;
             margin-bottom: 20px;
-            background-color: var(--card-bg);
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
         
-        .search-box, .filter-box {
+        .loading {
             display: flex;
-            align-items: center;
-        }
-        
-        .search-box {
-            flex: 1;
-            min-width: 250px;
-        }
-        
-        .search-box input {
-            flex: 1;
-            padding: 10px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-family: 'Vazir', Tahoma, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-        
-        .filter-box select {
-            padding: 10px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-family: 'Vazir', Tahoma, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-        
-        .tab {
-            display: flex;
-            overflow-x: auto;
-            margin-bottom: 20px;
-            background-color: var(--card-bg);
-            border-radius: 8px 8px 0 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-        
-        .tablinks {
-            background-color: inherit;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 15px 20px;
-            font-family: 'Vazir', Tahoma, Arial, sans-serif;
-            font-size: 1rem;
-            color: var(--text-color);
-            transition: background-color 0.3s;
-            white-space: nowrap;
-        }
-        
-        .tablinks:hover {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        
-        .tablinks.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .tabcontent {
-            display: none;
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-            overflow-x: auto;
-        }
-        
-        .section-title {
-            margin-bottom: 15px;
-            color: var(--primary-color);
-            font-size: 1.2rem;
+            justify-content: center;
+            margin: 20px 0;
         }
         
         table {
@@ -191,548 +41,168 @@
         }
         
         th, td {
-            padding: 12px 15px;
+            padding: 10px;
             text-align: right;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid #ddd;
         }
         
         th {
-            background-color: var(--primary-color);
+            background-color: #1e3a8a;
             color: white;
-            position: relative;
-            cursor: pointer;
-        }
-        
-        th:hover {
-            background-color: var(--secondary-color);
-        }
-        
-        th.sort-asc::after {
-            content: "↑";
-            position: absolute;
-            left: 5px;
-        }
-        
-        th.sort-desc::after {
-            content: "↓";
-            position: absolute;
-            left: 5px;
         }
         
         tr:nth-child(even) {
-            background-color: rgba(0, 0, 0, 0.03);
+            background-color: #f2f2f2;
         }
         
-        tr:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-        
-        .pagination-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-        
-        .pagination-info {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        
-        #pageInfo {
-            font-size: 0.9rem;
-        }
-        
-        .progress-container {
-            width: 100%;
-            height: 5px;
-            background-color: var(--border-color);
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background-color: var(--primary-color);
-            border-radius: 5px;
-            transition: width 0.3s;
-        }
-        
-        #pagination {
-            display: flex;
-            gap: 5px;
-        }
-        
-        #pagination button {
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'Vazir', Tahoma, Arial, sans-serif;
-        }
-        
-        #pagination button:hover:not(:disabled) {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        
-        #pagination button.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        #pagination button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .share-container {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-        }
-        
-        .share-title {
-            margin-bottom: 15px;
-            color: var(--primary-color);
-            font-size: 1.2rem;
-        }
-        
-        .social-share {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .social-share-button {
-            display: flex;
-            align-items: center;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            cursor: pointer;
-            font-family: 'Vazir', Tahoma, Arial, sans-serif;
-        }
-        
-        .social-share-button .material-icons {
-            margin-left: 5px;
-        }
-        
-        .twitter-share-button {
-            background-color: #1DA1F2;
-        }
-        
-        .facebook-share-button {
-            background-color: #4267B2;
-        }
-        
-        .telegram-share-button {
-            background-color: #0088cc;
-        }
-        
-        .whatsapp-share-button {
-            background-color: #25D366;
-        }
-        
-        .twitter-preview {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .twitter-preview img {
-            width: 100%;
-            max-height: 300px;
-            object-fit: cover;
-        }
-        
-        .twitter-preview-text {
-            padding: 15px;
-            font-size: 0.9rem;
-        }
-        
-        .data-source-info, .footer {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-            font-size: 0.9rem;
-        }
-        
-        .footer {
+        .error-message {
+            color: red;
             text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #ffeeee;
+            border: 1px solid #ffcccc;
+            border-radius: 5px;
         }
         
-        .footer-text {
-            margin-bottom: 10px;
-        }
-        
-        .copyright {
-            font-size: 0.8rem;
-            color: var(--text-color);
-            opacity: 0.7;
-        }
-        
-        .visitor-counter {
+        .success-message {
+            color: green;
             text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .scroll-to-top {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 40px;
-            height: 40px;
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 50%;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-        }
-        
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* رسپانسیو */
-        @media (max-width: 768px) {
-            .search-filter-container {
-                flex-direction: column;
-            }
-            
-            .search-box, .filter-box {
-                width: 100%;
-            }
-            
-            .tab {
-                flex-wrap: wrap;
-            }
-            
-            .tablinks {
-                flex: 1;
-                min-width: 120px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .dataTable.mobile-view th:nth-child(3),
-            .dataTable.mobile-view td:nth-child(3) {
-                display: none;
-            }
-            
-            .social-share {
-                flex-direction: column;
-            }
-            
-            .social-share-button {
-                width: 100%;
-            }
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #eeffee;
+            border: 1px solid #ccffcc;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <!-- لودینگ -->
-    <div class="loading">
-        <div class="loading-spinner"></div>
-    </div>
-    
     <div class="container">
-        <!-- هدر -->
-        <header>
-            <div class="logo">
-                <img src="images/logo.png" alt="لوگو">
-                <div class="logo-text">اطلاعات مشتریان بانک سپه</div>
-            </div>
-            <button id="themeToggle" class="theme-toggle">
-                <span class="material-icons">dark_mode</span>
-                تغییر تم
-            </button>
-        </header>
+        <h1>اطلاعات مشتریان بانک سپه</h1>
         
-        <!-- جستجو و فیلتر -->
-        <div class="search-filter-container">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="جستجو...">
-            </div>
-            <div class="filter-box">
-                <select id="customerGroupFilter">
-                    <option value="all">همه مشتریان</option>
-                    <option value="regular">مشتریان عادی</option>
-                    <option value="military">مشتریان نظامی</option>
-                </select>
-            </div>
-            <div class="filter-box">
-                <select id="sortFilter">
-                    <option value="name-asc">نام (صعودی)</option>
-                    <option value="name-desc">نام (نزولی)</option>
-                </select>
-            </div>
+        <div id="loading" class="loading">
+            در حال بارگذاری داده‌ها...
         </div>
         
-        <!-- تب‌ها -->
-        <div class="tab">
-            <button class="tablinks active" onclick="openTab(event, 'tab0')">همه مشتریان</button>
-            <button class="tablinks" onclick="openTab(event, 'tab1')">مشتریان عادی</button>
-            <button class="tablinks" onclick="openTab(event, 'tab2')">مشتریان نظامی</button>
-        </div>
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <div id="success-message" class="success-message" style="display: none;"></div>
         
-        <!-- محتوای تب‌ها -->
-        <div id="tab0" class="tabcontent" style="display: block;">
-            <h3 class="section-title">همه مشتریان</h3>
-            <table id="table0" class="dataTable">
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0, 'table0')">نام مشتری</th>
-                        <th onclick="sortTable(1, 'table0')">کد ملی</th>
-                        <th onclick="sortTable(2, 'table0')">محل تولد</th>
-                        <th onclick="sortTable(3, 'table0')">شماره موبایل</th>
-                        <th onclick="sortTable(4, 'table0')">گروه مشتریان</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- داده‌ها اینجا قرار می‌گیرند -->
-                </tbody>
-            </table>
-        </div>
-        
-        <div id="tab1" class="tabcontent">
-            <h3 class="section-title">مشتریان عادی</h3>
-            <table id="table1" class="dataTable">
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0, 'table1')">نام مشتری</th>
-                        <th onclick="sortTable(1, 'table1')">کد ملی</th>
-                        <th onclick="sortTable(2, 'table1')">محل تولد</th>
-                        <th onclick="sortTable(3, 'table1')">شماره موبایل</th>
-                        <th onclick="sortTable(4, 'table1')">گروه مشتریان</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- داده‌ها اینجا قرار می‌گیرند -->
-                </tbody>
-            </table>
-        </div>
-        
-        <div id="tab2" class="tabcontent">
-            <h3 class="section-title">مشتریان نظامی</h3>
-            <table id="table2" class="dataTable">
-                <thead>
-                    <tr>
-                        <th onclick="sortTable(0, 'table2')">نام مشتری</th>
-                        <th onclick="sortTable(1, 'table2')">کد ملی</th>
-                        <th onclick="sortTable(2, 'table2')">محل تولد</th>
-                        <th onclick="sortTable(3, 'table2')">شماره موبایل</th>
-                        <th onclick="sortTable(4, 'table2')">گروه مشتریان</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- داده‌ها اینجا قرار می‌گیرند -->
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- صفحه‌بندی -->
-        <div class="pagination-container">
-            <div class="pagination-info">
-                <div id="pageInfo">صفحه 1 از 1</div>
-            </div>
-            <div class="progress-container">
-                <div class="progress-bar" style="width: 0%"></div>
-            </div>
-            <div id="pagination">
-                <!-- دکمه‌های صفحه‌بندی اینجا قرار می‌گیرند -->
-            </div>
-        </div>
-        
-        <!-- اشتراک‌گذاری -->
-        <div class="share-container">
-            <h3 class="share-title">اشتراک‌گذاری</h3>
-            <div class="social-share">
-                <button class="social-share-button twitter-share-button" onclick="shareOnTwitter()">
-                    <span class="material-icons">twitter</span>
-                    توییتر
-                </button>
-                
-                <button class="social-share-button facebook-share-button" onclick="shareOnFacebook()">
-                    <span class="material-icons">facebook</span>
-                    فیسبوک
-                </button>
-                
-                <button class="social-share-button telegram-share-button" onclick="shareOnTelegram()">
-                    <span class="material-icons">send</span>
-                    تلگرام
-                </button>
-                
-                <button class="social-share-button whatsapp-share-button" onclick="shareOnWhatsApp()">
-                    <span class="material-icons">whatsapp</span>
-                    واتساپ
-                </button>
-            </div>
-            
-            <div class="twitter-preview">
-                <img src="images/twitter-preview.jpg" alt="تصویر پیش‌نمایش توییتر">
-                <div class="twitter-preview-text">
-                    اطلاعات مشتریان بانک سپه منتشر شد. #شفافیت_بانکی #افشای_اطلاعات
-                </div>
-            </div>
-        </div>
-        
-        <!-- اطلاعات منبع داده‌ها -->
-        <div class="data-source-info">
-            این اطلاعات در ماه مارس 2025 توسط گروه هکری IRCodeBreakers به‌دست آمده است. ما تنها به‌عنوان یک منبع خبری، در جهت اطلاع‌رسانی و افزایش شفافیت، این داده‌ها را به‌طور عمومی منتشر می‌کنیم. هیچ‌گونه مسئولیتی در قبال صحت، استفاده یا پیامدهای ناشی از این اطلاعات نخواهیم داشت
-        </div>
-        
-        <!-- فوتر -->
-        <div class="footer">
-            <div class="footer-text">
-                این اطلاعات در ماه مارس 2025 توسط گروه هکری IRCodeBreakers به‌دست آمده است. ما تنها به‌عنوان یک منبع خبری، در جهت اطلاع‌رسانی و افزایش شفافیت، این داده‌ها را به‌طور عمومی منتشر می‌کنیم.
-            </div>
-            <div class="copyright">
-                © 2025 تمامی حقوق محفوظ است.
-            </div>
-        </div>
-        
-        <!-- شمارنده بازدید -->
-        <div class="visitor-counter">
-            <script src="https://cdn.counter.dev/script.js" data-id="78982a0a-9050-4cc7-b5fe-a80cd6aad3ac" data-utcoffset="-7"></script>
-        </div>
-        
-        <!-- دکمه اسکرول به بالا -->
-        <div class="scroll-to-top">
-            <span class="material-icons">arrow_upward</span>
-        </div>
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>نام مشتری</th>
+                    <th>کد ملی</th>
+                    <th>محل تولد</th>
+                    <th>شماره موبایل</th>
+                    <th>گروه مشتریان</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- داده‌ها اینجا قرار می‌گیرند -->
+            </tbody>
+        </table>
     </div>
     
     <script>
-    // متغیرهای جهانی برای ذخیره داده‌ها
-    let allData = {
-        'all': [], // همه مشتریان
-        'regular': [], // مشتریان عادی
-        'military': [] // مشتریان نظامی
-    };
-    
-    // متغیرهای صفحه‌بندی
-    let rowsPerPage = 20;
-    let currentPage = 1;
-    let filteredData = {};
-    
-    // تابع بارگذاری داده‌ها از فایل
-    async function loadData() {
-        try {
-            // نمایش لودینگ
-            document.querySelector('.loading').style.display = 'block';
-            
-            // بارگذاری داده‌ها از فایل
-            const response = await fetch('data/sepahbilion.html');
-            const html = await response.text();
-            
-            // پردازش داده‌ها
-            parseHtmlData(html);
-            
-            // مخفی کردن لودینگ
-            document.querySelector('.loading').style.display = 'none';
-            
-            // نمایش تب فعال
-            const activeTab = document.querySelector('.tablinks.active');
-            if (activeTab) {
-                const tabId = activeTab.getAttribute('onclick').match(/openTab\(event, '(.+?)'\)/)[1];
-                document.getElementById(tabId).style.display = 'block';
-            }
-            
-            // بررسی حالت نمایش موبایل
-            if (window.innerWidth <= 576) {
-                document.querySelectorAll('.dataTable').forEach(table => {
-                    table.classList.add('mobile-view');
-                });
-            }
-        } catch (error) {
-            console.error('خطا در بارگذاری داده‌ها:', error);
-            document.querySelector('.loading').style.display = 'none';
-            alert('خطا در بارگذاری داده‌ها. لطفاً صفحه را مجدداً بارگذاری کنید.');
+        // تابع نمایش پیام خطا
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
         }
-    }
-    
-    // تابع پردازش داده‌های HTML
-    function parseHtmlData(html) {
-        try {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            
-            // بررسی وجود جدول در HTML
-            let table = doc.querySelector('table.dataframe');
-            
-            // اگر جدول با کلاس dataframe پیدا نشد، هر جدولی را بررسی کنیم
-            if (!table) {
-                console.log('جدول با کلاس dataframe یافت نشد، جستجو برای هر جدول...');
-                table = doc.querySelector('table');
+        
+        // تابع نمایش پیام موفقیت
+        function showSuccess(message) {
+            const successElement = document.getElementById('success-message');
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        // تابع بارگذاری داده‌ها
+        async function loadData() {
+            try {
+                console.log('شروع بارگذاری داده‌ها...');
+                
+                // بارگذاری فایل HTML
+                const response = await fetch('data/sepahbilion.html');
+                
+                if (!response.ok) {
+                    throw new Error(`خطای HTTP: ${response.status}`);
+                }
+                
+                const html = await response.text();
+                console.log(`داده با طول ${html.length} کاراکتر دریافت شد`);
+                
+                if (html.length === 0) {
+                    throw new Error('فایل HTML خالی است');
+                }
+                
+                // پردازش داده‌ها
+                parseHtmlData(html);
+                
+            } catch (error) {
+                console.error('خطا در بارگذاری داده‌ها:', error);
+                showError(`خطا در بارگذاری داده‌ها: ${error.message}`);
+                
+                // نمایش داده‌های نمونه
+                createSampleData();
             }
-            
-            if (!table) {
-                // روش جایگزین برای پارس HTML
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = html;
-                table = tempDiv.querySelector('table');
+        }
+        
+        // تابع پردازش داده‌های HTML
+        function parseHtmlData(html) {
+            try {
+                console.log('شروع پردازش داده‌ها...');
+                
+                // روش 1: استفاده از DOMParser
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // بررسی وجود جدول در HTML
+                let table = doc.querySelector('table');
                 
                 if (!table) {
-                    throw new Error('جدول در فایل HTML یافت نشد');
+                    console.log('جدول با DOMParser یافت نشد، تلاش با روش جایگزین...');
+                    
+                    // روش 2: استفاده از div موقت
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    table = tempDiv.querySelector('table');
+                    
+                    if (!table) {
+                        throw new Error('جدول در فایل HTML یافت نشد');
+                    }
                 }
-            }
-            
-            // یافتن ردیف‌ها در tbody
-            const rows = table.querySelectorAll('tbody tr');
-            
-            if (rows.length === 0) {
-                throw new Error('هیچ ردیفی در جدول یافت نشد');
-            }
-            
-            // پاک کردن داده‌های قبلی
-            allData = {
-                'all': [],
-                'regular': [],
-                'military': []
-            };
-            
-            // پردازش هر ردیف و تقسیم‌بندی داده‌ها
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (cells.length >= 5) {
+                
+                console.log('جدول پیدا شد، در حال استخراج ردیف‌ها...');
+                
+                // یافتن ردیف‌ها در جدول
+                let rows = table.querySelectorAll('tr');
+                
+                if (rows.length === 0) {
+                    throw new Error('هیچ ردیفی در جدول یافت نشد');
+                }
+                
+                console.log(`تعداد ${rows.length} ردیف پیدا شد، در حال پردازش...`);
+                
+                // پاک کردن جدول فعلی
+                const tbody = document.querySelector('#dataTable tbody');
+                tbody.innerHTML = '';
+                
+                // بررسی آیا ردیف اول هدر است
+                const startIndex = rows[0].querySelector('th') ? 1 : 0;
+                let processedRows = 0;
+                
+                // پردازش هر ردیف
+                for (let i = startIndex; i < rows.length; i++) {
+                    const row = rows[i];
+                    const cells = row.querySelectorAll('td');
+                    
+                    // اگر تعداد سلول‌ها کمتر از 5 است، ادامه بده
+                    if (cells.length < 5) continue;
+                    
                     const name = cells[0].textContent.trim();
                     const nationalId = cells[1].textContent.trim();
                     const birthplace = cells[2].textContent.trim();
@@ -749,402 +219,84 @@
                     
                     // کد ملی
                     const idCell = document.createElement('td');
-                    idCell.className = 'national-id';
                     idCell.textContent = nationalId;
                     newRow.appendChild(idCell);
                     
                     // محل تولد
                     const birthplaceCell = document.createElement('td');
-                    birthplaceCell.className = 'birthplace';
                     birthplaceCell.textContent = birthplace;
                     newRow.appendChild(birthplaceCell);
                     
                     // شماره موبایل
                     const mobileCell = document.createElement('td');
-                    mobileCell.className = 'mobile';
                     mobileCell.textContent = mobile;
                     newRow.appendChild(mobileCell);
                     
                     // گروه مشتریان
                     const groupCell = document.createElement('td');
-                    groupCell.className = 'customer-group';
                     groupCell.textContent = customerGroup;
                     newRow.appendChild(groupCell);
                     
-                    // اضافه کردن به همه داده‌ها
-                    allData['all'].push(newRow.cloneNode(true));
-                    
-                    // دسته‌بندی بر اساس گروه مشتریان
-                    if (customerGroup.includes('نظامی')) {
-                        allData['military'].push(newRow.cloneNode(true));
-                    } else {
-                        allData['regular'].push(newRow.cloneNode(true));
-                    }
+                    // اضافه کردن به جدول
+                    tbody.appendChild(newRow);
+                    processedRows++;
                 }
-            });
-            
-            // نمایش داده‌ها در جداول
-            displayDataInTables();
-            
-        } catch (error) {
-            console.error('خطا در پردازش داده‌ها:', error);
-            alert(`خطا در پردازش داده‌ها: ${error.message}`);
-        }
-    }
-    
-    // تابع نمایش داده‌ها در جداول
-    function displayDataInTables() {
-        // نمایش همه داده‌ها
-        displayTableData('table0', allData['all']);
-        
-        // نمایش داده‌های دسته‌بندی شده
-        displayTableData('table1', allData['regular']);
-        displayTableData('table2', allData['military']);
-        
-        // ذخیره داده‌های فیلتر شده برای صفحه‌بندی
-        filteredData = {
-            'table0': [...allData['all']],
-            'table1': [...allData['regular']],
-            'table2': [...allData['military']]
-        };
-        
-        // راه‌اندازی صفحه‌بندی برای همه جداول
-        setupPagination('table0');
-        setupPagination('table1');
-        setupPagination('table2');
-    }
-    
-    // تابع نمایش داده‌ها در یک جدول
-    function displayTableData(tableId, data) {
-        const tbody = document.querySelector(`#${tableId} tbody`);
-        tbody.innerHTML = '';
-        
-        data.forEach(row => {
-            tbody.appendChild(row.cloneNode(true));
-        });
-    }
-    
-    // تابع راه‌اندازی صفحه‌بندی
-    function setupPagination(tableId) {
-        const data = filteredData[tableId];
-        if (!data) return;
-        
-        const totalPages = Math.ceil(data.length / rowsPerPage);
-        const paginationDiv = document.getElementById('pagination');
-        const pageInfoDiv = document.getElementById('pageInfo');
-        const progressBar = document.querySelector('.progress-bar');
-        
-        // نمایش اطلاعات صفحه
-        pageInfoDiv.textContent = `صفحه ${currentPage} از ${totalPages}`;
-        
-        // تنظیم نوار پیشرفت
-        const progress = (currentPage / totalPages) * 100;
-        progressBar.style.width = `${progress}%`;
-        
-        // ایجاد دکمه‌های صفحه‌بندی
-        paginationDiv.innerHTML = '';
-        
-        // دکمه قبلی
-        const prevButton = document.createElement('button');
-        prevButton.textContent = 'قبلی';
-        prevButton.disabled = currentPage === 1;
-        prevButton.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                showPage(tableId, currentPage);
-                setupPagination(tableId);
-            }
-        });
-        paginationDiv.appendChild(prevButton);
-        
-        // دکمه‌های شماره صفحه
-        const maxButtons = 5;
-        let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
-        let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-        
-        if (endPage - startPage + 1 < maxButtons) {
-            startPage = Math.max(1, endPage - maxButtons + 1);
-        }
-        
-        for (let i = startPage; i <= endPage; i++) {
-            const pageButton = document.createElement('button');
-            pageButton.textContent = i;
-            pageButton.classList.toggle('active', i === currentPage);
-            pageButton.addEventListener('click', () => {
-                currentPage = i;
-                showPage(tableId, currentPage);
-                setupPagination(tableId);
-            });
-            paginationDiv.appendChild(pageButton);
-        }
-        
-        // دکمه بعدی
-        const nextButton = document.createElement('button');
-        nextButton.textContent = 'بعدی';
-        nextButton.disabled = currentPage === totalPages;
-        nextButton.addEventListener('click', () => {
-            if (currentPage < totalPages) {
-                currentPage++;
-                showPage(tableId, currentPage);
-                setupPagination(tableId);
-            }
-        });
-        paginationDiv.appendChild(nextButton);
-        
-        // نمایش صفحه فعلی
-        showPage(tableId, currentPage);
-    }
-    
-    // تابع نمایش صفحه
-    function showPage(tableId, page) {
-        const data = filteredData[tableId];
-        if (!data) return;
-        
-        const tbody = document.querySelector(`#${tableId} tbody`);
-        tbody.innerHTML = '';
-        
-        const startIndex = (page - 1) * rowsPerPage;
-        const endIndex = Math.min(startIndex + rowsPerPage, data.length);
-        
-        for (let i = startIndex; i < endIndex; i++) {
-            tbody.appendChild(data[i].cloneNode(true));
-        }
-    }
-    
-    // تابع باز کردن تب
-    function openTab(event, tabId) {
-        // مخفی کردن همه تب‌ها
-        const tabcontent = document.getElementsByClassName('tabcontent');
-        for (let i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = 'none';
-        }
-        
-        // حذف کلاس active از همه دکمه‌های تب
-        const tablinks = document.getElementsByClassName('tablinks');
-        for (let i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(' active', '');
-        }
-        
-        // نمایش تب فعال و اضافه کردن کلاس active به دکمه
-        document.getElementById(tabId).style.display = 'block';
-        event.currentTarget.className += ' active';
-        
-        // تنظیم صفحه‌بندی برای تب فعال
-        const tableId = 'table' + tabId.replace('tab', '');
-        currentPage = 1;
-        setupPagination(tableId);
-    }
-    
-    // تابع مرتب‌سازی جدول
-    function sortTable(columnIndex, tableId) {
-        const table = document.getElementById(tableId);
-        const headers = table.querySelectorAll('th');
-        
-        // حذف کلاس‌های مرتب‌سازی قبلی
-        headers.forEach(header => {
-            header.classList.remove('sort-asc', 'sort-desc');
-        });
-        
-        // تعیین جهت مرتب‌سازی
-        const currentHeader = headers[columnIndex];
-        const isAscending = !currentHeader.classList.contains('sort-asc');
-        
-        // اضافه کردن کلاس مرتب‌سازی
-        currentHeader.classList.add(isAscending ? 'sort-asc' : 'sort-desc');
-        
-        // مرتب‌سازی داده‌ها
-        const rows = Array.from(filteredData[tableId]);
-        rows.sort((a, b) => {
-            let aValue = a.cells[columnIndex].textContent.trim();
-            let bValue = b.cells[columnIndex].textContent.trim();
-            
-            // مرتب‌سازی متنی
-            return isAscending ? 
-                aValue.localeCompare(bValue, 'fa') : 
-                bValue.localeCompare(aValue, 'fa');
-        });
-        
-        // بروزرسانی داده‌های فیلتر شده
-        filteredData[tableId] = rows;
-        
-        // نمایش صفحه اول
-        currentPage = 1;
-        showPage(tableId, currentPage);
-        setupPagination(tableId);
-    }
-    
-    // تابع جستجو در داده‌ها
-    function searchData() {
-        const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-        
-        // جستجو در هر جدول
-        Object.keys(allData).forEach(key => {
-            const tableId = key === 'all' ? 'table0' : 
-                            key === 'regular' ? 'table1' : 'table2';
-            
-            // فیلتر کردن داده‌ها
-            filteredData[tableId] = allData[key].filter(row => {
-                const name = row.cells[0].textContent.toLowerCase();
-                const nationalId = row.cells[1].textContent;
-                const birthplace = row.cells[2].textContent.toLowerCase();
-                const mobile = row.cells[3].textContent;
-                const customerGroup = row.cells[4].textContent.toLowerCase();
                 
-                return name.includes(searchTerm) || 
-                       nationalId.includes(searchTerm) || 
-                       birthplace.includes(searchTerm) || 
-                       mobile.includes(searchTerm) ||
-                       customerGroup.includes(searchTerm);
+                console.log(`${processedRows} ردیف با موفقیت پردازش شد`);
+                
+                // اگر هیچ داده‌ای پردازش نشد، خطا نمایش دهیم
+                if (processedRows === 0) {
+                    throw new Error('هیچ داده‌ای از جدول استخراج نشد');
+                }
+                
+                // نمایش پیام موفقیت
+                showSuccess(`${processedRows} ردیف داده با موفقیت بارگذاری شد`);
+                
+            } catch (error) {
+                console.error('خطا در پردازش داده‌ها:', error);
+                showError(`خطا در پردازش داده‌ها: ${error.message}`);
+                
+                // ایجاد داده‌های نمونه
+                createSampleData();
+            }
+        }
+        
+        // تابع ایجاد داده‌های نمونه
+        function createSampleData() {
+            console.log('ایجاد داده‌های نمونه...');
+            
+            // داده‌های نمونه
+            const sampleData = [
+                ['علی محمدی', '0123456789', 'تهران', '09123456789', 'عادی'],
+                ['رضا احمدی', '9876543210', 'مشهد', '09187654321', 'عادی'],
+                ['محمد حسینی', '1234567890', 'اصفهان', '09123456780', 'نظامی'],
+                ['حسن کریمی', '0987654321', 'شیراز', '09187654320', 'نظامی'],
+                ['مریم رضایی', '1122334455', 'تبریز', '09123456781', 'عادی']
+            ];
+            
+            // پاک کردن جدول فعلی
+            const tbody = document.querySelector('#dataTable tbody');
+            tbody.innerHTML = '';
+            
+            // ایجاد ردیف‌ها
+            sampleData.forEach(data => {
+                const newRow = document.createElement('tr');
+                
+                data.forEach(cellData => {
+                    const cell = document.createElement('td');
+                    cell.textContent = cellData;
+                    newRow.appendChild(cell);
+                });
+                
+                tbody.appendChild(newRow);
             });
             
-            // بروزرسانی صفحه‌بندی
-            currentPage = 1;
-            setupPagination(tableId);
-        });
-    }
-    
-    // تابع فیلتر بر اساس گروه مشتریان
-    function filterByCustomerGroup() {
-        const selectedGroup = document.getElementById('customerGroupFilter').value;
-        
-        // تغییر تب فعال بر اساس گروه انتخاب شده
-        const tabLinks = document.querySelectorAll('.tablinks');
-        const tabIndex = selectedGroup === 'all' ? 0 : 
-                        selectedGroup === 'regular' ? 1 : 2;
-        
-        // شبیه‌سازی کلیک روی تب
-        tabLinks[tabIndex].click();
-    }
-    
-    // تابع مرتب‌سازی بر اساس فیلتر
-    function sortByFilter() {
-        const selectedSort = document.getElementById('sortFilter').value;
-        const activeTab = document.querySelector('.tabcontent[style*="display: block"]');
-        if (!activeTab) return;
-        
-        const tableId = activeTab.querySelector('table').id;
-        
-        // مرتب‌سازی بر اساس فیلتر انتخاب شده
-        switch (selectedSort) {
-            case 'name-asc':
-                sortTable(0, tableId); // مرتب‌سازی صعودی بر اساس نام
-                const headerNameAsc = document.querySelector(`#${tableId} th:nth-child(1)`);
-                headerNameAsc.classList.remove('sort-desc');
-                headerNameAsc.classList.add('sort-asc');
-                break;
-            
-            case 'name-desc':
-                sortTable(0, tableId); // مرتب‌سازی نزولی بر اساس نام
-                const headerNameDesc = document.querySelector(`#${tableId} th:nth-child(1)`);
-                headerNameDesc.classList.remove('sort-asc');
-                headerNameDesc.classList.add('sort-desc');
-                break;
+            // نمایش پیام
+            showSuccess('داده‌های واقعی یافت نشد. داده‌های نمونه نمایش داده شده است.');
         }
-    }
-    
-    // تابع اشتراک‌گذاری در توییتر
-    function shareOnTwitter() {
-        const text = 'اطلاعات مشتریان بانک سپه منتشر شد. #شفافیت_بانکی #افشای_اطلاعات';
-        const url = window.location.href;
-        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
-        window.open(twitterUrl, '_blank');
-    }
-    
-    // تابع اشتراک‌گذاری در فیسبوک
-    function shareOnFacebook() {
-        const url = window.location.href;
-        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-        window.open(facebookUrl, '_blank');
-    }
-    
-    // تابع اشتراک‌گذاری در تلگرام
-    function shareOnTelegram() {
-        const text = 'اطلاعات مشتریان بانک سپه منتشر شد.';
-        const url = window.location.href;
-        const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
-        window.open(telegramUrl, '_blank');
-    }
-    
-    // تابع اشتراک‌گذاری در واتساپ
-    function shareOnWhatsApp() {
-        const text = 'اطلاعات مشتریان بانک سپه منتشر شد.';
-        const url = window.location.href;
-        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`;
-        window.open(whatsappUrl, '_blank');
-    }
-    
-    // تابع تغییر تم
-    function toggleTheme() {
-        const body = document.body;
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('.material-icons');
         
-        if (body.getAttribute('data-theme') === 'dark') {
-            // تغییر به تم روشن
-            body.removeAttribute('data-theme');
-            themeIcon.textContent = 'dark_mode';
-            localStorage.setItem('theme', 'light');
-        } else {
-            // تغییر به تم تاریک
-            body.setAttribute('data-theme', 'dark');
-            themeIcon.textContent = 'light_mode';
-            localStorage.setItem('theme', 'dark');
-        }
-    }
-    
-    // تابع بررسی تم ذخیره شده
-    function checkSavedTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('.material-icons');
-        
-        if (savedTheme === 'dark') {
-            document.body.setAttribute('data-theme', 'dark');
-            themeIcon.textContent = 'light_mode';
-        }
-    }
-    
-    // تابع اسکرول به بالا
-    function scrollToTop() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
-    
-    // راه‌اندازی رویدادها
-    document.addEventListener('DOMContentLoaded', () => {
-        // بارگذاری داده‌ها
-        loadData();
-        
-        // بررسی تم ذخیره شده
-        checkSavedTheme();
-        
-        // تنظیم رویداد تغییر تم
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-        
-        // تنظیم رویداد جستجو
-        document.getElementById('searchInput').addEventListener('input', searchData);
-        
-        // تنظیم رویداد فیلتر گروه مشتریان
-        document.getElementById('customerGroupFilter').addEventListener('change', filterByCustomerGroup);
-        
-        // تنظیم رویداد مرتب‌سازی
-        document.getElementById('sortFilter').addEventListener('change', sortByFilter);
-        
-        // تنظیم رویداد اسکرول به بالا
-        document.querySelector('.scroll-to-top').addEventListener('click', scrollToTop);
-        
-        // نمایش/مخفی کردن دکمه اسکرول به بالا
-        window.addEventListener('scroll', () => {
-            const scrollButton = document.querySelector('.scroll-to-top');
-            if (window.scrollY > 300) {
-                scrollButton.style.display = 'flex';
-            } else {
-                scrollButton.style.display = 'none';
-            }
-        });
-    });
+        // بارگذاری داده‌ها هنگام بارگذاری صفحه
+        document.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
