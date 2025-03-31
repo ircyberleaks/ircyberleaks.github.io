@@ -51,8 +51,14 @@
   <script>
     // خواندن داده‌ها از دو فایل JSON به طور همزمان
     Promise.all([
-      fetch('data/sepahbilion.json').then(response => response.json()),
-      fetch('data/sepahbilion2.json').then(response => response.json())
+      fetch('data/sepahbilion.json').then(response => {
+        if (!response.ok) throw new Error('File not found: sepahbilion1.json');
+        return response.json();
+      }),
+      fetch('data/sepahbilion2.json').then(response => {
+        if (!response.ok) throw new Error('File not found: sepahbilion2.json');
+        return response.json();
+      })
     ])
     .then(([data1, data2]) => {
       const tableBody = document.querySelector('#customerTable tbody');
