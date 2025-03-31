@@ -49,26 +49,36 @@
   </table>
 
   <script>
-    // خواندن داده‌ها از فایل HTML
-    fetch('data/sepahbilion.html')
-      .then(response => response.text())
+    // خواندن داده‌ها از فایل JSON
+    fetch('data/sepahbilion.json')
+      .then(response => response.json())
       .then(data => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data, 'text/html');
-        
-        // استخراج ردیف‌های جدول از فایل HTML
-        const rows = doc.querySelectorAll('table tbody tr');
-        
-        // اضافه کردن ردیف‌ها به جدول اصلی
         const tableBody = document.querySelector('#customerTable tbody');
-        
-        rows.forEach(row => {
+
+        // اضافه کردن ردیف‌ها به جدول
+        data.forEach(customer => {
           const newRow = document.createElement('tr');
-          row.querySelectorAll('td').forEach(cell => {
-            const newCell = document.createElement('td');
-            newCell.textContent = cell.textContent;
-            newRow.appendChild(newCell);
-          });
+          
+          const nameCell = document.createElement('td');
+          nameCell.textContent = customer.name;
+          newRow.appendChild(nameCell);
+
+          const nationalIdCell = document.createElement('td');
+          nationalIdCell.textContent = customer.national_id;
+          newRow.appendChild(nationalIdCell);
+
+          const birthPlaceCell = document.createElement('td');
+          birthPlaceCell.textContent = customer.birth_place;
+          newRow.appendChild(birthPlaceCell);
+
+          const mobileCell = document.createElement('td');
+          mobileCell.textContent = customer.mobile;
+          newRow.appendChild(mobileCell);
+
+          const customerGroupCell = document.createElement('td');
+          customerGroupCell.textContent = customer.customer_group;
+          newRow.appendChild(customerGroupCell);
+
           tableBody.appendChild(newRow);
         });
       })
