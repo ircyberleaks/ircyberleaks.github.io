@@ -3,63 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نمایش اطلاعات بانک</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: right;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+    <title>بارگذاری داده‌ها</title>
 </head>
 <body>
 
-    <h2>لیست مشتریان</h2>
-    <table id="data-table">
-        <thead>
-            <tr>
-                <th>نام مشتری</th>
-                <th>کد ملی</th>
-                <th>محل تولد</th>
-                <th>شماره موبایل</th>
-                <th>گروه مشتریان</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- داده‌ها اینجا بارگذاری می‌شوند -->
-        </tbody>
-    </table>
+    <h2>داده‌ها</h2>
+    <div id="data-container">در حال بارگیری...</div>
 
     <script>
         async function loadData() {
-            let response = await fetch('data/sepahbilion.html');
-            let html = await response.text();
-            
-            let parser = new DOMParser();
-            let doc = parser.parseFromString(html, "text/html");
-
-            let rows = doc.querySelectorAll(".dataframe tbody tr");
-            let tableBody = document.querySelector("#data-table tbody");
-
-            rows.forEach(row => {
-                let cols = row.querySelectorAll("td");
-                let tr = document.createElement("tr");
-                
-                cols.forEach(col => {
-                    let td = document.createElement("td");
-                    td.innerHTML = col.innerHTML;
-                    tr.appendChild(td);
-                });
-
-                tableBody.appendChild(tr);
-            });
+            try {
+                let response = await fetch('data/sepahbilion.html', { cache: "no-store" });
+                let html = await response.text();
+                document.getElementById("data-container").innerHTML = html;
+            } catch (error) {
+                console.error("خطا در بارگیری:", error);
+                document.getElementById("data-container").innerHTML = "بارگیری ناموفق!";
+            }
         }
 
         loadData();
