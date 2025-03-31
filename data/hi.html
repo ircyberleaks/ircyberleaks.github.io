@@ -7,8 +7,8 @@
     
     <!-- استایل‌ها -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/clusterize.js/0.18.0/clusterize.min.css" rel="stylesheet">
     
     <style>
         body {
@@ -37,10 +37,38 @@
             margin-bottom: 20px;
         }
         
-        #data-container {
+        .clusterize-scroll {
+            max-height: 600px;
+            overflow: auto;
+        }
+        
+        table {
             width: 100%;
-            min-height: 600px;
-            border: none;
+            border-collapse: collapse;
+        }
+        
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #0d6efd;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            z-index: 1;
+        }
+        
+        tbody td {
+            padding: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        tbody tr:hover {
+            background-color: #f1f8ff;
+        }
+        
+        .highlight {
+            background-color: yellow;
         }
         
         .loading {
@@ -65,66 +93,66 @@
             <p>در حال بارگذاری داده‌ها...</p>
         </div>
         
-        <iframe id="data-container" style="display:none;"></iframe>
+        <div id="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>نام مشتری</th>
+                        <th>کد ملی</th>
+                        <th>محل تولد</th>
+                        <th>شماره موبایل</th>
+                        <th>گروه مشتریان</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="scrollArea" class="clusterize-scroll">
+                <table>
+                    <tbody id="contentArea" class="clusterize-content">
+                        <!-- داده‌ها اینجا قرار می‌گیرند -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     
     <!-- اسکریپت‌ها -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clusterize.js/0.18.0/clusterize.min.js"></script>
     
     <script>
         $(document).ready(function() {
-            // بارگذاری فایل داده
-            const iframe = document.getElementById('data-container');
-            iframe.src = 'data.html';
+            // داده‌های جدول - این قسمت را با داده‌های واقعی خود جایگزین کنید
+            const tableData = [
+                ['كيوان كركودي', '3256268145', 'کرمانشاه', '09362603905', 'مشتری عادی'],
+                ['شهاب دائي چين', '3241340430', 'کرمانشاه', '09182247480', 'اشخاص نظامی'],
+                ['سعيد درخشان سهلان', '1362262048', 'تبريز', '09025397653', 'مشتری عادی']
+                // داده‌های بیشتر را اینجا اضافه کنید
+            ];
             
-            // وقتی iframe بارگذاری شد
-            iframe.onload = function() {
-                // نمایش iframe و مخفی کردن لودینگ
-                $('#loading').hide();
-                $('#data-container').show();
-                
-                // اعمال استایل به جدول داخل iframe
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                const style = iframeDoc.createElement('style');
-                style.textContent = `
-                    body { font-family: 'Vazirmatn', 'Tahoma', sans-serif; }
-                    .dataframe {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-bottom: 20px;
-                    }
-                    .dataframe thead th {
-                        background-color: #0d6efd;
-                        color: white;
-                        padding: 12px;
-                        text-align: center;
-                        font-weight: bold;
-                    }
-                    .dataframe tbody td {
-                        padding: 10px;
-                        border-bottom: 1px solid #dee2e6;
-                    }
-                    .dataframe tbody tr:hover {
-                        background-color: #f1f8ff;
-                    }
-                    .highlight { background-color: yellow; }
-                `;
-                iframeDoc.head.appendChild(style);
-                
-                // اضافه کردن لینک فونت به iframe
-                const fontLink = iframeDoc.createElement('link');
-                fontLink.href = 'https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css';
-                fontLink.rel = 'stylesheet';
-                fontLink.type = 'text/css';
-                iframeDoc.head.appendChild(fontLink);
-                
-                // تنظیم عرض جدول
-                const table = iframeDoc.querySelector('.dataframe');
-                if (table) {
-                    table.style.width = '100%';
-                }
-            };
+            // تبدیل داده‌ها به ردیف‌های HTML
+            const rows = tableData.map(row => {
+                return `<tr>
+                    <td>${row[0]}</td>
+                    <td>${row[1]}</td>
+                    <td>${row[2]}</td>
+                    <td>${row[3]}</td>
+                    <td>${row[4]}</td>
+                </tr>`;
+            });
+            
+            // راه‌اندازی Clusterize.js
+            const clusterize = new Clusterize({
+                rows: rows,
+                scrollId: 'scrollArea',
+                contentId: 'contentArea',
+                rows_in_block: 50,
+                blocks_in_cluster: 4
+            });
+            
+            // مخفی کردن لودینگ
+            $('#loading').hide();
+            $('#table-container').show();
             
             // جستجو در جدول
             $('#search-button').click(function() {
@@ -139,33 +167,101 @@
             
             function searchTable() {
                 const searchText = $('#search-input').val().toLowerCase();
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
                 
-                // حذف هایلایت‌های قبلی
-                const highlightedElements = iframeDoc.querySelectorAll('.highlight');
-                highlightedElements.forEach(el => {
-                    el.classList.remove('highlight');
-                });
+                if (!searchText) {
+                    // بازگرداندن همه ردیف‌ها بدون هایلایت
+                    clusterize.update(rows);
+                    return;
+                }
                 
-                if (!searchText) return;
-                
-                // جستجو در سلول‌های جدول
-                const cells = iframeDoc.querySelectorAll('.dataframe td');
-                let found = false;
-                
-                cells.forEach(cell => {
-                    const cellText = cell.textContent.toLowerCase();
-                    if (cellText.includes(searchText)) {
-                        cell.classList.add('highlight');
-                        found = true;
-                        
-                        // اسکرول به اولین نتیجه
-                        if (!found) {
-                            cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
+                // جستجو در داده‌ها و هایلایت کردن نتایج
+                const filteredRows = tableData.map((rowData, index) => {
+                    const rowText = rowData.join(' ').toLowerCase();
+                    if (rowText.includes(searchText)) {
+                        // ایجاد ردیف با هایلایت
+                        return `<tr>
+                            <td>${highlightText(rowData[0], searchText)}</td>
+                            <td>${highlightText(rowData[1], searchText)}</td>
+                            <td>${highlightText(rowData[2], searchText)}</td>
+                            <td>${highlightText(rowData[3], searchText)}</td>
+                            <td>${highlightText(rowData[4], searchText)}</td>
+                        </tr>`;
+                    } else {
+                        return null; // ردیف‌های نامرتبط را حذف می‌کنیم
                     }
-                });
+                }).filter(row => row !== null); // حذف ردیف‌های null
+                
+                if (filteredRows.length > 0) {
+                    clusterize.update(filteredRows);
+                } else {
+                    // اگر نتیجه‌ای یافت نشد
+                    clusterize.update(['<tr><td colspan="5" style="text-align:center">نتیجه‌ای یافت نشد</td></tr>']);
+                }
             }
+            
+            // تابع هایلایت کردن متن
+            function highlightText(text, searchText) {
+                if (!text) return '';
+                
+                const lowerText = text.toLowerCase();
+                const lowerSearchText = searchText.toLowerCase();
+                
+                if (lowerText.includes(lowerSearchText)) {
+                    const startIndex = lowerText.indexOf(lowerSearchText);
+                    const endIndex = startIndex + searchText.length;
+                    
+                    return text.substring(0, startIndex) + 
+                           '<span class="highlight">' + 
+                           text.substring(startIndex, endIndex) + 
+                           '</span>' + 
+                           text.substring(endIndex);
+                }
+                
+                return text;
+            }
+            
+            // اضافه کردن داده‌های واقعی از فایل HTML
+            function loadDataFromHTML() {
+                fetch('data.html')
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const tableRows = doc.querySelectorAll('table.dataframe tbody tr');
+                        
+                        const extractedData = [];
+                        tableRows.forEach(row => {
+                            const cells = row.querySelectorAll('td');
+                            const rowData = [];
+                            cells.forEach(cell => {
+                                rowData.push(cell.textContent.trim());
+                            });
+                            extractedData.push(rowData);
+                        });
+                        
+                        if (extractedData.length > 0) {
+                            // تبدیل داده‌ها به ردیف‌های HTML
+                            const newRows = extractedData.map(row => {
+                                return `<tr>
+                                    <td>${row[0] || ''}</td>
+                                    <td>${row[1] || ''}</td>
+                                    <td>${row[2] || ''}</td>
+                                    <td>${row[3] || ''}</td>
+                                    <td>${row[4] || ''}</td>
+                                </tr>`;
+                            });
+                            
+                            // به‌روزرسانی Clusterize با داده‌های جدید
+                            clusterize.update(newRows);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('خطا در بارگذاری فایل HTML:', error);
+                    });
+            }
+            
+            // تلاش برای بارگذاری داده‌ها از فایل HTML
+            loadDataFromHTML();
         });
     </script>
 </body>
