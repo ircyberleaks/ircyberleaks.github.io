@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>اطلاعات مشتریان بانک سپههه</title>
+  <title>1اطلاعات مشتریان بانک سپه</title>
   <style>
     body {
       font-family: Tahoma, Arial, sans-serif;
@@ -78,16 +78,37 @@
       overflow-y: auto;
       margin-top: 20px;
     }
+    
+    .progress-container {
+      width: 100%;
+      background-color: #f1f1f1;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    
+    .progress-bar {
+      height: 20px;
+      background-color: #4CAF50;
+      border-radius: 4px;
+      width: 0%;
+      text-align: center;
+      line-height: 20px;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>اطلاعات مشتریان بانک سپه</h1>
+    <h1>1اطلاعات مشتریان بانک سپه</h1>
     
     <div id="errorMessage" class="error" style="display: none;"></div>
     <div id="loading" class="loading">در حال بارگذاری اطلاعات...</div>
     
-    <div class="search-box">
+    <div id="progressContainer" class="progress-container" style="display: none;">
+      <div id="progressBar" class="progress-bar">0%</div>
+    </div>
+    
+    <div class="search-box" style="display: none;" id="searchContainer">
       <input type="text" id="searchInput" placeholder="جستجو (نام، کد ملی یا شماره موبایل)...">
     </div>
     
@@ -142,43 +163,74 @@
     // متغیرهای سراسری
     let db = null;
     
-    // راه‌اندازی دیتابیس
+    // راه‌اندازی دیتابیس با نمایش پیشرفت
     async function initDatabase() {
       try {
         // نمایش وضعیت بارگذاری
         document.getElementById('loading').style.display = 'block';
+        document.getElementById('progressContainer').style.display = 'block';
         document.getElementById('customerTable').style.display = 'none';
+        document.getElementById('searchContainer').style.display = 'none';
         document.getElementById('errorMessage').style.display = 'none';
         
-        // راه‌اندازی SQL.js - اصلاح شده برای جلوگیری از فراخوانی بازگشتی
+        // راه‌اندازی SQL.js
         const SQL = await window.initSqlJs({
           locateFile: filename => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${filename}`
         });
         
-        console.log('SQL.js با موفقیت راه‌اندازی شد.');
+        // بارگذاری فایل دیتابیس با نمایش پیشرفت
+        const response = await fetch('data/customers.db');
         
-        // بارگذاری فایل دیتابیس
-        console.log('در حال بارگذاری فایل دیتابیس...');
-        const dbResponse = await fetch('data/customers.db');
-        if (!dbResponse.ok) {
-          throw new Error(`خطا در بارگذاری دیتابیس: ${dbResponse.status} ${dbResponse.statusText}`);
+        if (!response.ok) {
+          throw new Error(`خطا در بارگذاری دیتابیس: ${response.status} ${response.statusText}`);
         }
         
-        // تبدیل پاسخ به آرایه بافر
-        console.log('در حال تبدیل پاسخ به آرایه...');
-        const dbBuffer = await dbResponse.arrayBuffer();
-        const uInt8Array = new Uint8Array(dbBuffer);
+        const contentLength = response.headers.get('Content-Length');
+        const total = contentLength ? parseInt(contentLength, 10) : 0;
+        let loaded = 0;
+        
+        const reader = response.body.getReader();
+        const chunks = [];
+        
+        // خواندن داده‌ها به صورت جریانی
+        while (true) {
+          const { done, value } = await reader.read();
+          
+          if (done) {
+            break;
+          }
+          
+          chunks.push(value);
+          loaded += value.length;
+          
+          // به‌روزرسانی نوار پیشرفت
+          if (total > 0) {
+            const percent = Math.round((loaded / total) * 100);
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            document.getElementById('progressBar').textContent = `${percent}%`;
+          }
+        }
+        
+        // ترکیب تکه‌ها
+        const chunksAll = new Uint8Array(loaded);
+        let position = 0;
+        
+        for (const chunk of chunks) {
+          chunksAll.set(chunk, position);
+          position += chunk.length;
+        }
         
         // ایجاد دیتابیس
-        console.log('در حال ایجاد دیتابیس...');
-        db = new SQL.Database(uInt8Array);
+        db = new SQL.Database(chunksAll);
         
         // نمایش آمار دیتابیس
         showDatabaseStats();
         
         // مخفی کردن وضعیت بارگذاری
         document.getElementById('loading').style.display = 'none';
+        document.getElementById('progressContainer').style.display = 'none';
         document.getElementById('customerTable').style.display = 'table';
+        document.getElementById('searchContainer').style.display = 'block';
         
         console.log('دیتابیس با موفقیت بارگذاری شد.');
       } catch (error) {
@@ -186,6 +238,7 @@
         
         // نمایش پیام خطا
         document.getElementById('loading').style.display = 'none';
+        document.getElementById('progressContainer').style.display = 'none';
         document.getElementById('errorMessage').style.display = 'block';
         document.getElementById('errorMessage').textContent = `خطا در بارگذاری دیتابیس: ${error.message}`;
       }
