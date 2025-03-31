@@ -1,97 +1,240 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>داده‌های مشتریان</title>
+  <title>اطلاعات مشتریان بانک سپه</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
+      font-family: Tahoma, Arial, sans-serif;
       direction: rtl;
-      padding: 20px;
+      margin: 20px;
+      background-color: #f5f5f5;
     }
+    
+    h1 {
+      color: #0c4b8e;
+      text-align: center;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .search-box {
+      margin-bottom: 20px;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: Tahoma, Arial, sans-serif;
+    }
+    
     table {
-      width: 80%;
-      margin: auto;
+      width: 100%;
       border-collapse: collapse;
     }
+    
     th, td {
       padding: 10px;
-      text-align: center;
-      border: 1px solid #ddd;
+      text-align: right;
+      border-bottom: 1px solid #ddd;
     }
+    
     th {
+      background-color: #0c4b8e;
+      color: white;
+    }
+    
+    tr:nth-child(even) {
       background-color: #f2f2f2;
     }
-    td {
-      background-color: #f9f9f9;
+    
+    tr:hover {
+      background-color: #e6e6e6;
     }
   </style>
 </head>
 <body>
-
-  <h1>داده‌های مشتریان</h1>
-
-  <table id="customerTable">
-    <thead>
-      <tr>
-        <th>نام مشتری</th>
-        <th>کد ملی</th>
-        <th>محل تولد</th>
-        <th>شماره موبایل</th>
-        <th>گروه مشتریان</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- داده‌ها اینجا به صورت داینامیک اضافه خواهند شد -->
-    </tbody>
-  </table>
+  <div class="container">
+    <h1>اطلاعات مشتریان بانک سپه</h1>
+    
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="جستجو...">
+    </div>
+    
+    <table id="customerTable">
+      <thead>
+        <tr>
+          <th>نام مشتری</th>
+          <th>کد ملی</th>
+          <th>محل تولد</th>
+          <th>شماره موبایل</th>
+          <th>گروه مشتریان</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- داده‌ها اینجا قرار می‌گیرند -->
+      </tbody>
+    </table>
+  </div>
 
   <script>
-    // خواندن داده‌ها از دو فایل JSON به طور همزمان
-    Promise.all([
-      fetch('data/sepahbilion.json').then(response => {
-        if (!response.ok) throw new Error('File not found: sepahbilion1.json');
-        return response.json();
-      }),
-      fetch('data/sepahbilion2.json').then(response => {
-        if (!response.ok) throw new Error('File not found: sepahbilion2.json');
-        return response.json();
-      })
-    ])
-    .then(([data1, data2]) => {
-      const tableBody = document.querySelector('#customerTable tbody');
-
-      // اضافه کردن ردیف‌ها از هر دو فایل به جدول
-      [...data1, ...data2].forEach(customer => {
-        const newRow = document.createElement('tr');
+    // داده‌های نمونه
+    const sampleData = [
+      {
+        name: 'كيوان كركودي',
+        nationalId: '3256268145',
+        birthPlace: 'کرمانشاه',
+        mobile: '09362603905',
+        customerGroup: 'مشتری عادی'
+      },
+      {
+        name: 'محمدحامي نيازمندمنفردقلندرآبادي',
+        nationalId: '440956811',
+        birthPlace: 'شميران',
+        mobile: '09121192525',
+        customerGroup: 'مشتری عادی'
+      },
+      {
+        name: 'سيدسعيد ميربد',
+        nationalId: '1199029947',
+        birthPlace: 'شهرضا',
+        mobile: '09138258015',
+        customerGroup: 'مشتری عادی'
+      }
+    ];
+    
+    // اجرای کد پس از بارگذاری صفحه
+    document.addEventListener('DOMContentLoaded', function() {
+      // تلاش برای بارگذاری داده‌ها از فایل HTML
+      loadDataFromHTML();
+      
+      // تنظیم رویداد جستجو
+      document.getElementById('searchInput').addEventListener('input', function() {
+        filterTable(this.value);
+      });
+    });
+    
+    // بارگذاری داده‌ها از فایل HTML
+    function loadDataFromHTML() {
+      // ابتدا داده‌های نمونه را نمایش بده
+      displayData(sampleData);
+      
+      // تلاش برای بارگذاری داده‌ها از فایل
+      fetch('data/sepahbilion.html')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('فایل یافت نشد');
+          }
+          return response.text();
+        })
+        .then(html => {
+          // ایجاد یک المان موقت برای تجزیه HTML
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = html;
+          
+          // استخراج ردیف‌های جدول
+          const rows = tempDiv.querySelectorAll('table tbody tr');
+          
+          if (rows.length === 0) {
+            throw new Error('هیچ داده‌ای در فایل HTML یافت نشد');
+          }
+          
+          // تبدیل هر ردیف به یک آبجکت مشتری
+          const customers = [];
+          rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 5) {
+              const customer = {
+                name: cells[0].textContent.trim(),
+                nationalId: cells[1].textContent.trim(),
+                birthPlace: cells[2].textContent.trim(),
+                mobile: cells[3].textContent.trim(),
+                customerGroup: cells[4].textContent.trim()
+              };
+              customers.push(customer);
+            }
+          });
+          
+          // نمایش داده‌ها
+          displayData(customers);
+          console.log(`${customers.length} رکورد از فایل بارگذاری شد.`);
+        })
+        .catch(error => {
+          console.error('خطا در بارگذاری داده‌ها:', error);
+          // داده‌های نمونه قبلاً نمایش داده شده‌اند
+        });
+    }
+    
+    // نمایش داده‌ها در جدول
+    function displayData(customers) {
+      const tableBody = document.getElementById('tableBody');
+      tableBody.innerHTML = '';
+      
+      customers.forEach(customer => {
+        const row = document.createElement('tr');
         
+        // نام مشتری
         const nameCell = document.createElement('td');
         nameCell.textContent = customer.name;
-        newRow.appendChild(nameCell);
-
+        row.appendChild(nameCell);
+        
+        // کد ملی
         const nationalIdCell = document.createElement('td');
-        nationalIdCell.textContent = customer.national_id;
-        newRow.appendChild(nationalIdCell);
-
+        nationalIdCell.textContent = customer.nationalId;
+        row.appendChild(nationalIdCell);
+        
+        // محل تولد
         const birthPlaceCell = document.createElement('td');
-        birthPlaceCell.textContent = customer.birth_place;
-        newRow.appendChild(birthPlaceCell);
-
+        birthPlaceCell.textContent = customer.birthPlace;
+        row.appendChild(birthPlaceCell);
+        
+        // شماره موبایل
         const mobileCell = document.createElement('td');
         mobileCell.textContent = customer.mobile;
-        newRow.appendChild(mobileCell);
-
+        row.appendChild(mobileCell);
+        
+        // گروه مشتریان
         const customerGroupCell = document.createElement('td');
-        customerGroupCell.textContent = customer.customer_group;
-        newRow.appendChild(customerGroupCell);
-
-        tableBody.appendChild(newRow);
+        customerGroupCell.textContent = customer.customerGroup;
+        row.appendChild(customerGroupCell);
+        
+        tableBody.appendChild(row);
       });
-    })
-    .catch(err => console.log('Error loading data:', err));
+    }
+    
+    // فیلتر جدول بر اساس متن جستجو
+    function filterTable(searchText) {
+      const tableBody = document.getElementById('tableBody');
+      const rows = tableBody.getElementsByTagName('tr');
+      
+      searchText = searchText.toLowerCase();
+      
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        let found = false;
+        
+        for (let j = 0; j < cells.length; j++) {
+          const cellText = cells[j].textContent.toLowerCase();
+          if (cellText.includes(searchText)) {
+            found = true;
+            break;
+          }
+        }
+        
+        row.style.display = found ? '' : 'none';
+      }
+    }
   </script>
-
 </body>
 </html>
