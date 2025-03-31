@@ -61,15 +61,35 @@
     tr:hover {
       background-color: #e6e6e6;
     }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      font-size: 18px;
+      color: #666;
+    }
+    
+    .error {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>اطلاعات مشتریان بانک سپه</h1>
     
+    <div id="errorMessage" class="error" style="display: none;"></div>
+    
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="جستجو...">
     </div>
+    
+    <div id="loading" class="loading">در حال بارگذاری اطلاعات...</div>
     
     <table id="customerTable">
       <thead>
@@ -88,35 +108,10 @@
   </div>
 
   <script>
-    // داده‌های نمونه
-    const sampleData = [
-      {
-        name: 'كيوان كركودي',
-        nationalId: '3256268145',
-        birthPlace: 'کرمانشاه',
-        mobile: '09362603905',
-        customerGroup: 'مشتری عادی'
-      },
-      {
-        name: 'محمدحامي نيازمندمنفردقلندرآبادي',
-        nationalId: '440956811',
-        birthPlace: 'شميران',
-        mobile: '09121192525',
-        customerGroup: 'مشتری عادی'
-      },
-      {
-        name: 'سيدسعيد ميربد',
-        nationalId: '1199029947',
-        birthPlace: 'شهرضا',
-        mobile: '09138258015',
-        customerGroup: 'مشتری عادی'
-      }
-    ];
-    
     // اجرای کد پس از بارگذاری صفحه
     document.addEventListener('DOMContentLoaded', function() {
-      // تلاش برای بارگذاری داده‌ها از فایل HTML
-      loadDataFromHTML();
+      // بارگذاری داده‌ها
+      loadData();
       
       // تنظیم رویداد جستجو
       document.getElementById('searchInput').addEventListener('input', function() {
@@ -124,54 +119,52 @@
       });
     });
     
-    // بارگذاری داده‌ها از فایل HTML
-    function loadDataFromHTML() {
-      // ابتدا داده‌های نمونه را نمایش بده
-      displayData(sampleData);
+    // بارگذاری داده‌ها از فایل JSON
+    function loadData() {
+      // نمایش وضعیت بارگذاری
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('customerTable').style.display = 'none';
       
       // تلاش برای بارگذاری داده‌ها از فایل
-      fetch('data/sepahbilion.html')
+      fetch('data/sepahbilion.json')
         .then(response => {
           if (!response.ok) {
             throw new Error('فایل یافت نشد');
           }
-          return response.text();
+          return response.json();
         })
-        .then(html => {
-          // ایجاد یک المان موقت برای تجزیه HTML
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = html;
-          
-          // استخراج ردیف‌های جدول
-          const rows = tempDiv.querySelectorAll('table tbody tr');
-          
-          if (rows.length === 0) {
-            throw new Error('هیچ داده‌ای در فایل HTML یافت نشد');
-          }
-          
-          // تبدیل هر ردیف به یک آبجکت مشتری
-          const customers = [];
-          rows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            if (cells.length >= 5) {
-              const customer = {
-                name: cells[0].textContent.trim(),
-                nationalId: cells[1].textContent.trim(),
-                birthPlace: cells[2].textContent.trim(),
-                mobile: cells[3].textContent.trim(),
-                customerGroup: cells[4].textContent.trim()
-              };
-              customers.push(customer);
-            }
-          });
+        .then(data => {
+          // مخفی کردن وضعیت بارگذاری
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('customerTable').style.display = 'table';
           
           // نمایش داده‌ها
-          displayData(customers);
-          console.log(`${customers.length} رکورد از فایل بارگذاری شد.`);
+          displayData(data);
+          console.log(`${data.length} رکورد از فایل بارگذاری شد.`);
         })
         .catch(error => {
           console.error('خطا در بارگذاری داده‌ها:', error);
-          // داده‌های نمونه قبلاً نمایش داده شده‌اند
+          
+          // نمایش پیام خطا
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('errorMessage').style.display = 'block';
+          document.getElementById('errorMessage').textContent = 'خطا در بارگذاری اطلاعات. استفاده از داده‌های نمونه...';
+          
+          // استفاده از داده‌های نمونه در صورت خطا
+          const sampleData = [
+
+            {
+              "name": "نام مشتری 2",
+              "national_id": "9876543210",
+              "birth_place": "تهران",
+              "mobile": "09123456789",
+              "customer_group": "مشتری ویژه"
+            }
+          ];
+          
+          // نمایش داده‌های نمونه
+          document.getElementById('customerTable').style.display = 'table';
+          displayData(sampleData);
         });
     }
     
@@ -190,12 +183,12 @@
         
         // کد ملی
         const nationalIdCell = document.createElement('td');
-        nationalIdCell.textContent = customer.nationalId;
+        nationalIdCell.textContent = customer.national_id;
         row.appendChild(nationalIdCell);
         
         // محل تولد
         const birthPlaceCell = document.createElement('td');
-        birthPlaceCell.textContent = customer.birthPlace;
+        birthPlaceCell.textContent = customer.birth_place;
         row.appendChild(birthPlaceCell);
         
         // شماره موبایل
@@ -205,7 +198,7 @@
         
         // گروه مشتریان
         const customerGroupCell = document.createElement('td');
-        customerGroupCell.textContent = customer.customerGroup;
+        customerGroupCell.textContent = customer.customer_group;
         row.appendChild(customerGroupCell);
         
         tableBody.appendChild(row);
